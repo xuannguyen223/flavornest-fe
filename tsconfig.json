@@ -1,0 +1,22 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "jsx": "react-jsx", // Use "react" if you're using React < 17
+    "lib": ["dom", "esnext"], // Ensure DOM types are included
+    "strict": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true
+  }
+}
