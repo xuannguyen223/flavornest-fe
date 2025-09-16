@@ -29,13 +29,11 @@ export default function UserMenu({
           <span
             aria-hidden
             className="grid place-items-center w-8 h-8 rounded-full bg-(--gray-color) text-(--light-black-color) text-sm font-medium"
-            style={{ fontFamily: "var(--poppins-medium)" }}
           >
             {initials}
           </span>
           <span
             className="hidden sm:block text-(--light-black-color) text-sm sm:text-base lg:text-lg xl:text-[20px]"
-            style={{ fontFamily: "var(--poppins-regular)" }}
           >
             {displayName}
           </span>
@@ -50,8 +48,8 @@ export default function UserMenu({
               <path
                 d="M13 16L19 22L25 16"
                 stroke="#1D1D1D"
-                stroke-width="2"
-                stroke-linecap="round"
+                strokeWidth="2"
+                strokeLinecap="round"
               />
             </svg>
           </span>
@@ -66,7 +64,7 @@ export default function UserMenu({
         <DropdownMenuItem className="px-3 py-2">
           <a
             href="#"
-            className="block w-full text-left font-(family-name:--poppins-regular) text-base sm:text-lg lg:text-xl xl:text-[20px] text-(--light-black-color)"
+            className="block w-full text-left text-base sm:text-lg lg:text-xl xl:text-[20px] text-(--light-black-color)"
           >
             My Profile
           </a>
@@ -74,15 +72,16 @@ export default function UserMenu({
         <DropdownMenuItem className="px-3 py-2">
           <a
             href="#"
-            className="block w-full text-left font-(family-name:--poppins-regular) text-base sm:text-lg lg:text-xl xl:text-[20px] text-(--light-black-color)"
+            className="block w-full text-left text-base sm:text-lg lg:text-xl xl:text-[20px] text-(--light-black-color)"
           >
             Preferences
           </a>
         </DropdownMenuItem>
         <DropdownMenuItem className="px-3 py-2" onClick={onLogout}>
-          <span className="block w-full text-left font-(family-name:--poppins-regular) text-base sm:text-lg lg:text-xl xl:text-[20px] text-(--light-black-color)">Log Out</span>
+          <span className="block w-full text-left text-base sm:text-lg lg:text-xl xl:text-[20px] text-(--light-black-color)">Log Out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
+

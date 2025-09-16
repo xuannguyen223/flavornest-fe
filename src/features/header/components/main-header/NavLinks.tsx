@@ -23,7 +23,7 @@ export default function NavLinks({ links = DEFAULT_LINKS }: NavLinksProps) {
                     <li key={item.to}>
                         <Link
                             to={item.to}
-                            className="font-(family-name:--poppins-medium) text-sm sm:text-base lg:text-lg xl:text-[22px] text-(--light-black-color)"
+                            className="font-medium text-sm sm:text-base lg:text-lg xl:text-[22px] text-(--light-black-color)"
                         >
                             {item.label}
                         </Link>

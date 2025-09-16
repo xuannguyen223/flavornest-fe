@@ -1,2 +1,22 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Potta+One&display=swap');
+
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@layer base {
+	:root {
+		--default-font-family: 'Poppins', sans-serif; /* body default */
+	}
+}
+
+.font-poppins {
+	font-family: 'Poppins', sans-serif;
+}
+
+.font-cormorant {
+	font-family: 'Cormorant Garamond', serif;
+}
+
+.font-potta {
+	font-family: 'Potta One', cursive;
+}
