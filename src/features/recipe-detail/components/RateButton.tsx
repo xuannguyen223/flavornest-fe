@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Star } from "lucide-react";
+import { cn } from '@/lib/utils';
 
 export interface RateButtonProps {
   defaultRated?: boolean;
@@ -16,20 +17,21 @@ export default function RateButton({ defaultRated = false, onToggle, className }
     onToggle?.(next);
   };
 
-  const base = "h-[53px] rounded-full border px-5 text-lg inline-flex items-center gap-2 transition-colors";
-  const defaultState = "border-neutral-800 text-neutral-800";
-  const hoverState = "hover:bg-neutral-800 hover:text-white hover:border-white transition";
-  const activeState = rated ? "bg-neutral-800 text-white border-white" : "";
-
   return (
     <button
       type="button"
       onClick={handleClick}
       aria-pressed={rated}
-      className={[base, defaultState, hoverState, activeState, className].filter(Boolean).join(" ")}
+      className={cn(
+        "h-[53px] rounded-full border px-5 text-lg inline-flex items-center gap-2 transition-colors", // base
+        "border-neutral-800 text-neutral-800", // default state
+        "hover:bg-neutral-800 hover:text-white hover:border-white transition", // hover
+        rated && "bg-neutral-800 text-white border-white", // active state
+        className // props extend
+      )}
     >
       <Star
-        className={(rated ? "text-white" : "text-current") + " size-7"}
+        className={cn(rated ? "text-white" : "text-current", "size-7")}
         fill={rated ? "currentColor" : "none"}
         stroke="currentColor"
         strokeWidth={1}

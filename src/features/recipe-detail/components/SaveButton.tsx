@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Bookmark } from "lucide-react";
+import { cn } from '@/lib/utils';
 
 export interface SaveButtonProps {
   defaultSaved?: boolean;
@@ -16,20 +17,21 @@ export default function SaveButton({ defaultSaved = false, onToggle, className }
     onToggle?.(next);
   };
 
-  const base = "h-[53px] rounded-full border px-5 text-lg inline-flex items-center gap-2 transition-colors";
-  const defaultState = "border-neutral-800 text-neutral-800";
-  const hoverState = "hover:bg-neutral-800 hover:text-white hover:border-neutral-50 transition";
-  const activeState = saved ? "bg-neutral-800 text-white border-white" : "";
-
   return (
     <button
       type="button"
       onClick={handleClick}
       aria-pressed={saved}
-      className={[base, defaultState, hoverState, activeState, className].filter(Boolean).join(" ")}
+      className={cn(
+        "h-[53px] rounded-full border px-5 text-lg inline-flex items-center gap-2 transition-colors", // base
+        "border-neutral-800 text-neutral-800", // default state
+        "hover:bg-neutral-800 hover:text-white hover:border-neutral-50 transition", // hover
+        saved && "bg-neutral-800 text-white border-white", // active state
+        className // props extend
+      )}
     >
       <Bookmark
-        className={(saved ? "text-white" : "text-brandBg") + " size-7"}
+        className={cn(saved ? "text-white" : "text-brandBg", "size-7")}
         fill={saved ? "currentColor" : "none"}
         stroke="currentColor"
         strokeWidth={1}
@@ -39,3 +41,4 @@ export default function SaveButton({ defaultSaved = false, onToggle, className }
     </button>
   );
 }
+
