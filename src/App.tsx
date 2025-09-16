@@ -6,6 +6,8 @@ import Footer from "./features/footer/Footer";
 import MainLayout from "./components/common/MainLayout";
 import AboutUsPage from "./features/about-us/AbouUsPage";
 import SearchPage from "./features/search-page/SearchPage";
+import RecipeExample from './features/list-recipes/RecipeExample';
+
 function App() {
 	return (
 	  <BrowserRouter>
@@ -35,6 +37,6 @@ function App() {
 	  </BrowserRouter>
 	);
   }
-  
+
 export default App;
   
