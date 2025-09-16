@@ -1,7 +1,7 @@
 import { Preferences } from './components/Preferences';
 import { preferencesData } from './components/tempData';
 
-export function HomePage() {
+export default function HomePage() {
 	const handleComplete = (selections: Record<number, string[]>) => {
 		console.log('User preferences:', selections);
 	};
