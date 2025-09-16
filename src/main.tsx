@@ -5,11 +5,11 @@ import App from "./App.tsx";
 import { Provider } from "react-redux";
 import { store } from "./store/store.tsx";
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
-);
+// createRoot(document.getElementById("root")!).render(
+//   <StrictMode>
+//     <App />
+//   </StrictMode>
+// );
 
 const container = document.getElementById("root");
 
