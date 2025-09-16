@@ -1,39 +1,34 @@
-// SubscribeNewsletter.tsx
-import React from "react";
-
-const SubscribeNewsletter: React.FC = () => {
+export default function SubscribeNewsletter() {
   return (
     <div className="w-full max-w-[400px]">
       {/* Title */}
-      <h2 className="text-neutral-700 text-3xl font-semibold 
-        mb-2 leading-tight font-cormorant"
-        style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+      <h2
+        className="text-neutral-700 text-3xl font-semibold mb-2 leading-tight font-cormorant"
+        style={{ fontFamily: "'Cormorant Garamond', serif" }}
+      >
         Sign up for our Newsletter
       </h2>
+
       {/* Subtitle */}
       <p className="text-neutral-700 text-lg leading-9 mb-2 font-poppins">
         Subscribe & start receiving your weekly dose of delicious inspiration!
       </p>
+
       {/* Input + Button */}
-      <div className="flex w-full h-[50px] bg-white 
-        rounded-[46px] border border-white overflow-hidden">
+      <div className="flex w-full h-[50px] bg-white rounded-[46px] border border-white overflow-hidden">
         <input
           type="email"
           placeholder="name@domain.com"
-          className="flex-1 px-7 text-left text-gray-500 
-                    placeholder-gray-500 focus:outline-none"
+          className="flex-1 px-7 text-left text-gray-500 placeholder-gray-500 focus:outline-none"
         />
         <button
           className="bg-neutral-700 text-white flex items-center justify-center 
-                    hover:bg-neutral-500 transition-colors 
-                    rounded-r-[46px] font-poppins font-semibold text-lg w-1/3 h-full"
+          hover:bg-neutral-500 transition-colors rounded-r-[46px] 
+          font-poppins font-semibold text-lg w-1/3 h-full"
         >
           SUBSCRIBE
         </button>
       </div>
-
     </div>
   );
-};
-
-export default SubscribeNewsletter;
+}
