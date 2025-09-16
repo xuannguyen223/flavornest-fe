@@ -1,2 +1,14 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@layer base {
+	:root {
+		--default-font-family: 'Poppins', sans-serif; /* body default */
+	}
+}
+
+.font-cormorant {
+	font-family: 'Cormorant Garamond', serif;
+}
