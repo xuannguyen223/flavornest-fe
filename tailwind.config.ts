@@ -1,0 +1,20 @@
+/** @type {import('tailwindcss').Config} */
+
+export default {
+	content: [
+		'./features/**/*.{ts,tsx,js,jsx}',
+		'./components/**/*.{ts,tsx,js,jsx}',
+		'./app/**/*.{ts,tsx,js,jsx}',
+		'./src/**/*.{ts,tsx,js,jsx}',
+	],
+	theme: {
+		extend: {
+			fontFamily: {
+				potta: ['"Potta One"', 'cursive'],
+				poppins: ['Poppins', 'sans-serif'],
+				cormorant: ['Cormorant Garamond', 'serif'],
+			},
+		},
+	},
+	plugins: [],
+};
