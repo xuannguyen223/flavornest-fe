@@ -1,18 +1,20 @@
-import type { Config } from "tailwindcss";
+/** @type {import('tailwindcss').Config} */
 
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
-  theme: {
-    extend: {
-      fontFamily: {
+	content: [
+		'./features/**/*.{ts,tsx,js,jsx}',
+		'./components/**/*.{ts,tsx,js,jsx}',
+		'./app/**/*.{ts,tsx,js,jsx}',
+		'./src/**/*.{ts,tsx,js,jsx}',
+	],
+	theme: {
+		extend: {
+			fontFamily: {
         potta: ['"Potta One"', "cursive"],
-        poppins: ["Poppins", "sans-serif"],
-        cormorant: ['"Cormorant Garamond"', 'serif'],
-      },
-    },
-  },
-  plugins: [],
-} satisfies Config;
+				poppins: ['Poppins', 'sans-serif'],
+				cormorant: ['Cormorant Garamond', 'serif'],
+			},
+		},
+	},
+	plugins: [],
+};
