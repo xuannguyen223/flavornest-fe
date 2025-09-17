@@ -67,7 +67,7 @@ export function Preferences({
 	const currentSelections = selections[currentStep] || [];
 
 	return (
-		<div className={cn('w-full mx-auto px-4 py-8', className)}>
+		<div className={cn('w-full mx-auto pb-10', className)}>
 			{(sectionName || description) && (
 				<div className="w-full mb-4 px-20">
 					{sectionName && (

@@ -10,12 +10,12 @@ export type RecipeListLayout = 'default' | '2-rows-4' | '1-row-4';
 export interface RecipeListProps {
 	recipeList: RecipeItemProps[];
 	layout?: RecipeListLayout;
-	sectionName?: string;
+	categoryName?: string;
 	description?: string;
 	viewAll?: {
 		show: boolean;
 		text?: string;
-		onClick?: (categoryId: string) => void; // click then navigate to recipe list page with that category selected
+		onClick?: (categoryName: string, description: string) => void; // click then navigate to recipe list page with that category selected
 	};
 	onSaveToggle?: (id: string) => void;
 	onRecipeClick?: (id: string) => void;
@@ -25,7 +25,7 @@ export interface RecipeListProps {
 export function RecipeList({
 	recipeList,
 	layout = 'default',
-	sectionName,
+	categoryName,
 	description,
 	viewAll,
 	onSaveToggle,
@@ -60,21 +60,21 @@ export function RecipeList({
 	const displayedRecipes = recipeList.slice(0, itemsToShow);
 
 	return (
-		<div className={cn('max-w-[80%] mx-auto px-4 py-8', className)}>
-			{(sectionName || description || viewAll?.show) && (
+		<div className={cn('w-full mx-auto', viewAll?.show ? 'px-12' : '', className)}>
+			{(categoryName || description || viewAll?.show) && (
 				<div className="w-full">
-					{(sectionName || viewAll?.show) && (
-						<div className="w-full flex items-center justify-between mb-4">
-							{sectionName && (
+					{(categoryName || viewAll?.show) && (
+						<div className="w-full flex items-center justify-between px-8">
+							{categoryName && (
 								<div className="text-5xl font-cormorant font-semibold text-gray-900 tracking-tight text-balance">
-									{sectionName}
+									{categoryName}
 								</div>
 							)}
 							{viewAll?.show && (
 								<Button
 									variant="ghost"
-									onClick={() => viewAll.onClick?.('')}
-									className="text-gray-700 hover:text-gray-900 font-light text-lg tracking-wide uppercase">
+									onClick={() => viewAll.onClick?.(categoryName || '', description || '')}
+									className="text-gray-700 hover:text-gray-900 font-light text-lg tracking-wide uppercase cursor-pointer">
 									{viewAll.text || 'VIEW ALL RECIPES'}
 									<ChevronRight className="w-4 h-4" />
 								</Button>
@@ -83,14 +83,14 @@ export function RecipeList({
 					)}
 
 					{description && (
-						<div className="w-full text-left text-gray-600 text-lg leading-relaxed text-pretty">
+						<div className="w-full text-left text-gray-600 text-lg leading-relaxed text-pretty px-8">
 							{description}
 						</div>
 					)}
 				</div>
 			)}
 
-			<div className={getGridClasses()}>
+			<div className={`px-8 ${getGridClasses()}`}>
 				{displayedRecipes.map(recipe => (
 					<RecipeItem
 						key={recipe.id}

@@ -1,72 +1,73 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 :root {
-    /* Colors */
-    --primary-color: #404040;
-    --second-color: #8C8C8C;
-    --gray-color: #D1D1D6;
-    --light-gray-color: #ACACAC;
-    --shadow-gray-color: #444;
-    --accent-color: #929AAB;
-    --required-color: #DB0F0F;
-    --light-black-color: #1D1D1D;
+	/* Colors */
+	--primary-color: #404040;
+	--second-color: #8c8c8c;
+	--gray-color: #d1d1d6;
+	--light-gray-color: #acacac;
+	--shadow-gray-color: #444;
+	--accent-color: #929aab;
+	--required-color: #db0f0f;
+	--light-black-color: #1d1d1d;
 
-    --divide-color: rgba(111, 111, 111, 0.3);
-    /* #6f6f6f 30% */
-    --border-color: rgba(130, 130, 130, 0.7);
-    /* #828282 70% */
+	--divide-color: rgba(111, 111, 111, 0.3);
+	/* #6f6f6f 30% */
+	--border-color: rgba(130, 130, 130, 0.7);
+	/* #828282 70% */
 }
 
 .header-container {
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 1.5rem;
+	padding-right: 1.5rem;
 }
 
 .header-top {
-    height: 72px;
-    display: flex;
-    align-items: center;
-    gap: 2rem;
+	height: 72px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 2rem;
+	padding: 0 1.5rem;
 }
 
 .header-divider {
-    margin-top: 16px;
-    border: 1px solid var(--divide-color);
+	border: 1px solid var(--divide-color);
 }
 
 .category-popover {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 22rem;
-    background: white;
-    padding: 1rem 1.25rem;
-    z-index: 20;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	width: 22rem;
+	background: white;
+	padding: 1rem 1.25rem;
+	z-index: 20;
 }
 
 .category-popover ul {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
 }
 
 .category-underline {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -6px;
-    height: 5px;
-    background: var(--accent-color);
-    border-radius: 12px;
-    transform: scaleX(0);
-    transform-origin: center;
-    transition: transform 0.3s ease;
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -6px;
+	height: 5px;
+	background: var(--accent-color);
+	border-radius: 12px;
+	transform: scaleX(0);
+	transform-origin: center;
+	transition: transform 0.3s ease;
 }
 
 .category-trigger:hover .category-underline,
 .category-underline.is-active {
-    transform: scaleX(1);
+	transform: scaleX(1);
 }

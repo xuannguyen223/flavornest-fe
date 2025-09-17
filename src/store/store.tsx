@@ -1,12 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from './features/testSlice';
 import sortReducer from './features/sortSlice';
-import recipeReducer from "./features/recipeSlice";
+import recipeReducer from './features/recipeSlice';
 
 export const store = configureStore({
 	reducer: {
-		counter: counterReducer,
-    recipe: recipeReducer,
+		recipe: recipeReducer,
 		sort: sortReducer,
 	},
 });

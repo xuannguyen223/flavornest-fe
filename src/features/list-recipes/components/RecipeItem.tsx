@@ -66,7 +66,7 @@ export function RecipeItem({
 			className={cn('group cursor-pointer overflow-hidden border-none shadow-none', className)}
 			onClick={handleCardClick}>
 			<CardContent className="p-0">
-				<div className="relative aspect-[4/3] overflow-hidden rounded-t-lg">
+				<div className="relative aspect-[3/2] overflow-hidden rounded-t-lg">
 					<img
 						src={imageUrl || '/placeholder.svg'}
 						alt={title}
