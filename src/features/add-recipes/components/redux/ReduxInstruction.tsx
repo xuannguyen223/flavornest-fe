@@ -82,7 +82,7 @@ export function ReduxInstruction({
           onClick={onRemove}
           className="p-0 flex-shrink-0"
         >
-          <img src="src\assets\remove-icon.svg" alt="" />
+          <img src="src\assets\remove-icon.svg" alt="Remove instruction step" />
         </Button>
       </div>
     </div>

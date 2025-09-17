@@ -1,4 +1,5 @@
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
 type FormSelectProps = {
   label?: string;
@@ -24,7 +25,7 @@ export function FormSelect({
   selectClassName,
 }: FormSelectProps) {
   return (
-    <div className={"space-y-2" + (className ? ` ${className}` : "") }>
+    <div className={cn("space-y-2", className)}>
       {label ? (
         <Label className="font-medium text-lg sm:text-xl lg:text-2xl xl:text-[24px]">
           {label}
@@ -40,15 +41,15 @@ export function FormSelect({
           backgroundRepeat: "no-repeat",
           backgroundPosition: "right 8px center",
         }}
-        className={[
-          selectClassName ?? "",
+        className={cn(
           "h-[68px] w-full rounded-[5px] px-4",
           "border border-solid border-(--border-color)",
           "text-base sm:text-lg lg:text-xl xl:text-[20px]",
           value === "" ? "text-(--light-gray-color)" : "text-(--primary-color)",
           "focus-visible:ring-0 focus:border-(--border-color)",
           "appearance-none pr-10",
-        ].join(" ")}
+          selectClassName
+        )}
       >
         <option value="" disabled hidden>
           {placeholder}

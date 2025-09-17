@@ -46,7 +46,7 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
     if (defaultValues) {
       setPhoto(defaultValues.photo || null);
     }
-  }, [defaultValues]);
+  }, [defaultValues?.photo]);
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

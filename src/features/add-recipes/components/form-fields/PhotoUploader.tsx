@@ -12,7 +12,7 @@ export function PhotoUploader({ value, onChange }: PhotoUploaderProps) {
   const handleSelect = () => inputRef.current?.click();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files && e.target.files[0] ? e.target.files[0] : null;
+    const file = e.target.files?.[0] || null;
     onChange(file);
   };
 
@@ -32,7 +32,7 @@ export function PhotoUploader({ value, onChange }: PhotoUploaderProps) {
           onClick={handleSelect}
           className="font-medium text-sm sm:text-base lg:text-lg xl:text-[20px] text-white px-3 sm:px-4 lg:px-5 py-3 sm:py-4 lg:py-6 flex gap-2 sm:gap-3"
         >
-          <img src="src/assets/add.svg" alt="" className="w-6 sm:w-7 lg:w-8"/>
+          <img src="src/assets/add.svg" alt="Add photo icon" className="w-6 sm:w-7 lg:w-8"/>
           <div className="block">Add a photo</div>
         </Button>
         {value ? <span className="text-sm">{value.name}</span> : null}

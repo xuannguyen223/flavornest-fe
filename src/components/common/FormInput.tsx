@@ -1,6 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
 type BaseProps = {
   label?: string;
@@ -38,7 +39,7 @@ export function FormInput(props: FormInputProps) {
   } = props;
 
   return (
-    <div className={"space-y-2" + (className ? ` ${className}` : "") }>
+    <div className={cn("space-y-2", className)}>
       {label ? (
         <Label className="font-medium text-lg sm:text-xl lg:text-2xl xl:text-[24px]">
           {label}
@@ -52,10 +53,10 @@ export function FormInput(props: FormInputProps) {
           onChange={(e) => props.onChange(e.target.value)}
           placeholder={props.placeholder}
           rows={(props as TextAreaProps).rows ?? 4}
-          className={
-            (props.inputClassName ?? "") ||
-            "h-32 sm:h-40 lg:h-48 xl:h-[230px] placeholder:text-(--light-gray-color) text-(--primary-color) text-base sm:text-lg lg:text-xl xl:text-[20px] border-1 border-solid border-(--border-color) rounded-[10px]"
-          }
+          className={cn(
+            "h-32 sm:h-40 lg:h-48 xl:h-[230px] placeholder:text-(--light-gray-color) text-(--primary-color) text-base sm:text-lg lg:text-xl xl:text-[20px] border-1 border-solid border-(--border-color) rounded-[10px]",
+            props.inputClassName
+          )}
         />
       ) : (
         <Input
@@ -63,10 +64,10 @@ export function FormInput(props: FormInputProps) {
           value={props.value}
           onChange={(e) => props.onChange(e.target.value)}
           placeholder={(props as TextInputProps).placeholder}
-          className={
-            (props.inputClassName ?? "") ||
-            "h-12 sm:h-14 lg:h-16 xl:h-[74px] placeholder:text-(--light-gray-color) text-(--primary-color) text-base sm:text-lg lg:text-xl xl:text-[20px] border-1 border-solid border-(--border-color) rounded-[10px]"
-          }
+          className={cn(
+            "h-12 sm:h-14 lg:h-16 xl:h-[74px] placeholder:text-(--light-gray-color) text-(--primary-color) text-base sm:text-lg lg:text-xl xl:text-[20px] border-1 border-solid border-(--border-color) rounded-[10px]",
+            props.inputClassName
+          )}
         />
       )}
 

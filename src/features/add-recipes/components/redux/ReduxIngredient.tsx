@@ -116,7 +116,7 @@ export function ReduxIngredient({
         onClick={onRemove}
         className="h-8 w-8 p-0 flex-shrink-0 flex items-center justify-center"
       >
-        <img src="src\assets\remove-icon.svg" alt="" />
+        <img src="src\assets\remove-icon.svg" alt="Remove ingredient" />
       </Button>
     </div>
   );
