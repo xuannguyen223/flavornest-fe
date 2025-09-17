@@ -1,0 +1,23 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+:root {
+    /* Fonts */
+    --cormorant-garamond-semibold: "CormorantGaramond-SemiBold", sans-serif;
+    --poppins-regular: "Poppins-Regular", sans-serif;
+    --poppins-medium: "Poppins-Medium", sans-serif;
+    --poppins-italic: "Poppins-Italic", sans-serif;
+    --poppins-light: "Poppins-Light", sans-serif;
+
+    /* Colors */
+    --primary-color: #404040;
+    --second-color: #8C8C8C;
+    --gray-color: #D1D1D6;
+    --light-gray-color: #ACACAC;
+    --shadow-gray-color: #444;
+    --accent-color: #929AAB;
+    --required-color: #DB0F0F;
+    --light-black-color: #1D1D1D;
+
+    --divide-color: rgba(111, 111, 111, 0.3); /* #6f6f6f 30% */
+    --border-color: rgba(130, 130, 130, 0.7); /* #828282 70% */
+}

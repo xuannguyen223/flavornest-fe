@@ -1,0 +1,78 @@
+import type { Category } from "./CategoryList";
+
+export const CATEGORY_DATA: Category[] = [
+  {
+    id: "popular",
+    label: "Popular",
+    items: [
+      { id: "top", label: "Top Recipes This Week" },
+      { id: "most", label: "Most Viewed Recipes" },
+      { id: "editors", label: "Editor's Picks" },
+      { id: "trending", label: "Trending Cuisines" },
+      { id: "quick", label: "Quick & Easy Meals" },
+    ],
+  },
+  {
+    id: "ingredients",
+    label: "Ingredients",
+    items: [
+      { id: "mushroom", label: "Mushroom" },
+      { id: "broccoli", label: "Broccoli" },
+      { id: "chicken", label: "Chicken" },
+      { id: "shrimp", label: "Shrimp" },
+      { id: "tofu", label: "Tofu" },
+      { id: "pasta", label: "Pasta" },
+      { id: "rice", label: "Rice" },
+      { id: "lentils", label: "Lentils" },
+      { id: "beans", label: "Beans" },
+      { id: "apple", label: "Apple" },
+      { id: "tomato", label: "Tomato" },
+      { id: "butter", label: "Butter" },
+      { id: "eggs", label: "Eggs" },
+    ],
+  },
+  {
+    id: "meals",
+    label: "Meals & Dishes",
+    items: [
+      { id: "breakfast", label: "Breakfast" },
+      { id: "brunch", label: "Brunch" },
+      { id: "lunch", label: "Lunch" },
+      { id: "dinner", label: "Dinner" },
+      { id: "dessert", label: "Dessert" },
+      { id: "appetizer", label: "Appetizer" },
+      { id: "snack", label: "Snack" },
+      { id: "side-dish", label: "Side Dish" },
+      { id: "salad", label: "Salad" },
+      { id: "soup", label: "Soup" },
+      { id: "main-course", label: "Main Course" },
+      { id: "beverage", label: "Beverage" },
+    ],
+  },
+  {
+    id: "diets",
+    label: "Diets",
+    items: [
+      { id: "vegetarian-vegan", label: "Vegetarian & Vegan" },
+      { id: "gluten-free", label: "Gluten-Free" },
+      { id: "dairy-free", label: "Dairy-Free" },
+      { id: "keto", label: "Keto" },
+      { id: "paleo", label: "Paleo" },
+      { id: "low-carb", label: "Low-Carb" },
+      { id: "high-protein", label: "High-Protein" },
+    ],
+  },
+  {
+    id: "occasions",
+    label: "Occasions",
+    items: [
+      { id: "holidays", label: "Holidays & Celebrations" },
+      { id: "weeknight", label: "Weeknight Dinners" },
+      { id: "weekend-brunches", label: "Weekend Brunches" },
+      { id: "potlucks", label: "Potlucks & Parties" },
+      { id: "romantic", label: "Romantic Dinners" },
+      { id: "family", label: "Family Meals" },
+      { id: "bbq", label: "Grilling & BBQ" },
+    ],
+  },
+];
