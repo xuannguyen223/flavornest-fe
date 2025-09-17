@@ -2,9 +2,9 @@ import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import RecipeDetailPage from "./features/recipe-detail/RecipeDetailPage";
 import CategoryPage from "./features/category-page/CategoryPage";
-import Footer from "./features/footer/Footer";
+// import Footer from "./features/footer/Footer";
 import MainLayout from "./components/common/MainLayout";
-import AboutUsPage from "./features/about-us/AbouUsPage";
+import AboutUsPage from "./features/about-us/AboutUsPage";
 import SearchPage from "./features/search-page/SearchPage";
 import RecipeExample from './features/list-recipes/RecipeExample';
 
@@ -33,7 +33,7 @@ function App() {
 				</MainLayout>
 				}/>
 		</Routes>
-		<Footer />
+		{/* <Footer /> */}
 	  </BrowserRouter>
 	);
   }
