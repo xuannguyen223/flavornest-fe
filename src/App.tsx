@@ -1,4 +1,3 @@
-import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import RecipeDetailPage from "./features/recipe-detail/RecipeDetailPage";
 import CategoryPage from "./features/category-page/CategoryPage";
