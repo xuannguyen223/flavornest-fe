@@ -101,10 +101,10 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
     >
       {/* Header */}
       <div className="space-y-4 sm:space-y-6 lg:space-y-8">
-        <h1 className="font-(family-name:--cormorant-garamond-semibold) text-3xl sm:text-4xl lg:text-5xl xl:text-[48px]">
+        <h1 className="font-cormorant font-semibold text-3xl sm:text-4xl lg:text-5xl xl:text-[48px]">
           Add a Recipe
         </h1>
-        <p className="font-(family-name:--poppins-regular) text-base sm:text-lg lg:text-xl xl:text-[22px] text-left text-(--shadow-gray-color)">
+        <p className="text-base sm:text-lg lg:text-xl xl:text-[22px] text-left text-(--shadow-gray-color)">
           Feeling like a kitchen Picasso? We want to see your masterpiece! Add
           your recipe and show off your culinary creativity.
         </p>
@@ -131,7 +131,7 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
           label="Description"
           placeholder="Describe your recipe in a way that makes mouths water."
           as="textarea"
-          inputClassName="h-32 sm:h-40 lg:h-48 xl:h-[230px] font-(family-name:--poppins-regular) placeholder:text-(--light-gray-color) text-(--primary-color) text-base sm:text-lg lg:text-xl xl:text-[20px] border-1 border-solid border-(--border-color) rounded-[10px]"
+          inputClassName="h-32 sm:h-40 lg:h-48 xl:h-[230px] placeholder:text-(--light-gray-color) text-(--primary-color) text-base sm:text-lg lg:text-xl xl:text-[20px] border-1 border-solid border-(--border-color) rounded-[10px]"
           rows={4}
           required
         />
@@ -146,7 +146,7 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
           label="Servings"
           placeholder="e.g., 4"
           min={1}
-          inputClassName="w-48 sm:w-64 lg:w-80 xl:w-[288px] h-12 sm:h-14 lg:h-16 xl:h-[68px] font-(family-name:--poppins-regular) placeholder:text-(--light-gray-color) text-(--primary-color) text-base sm:text-lg lg:text-xl xl:text-[20px] border-1 border-solid border-(--border-color) rounded-[10px]"
+          inputClassName="w-48 sm:w-64 lg:w-80 xl:w-[288px] h-12 sm:h-14 lg:h-16 xl:h-[68px] placeholder:text-(--light-gray-color) text-(--primary-color) text-base sm:text-lg lg:text-xl xl:text-[20px] border-1 border-solid border-(--border-color) rounded-[10px]"
           required
         />
 
@@ -161,11 +161,11 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
 
       {/* Ingredients */}
       <div className="space-y-4">
-        <h2 className="flex font-(family-name:--poppins-medium) text-lg sm:text-xl lg:text-2xl xl:text-[24px]">
+        <h2 className="flex font-medium text-lg sm:text-xl lg:text-2xl xl:text-[24px]">
           Ingredients
           <span className="text-(--required-color)">&nbsp;*</span>
         </h2>
-        <p className="font-(family-name:--poppins-regular) text-base sm:text-lg lg:text-xl xl:text-[22px] text-left text-(--shadow-gray-color)">
+        <p className="text-base sm:text-lg lg:text-xl xl:text-[22px] text-left text-(--shadow-gray-color)">
           List one ingredient per line, specifying quantities (1, 2),
           measurements (cups, spoons), and any prep details (chopped, sifted)
           along with the item. Let your creativity flow in every detail!
@@ -185,7 +185,7 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
           type="button"
           variant="default"
           onClick={handleAddIngredient}
-          className="block w-full font-(family-name:--poppins-medium) text-lg sm:text-xl lg:text-2xl xl:text-[24px] text-left"
+          className="block w-full font-medium text-lg sm:text-xl lg:text-2xl xl:text-[24px] text-left"
         >
           + Add ingredient
         </Button>
@@ -199,11 +199,11 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
 
       {/* Instructions */}
       <div className="space-y-4">
-        <h2 className="flex font-(family-name:--poppins-medium) text-lg sm:text-xl lg:text-2xl xl:text-[24px]">
+        <h2 className="flex font-medium text-lg sm:text-xl lg:text-2xl xl:text-[24px]">
           Instructions 
           <span className="text-(--required-color)">&nbsp;*</span>
         </h2>
-        <p className="font-(family-name:--poppins-regular) text-base sm:text-lg lg:text-xl xl:text-[22px] text-left text-(--shadow-gray-color)">
+        <p className="text-base sm:text-lg lg:text-xl xl:text-[22px] text-left text-(--shadow-gray-color)">
           Break down your recipe into clear, step-by-step instructions.
         </p>
 
@@ -222,7 +222,7 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
           type="button"
           variant="default"
           onClick={handleAddStep}
-          className="block w-full font-(family-name:--poppins-medium) text-lg sm:text-xl lg:text-2xl xl:text-[24px] text-left"
+          className="block w-full font-medium text-lg sm:text-xl lg:text-2xl xl:text-[24px] text-left"
         >
           + Add step
         </Button>
@@ -240,7 +240,7 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
         label="Cook's Tips"
         placeholder="Share your kitchen secrets! Oven hacks, swaps, or any tips for ultimate recipe success."
         as="textarea"
-        inputClassName="h-[230px] font-(family-name:--poppins-regular) placeholder:text-(--light-gray-color) text-(--primary-color) text-base sm:text-lg lg:text-xl xl:text-[20px] border-1 border-solid border-(--border-color) rounded-[10px]"
+        inputClassName="h-[230px] placeholder:text-(--light-gray-color) text-(--primary-color) text-base sm:text-lg lg:text-xl xl:text-[20px] border-1 border-solid border-(--border-color) rounded-[10px]"
         rows={4}
       />
 
@@ -271,7 +271,7 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
 
       {/* Footer */}
       <div className="space-y-2">
-        <p className="font-(family-name:--poppins-italic) text-sm sm:text-base lg:text-lg xl:text-[17px] text-left text-(--shadow-gray-color)">
+        <p className="font-italic text-sm sm:text-base lg:text-lg xl:text-[17px] text-left text-(--shadow-gray-color)">
           If you've come across this recipe in a magazine, cookbook, or on
           another website, we're unable to publish it here. Our platform thrives
           on originality, and published recipes must adhere to our Terms of

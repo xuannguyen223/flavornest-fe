@@ -26,7 +26,7 @@ export function FormSelect({
   return (
     <div className={"space-y-2" + (className ? ` ${className}` : "") }>
       {label ? (
-        <Label className="font-(family-name:--poppins-medium) text-lg sm:text-xl lg:text-2xl xl:text-[24px]">
+        <Label className="font-medium text-lg sm:text-xl lg:text-2xl xl:text-[24px]">
           {label}
           {required ? <span className="text-(--required-color)">*</span> : null}
         </Label>
@@ -44,7 +44,6 @@ export function FormSelect({
           selectClassName ?? "",
           "h-[68px] w-full rounded-[5px] px-4",
           "border border-solid border-(--border-color)",
-          "font-(family-name:--poppins-regular)",
           "text-base sm:text-lg lg:text-xl xl:text-[20px]",
           value === "" ? "text-(--light-gray-color)" : "text-(--primary-color)",
           "focus-visible:ring-0 focus:border-(--border-color)",

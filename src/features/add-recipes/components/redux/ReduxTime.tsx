@@ -45,7 +45,7 @@ export function ReduxTime({
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-4">
-        <Label className="w-[200px] font-(family-name:--poppins-medium) text-lg sm:text-xl lg:text-2xl xl:text-[24px] flex-shrink-0">
+        <Label className="w-[200px] font-medium text-lg sm:text-xl lg:text-2xl xl:text-[24px] flex-shrink-0">
           {label}
           {required ? <span className="text-(--required-color)">*</span> : null}
         </Label>
@@ -55,7 +55,7 @@ export function ReduxTime({
             onChange={(v) => handleTimeChange('hrs', String(v))}
             placeholder="hrs"
             min={0}
-            inputClassName="w-20 sm:w-24 lg:w-28 xl:w-[134px] h-12 sm:h-14 lg:h-16 xl:h-[68px] font-(family-name:--poppins-regular) placeholder:text-(--light-gray-color) text-(--primary-color) text-base sm:text-lg lg:text-xl xl:text-[20px] border-1 border-solid border-(--border-color) rounded-[10px]"
+            inputClassName="w-20 sm:w-24 lg:w-28 xl:w-[134px] h-12 sm:h-14 lg:h-16 xl:h-[68px] placeholder:text-(--light-gray-color) text-(--primary-color) text-base sm:text-lg lg:text-xl xl:text-[20px] border-1 border-solid border-(--border-color) rounded-[10px]"
           />
           <FormNumberInput
             value={timeValue.mins}
@@ -63,7 +63,7 @@ export function ReduxTime({
             placeholder="mins"
             min={0}
             max={59}
-            inputClassName="w-20 sm:w-24 lg:w-28 xl:w-[134px] h-12 sm:h-14 lg:h-16 xl:h-[68px] font-(family-name:--poppins-regular) placeholder:text-(--light-gray-color) text-(--primary-color) text-base sm:text-lg lg:text-xl xl:text-[20px] border-1 border-solid border-(--border-color) rounded-[10px]"
+            inputClassName="w-20 sm:w-24 lg:w-28 xl:w-[134px] h-12 sm:h-14 lg:h-16 xl:h-[68px] placeholder:text-(--light-gray-color) text-(--primary-color) text-base sm:text-lg lg:text-xl xl:text-[20px] border-1 border-solid border-(--border-color) rounded-[10px]"
           />
         </div>
       </div>

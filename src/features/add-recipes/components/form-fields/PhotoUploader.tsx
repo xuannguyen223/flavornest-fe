@@ -30,7 +30,7 @@ export function PhotoUploader({ value, onChange }: PhotoUploaderProps) {
           type="button"
           size="sm"
           onClick={handleSelect}
-          className="font-(family-name:--poppins-medium) text-sm sm:text-base lg:text-lg xl:text-[20px] text-white px-3 sm:px-4 lg:px-5 py-3 sm:py-4 lg:py-6 flex gap-2 sm:gap-3"
+          className="font-medium text-sm sm:text-base lg:text-lg xl:text-[20px] text-white px-3 sm:px-4 lg:px-5 py-3 sm:py-4 lg:py-6 flex gap-2 sm:gap-3"
         >
           <img src="src/assets/add.svg" alt="" className="w-6 sm:w-7 lg:w-8"/>
           <div className="block">Add a photo</div>

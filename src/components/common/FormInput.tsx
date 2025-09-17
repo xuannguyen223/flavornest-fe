@@ -40,7 +40,7 @@ export function FormInput(props: FormInputProps) {
   return (
     <div className={"space-y-2" + (className ? ` ${className}` : "") }>
       {label ? (
-        <Label className="font-(family-name:--poppins-medium) text-lg sm:text-xl lg:text-2xl xl:text-[24px]">
+        <Label className="font-medium text-lg sm:text-xl lg:text-2xl xl:text-[24px]">
           {label}
           {required ? <span className="text-(--required-color)">*</span> : null}
         </Label>
@@ -54,7 +54,7 @@ export function FormInput(props: FormInputProps) {
           rows={(props as TextAreaProps).rows ?? 4}
           className={
             (props.inputClassName ?? "") ||
-            "h-32 sm:h-40 lg:h-48 xl:h-[230px] font-(family-name:--poppins-regular) placeholder:text-(--light-gray-color) text-(--primary-color) text-base sm:text-lg lg:text-xl xl:text-[20px] border-1 border-solid border-(--border-color) rounded-[10px]"
+            "h-32 sm:h-40 lg:h-48 xl:h-[230px] placeholder:text-(--light-gray-color) text-(--primary-color) text-base sm:text-lg lg:text-xl xl:text-[20px] border-1 border-solid border-(--border-color) rounded-[10px]"
           }
         />
       ) : (
@@ -65,7 +65,7 @@ export function FormInput(props: FormInputProps) {
           placeholder={(props as TextInputProps).placeholder}
           className={
             (props.inputClassName ?? "") ||
-            "h-12 sm:h-14 lg:h-16 xl:h-[74px] font-(family-name:--poppins-regular) placeholder:text-(--light-gray-color) text-(--primary-color) text-base sm:text-lg lg:text-xl xl:text-[20px] border-1 border-solid border-(--border-color) rounded-[10px]"
+            "h-12 sm:h-14 lg:h-16 xl:h-[74px] placeholder:text-(--light-gray-color) text-(--primary-color) text-base sm:text-lg lg:text-xl xl:text-[20px] border-1 border-solid border-(--border-color) rounded-[10px]"
           }
         />
       )}

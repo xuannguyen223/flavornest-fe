@@ -38,7 +38,7 @@ export function FormNumberInput({
   return (
     <div className={"space-y-2" + (className ? ` ${className}` : "") }>
       {label ? (
-        <Label className="font-(family-name:--poppins-medium) text-lg sm:text-xl lg:text-2xl xl:text-[24px]">
+        <Label className="font-medium text-lg sm:text-xl lg:text-2xl xl:text-[24px]">
           {label}
           {required ? <span className="text-(--required-color)">*</span> : null}
         </Label>
@@ -54,7 +54,7 @@ export function FormNumberInput({
         step={step}
         className={
           (inputClassName ?? "") ||
-          "w-full sm:w-48 lg:w-64 xl:w-[288px] h-12 sm:h-14 lg:h-16 xl:h-[68px] font-(family-name:--poppins-regular) placeholder:text-(--light-gray-color) text-(--primary-color) text-base sm:text-lg lg:text-xl xl:text-[20px] border-1 border-solid border-(--border-color) rounded-[10px]"
+          "w-full sm:w-48 lg:w-64 xl:w-[288px] h-12 sm:h-14 lg:h-16 xl:h-[68px] placeholder:text-(--light-gray-color) text-(--primary-color) text-base sm:text-lg lg:text-xl xl:text-[20px] border-1 border-solid border-(--border-color) rounded-[10px]"
         }
       />
 

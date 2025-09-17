@@ -57,7 +57,7 @@ export function ReduxServings({
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-4">
-        <Label className="w-[200px] font-(family-name:--poppins-medium) text-lg sm:text-xl lg:text-2xl xl:text-[24px] flex-shrink-0">
+        <Label className="w-[200px] font-medium text-lg sm:text-xl lg:text-2xl xl:text-[24px] flex-shrink-0">
           {label}
           {required ? <span className="text-(--required-color)">*</span> : null}
         </Label>

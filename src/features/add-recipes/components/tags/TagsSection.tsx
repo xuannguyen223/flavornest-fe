@@ -42,7 +42,7 @@ const MAIN_INGREDIENT_OPTIONS = [
 export function TagsSection({ value, onChange, errors }: TagsSectionProps) {
   return (
     <div className="space-y-4 mb-[80px]">
-      <Label className="flex font-(family-name:--poppins-medium) text-lg sm:text-xl lg:text-2xl xl:text-[24px]">
+      <Label className="flex font-medium text-lg sm:text-xl lg:text-2xl xl:text-[24px]">
         Tags
       </Label>
       

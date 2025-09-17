@@ -29,12 +29,38 @@ export function ReduxInstruction({
         {...dragHandleProps}
         className="cursor-grab flex-shrink-0 flex items-center"
       >
-        <img src="src/assets/re-order icon.svg" alt="" className="w-6 sm:w-8" />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="26"
+          height="18"
+          viewBox="0 0 26 18"
+          fill="none"
+          className="w-6 sm:w-8 block mx-auto"
+        >
+          <path
+            d="M1 1H25"
+            stroke="#1D1D1D"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <path
+            d="M1 9H25"
+            stroke="#1D1D1D"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <path
+            d="M1 17H25"
+            stroke="#1D1D1D"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </svg>
       </div>
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 sm:gap-3 mb-2">
-          <span className="font-(family-name:--poppins-medium) text-base sm:text-lg lg:text-xl xl:text-[20px] text-(--primary-color) flex-shrink-0">
+          <span className="font-medium text-base sm:text-lg lg:text-xl xl:text-[20px] text-(--primary-color) flex-shrink-0">
             Step {stepNumber}
           </span>
         </div>
@@ -43,18 +69,18 @@ export function ReduxInstruction({
           value={step.text}
           onChange={handleTextChange}
           placeholder="Describe this step in detail..."
-          inputClassName="w-full h-24 sm:h-28 lg:h-32 xl:h-[140px] font-(family-name:--poppins-regular) placeholder:text-(--light-gray-color) text-(--primary-color) text-base sm:text-lg lg:text-xl xl:text-[20px] border-1 border-solid border-(--border-color) rounded-[10px]"
+          inputClassName="w-full h-24 sm:h-28 lg:h-32 xl:h-[140px] placeholder:text-(--light-gray-color) text-(--primary-color) text-base sm:text-lg lg:text-xl xl:text-[20px] border-1 border-solid border-(--border-color) rounded-[10px]"
           rows={4}
         />
       </div>
 
-      <div className="flex items-center">
+      <div className="flex items-center min-w-0">
         <Button
           type="button"
           variant="ghost"
           size="sm"
           onClick={onRemove}
-          className="h-8 w-8 p-0 flex-shrink-0"
+          className="p-0 flex-shrink-0"
         >
           <img src="src\assets\remove-icon.svg" alt="" />
         </Button>

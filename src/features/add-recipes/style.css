@@ -1,31 +1,5 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-
-@font-face {
-    font-family: 'CormorantGaramond-SemiBold';
-    src: url('src/fonts/Cormorant_Garamond/CormorantGaramond-SemiBold.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'Poppins-Regular';
-    src: url('src/fonts/Poppins/Poppins-Regular.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'Poppins-Medium';
-    src: url('src/fonts/Poppins/Poppins-Medium.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'Poppins-Light';
-    src: url('src/fonts/Poppins/Poppins-Light.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'Poppins-Italic';
-    src: url('src/fonts/Poppins/Poppins-Italic.ttf') format('truetype');
-}
-
 :root {
     /* Fonts */
     --cormorant-garamond-semibold: "CormorantGaramond-SemiBold", sans-serif;
