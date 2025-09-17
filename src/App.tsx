@@ -3,6 +3,7 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 import { Counter } from "./features/example-1/Counter";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Footer from "./features/footer/Footer";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           </p>
         </div>
         <Counter />
+		<Footer />
       </>
     </BrowserRouter>
   );
