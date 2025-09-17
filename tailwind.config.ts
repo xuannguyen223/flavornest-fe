@@ -10,7 +10,7 @@ export default {
 	theme: {
 		extend: {
 			fontFamily: {
-				potta: ['"Potta One"', 'cursive'],
+        potta: ['"Potta One"', "cursive"],
 				poppins: ['Poppins', 'sans-serif'],
 				cormorant: ['Cormorant Garamond', 'serif'],
 			},

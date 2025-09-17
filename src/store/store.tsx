@@ -1,7 +1,12 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore } from '@reduxjs/toolkit';
+import counterReducer from './features/testSlice';
+import sortReducer from './features/sortSlice';
 
 export const store = configureStore({
-  reducer: {},
+	reducer: {
+		counter: counterReducer,
+		sort: sortReducer,
+	},
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
