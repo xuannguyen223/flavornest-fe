@@ -1,6 +1,5 @@
 import { Star } from "lucide-react";
 import SaveButton from "./SaveButton";
-import RateButton from "./RateButton";
 import Breadcrumbs from "@/components/common/BreadCrumbs";
 
 export interface RecipeHeaderProps {
@@ -13,13 +12,9 @@ export interface RecipeHeaderProps {
 }
 
 export default function RecipeHeader({
-  title,
-  image,
-  author,
-  publishedAt,
-  rating,
-  ratingCount,
-}: RecipeHeaderProps) {
+  rating, ratingCount, title, image, author, publishedAt, }: RecipeHeaderProps) {
+
+
   const dateLabel = new Date(publishedAt).toLocaleDateString(undefined, {
     year: "numeric",
     month: "long",
@@ -70,14 +65,13 @@ export default function RecipeHeader({
         <img
           src={image}
           alt={title}
-          className="h-[150px] w-full md:w-[600px] object-cover md:h-[350px]"
+          className="h-[150px] w-full object-cover md:h-[350px]"
         />
       </div>
 
-      {/* Action buttons (Save, Rate) */}
+      {/* Action buttons (Save) */}
       <div className="mt-6 flex items-center gap-3">
         <SaveButton />
-        <RateButton />
       </div>
     </section>
   );
