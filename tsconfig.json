@@ -17,6 +17,7 @@
     "lib": ["dom", "esnext"], // Ensure DOM types are included
     "strict": true,
     "moduleResolution": "node",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "ignoreDeprecations": "6.0"
   }
 }
