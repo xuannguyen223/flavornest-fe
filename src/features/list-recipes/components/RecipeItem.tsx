@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Bookmark, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -35,6 +36,7 @@ export function RecipeItem({
 }: RecipeItemProps) {
 	const [saved, setSaved] = useState(isSaved);
 	const [imageLoaded, setImageLoaded] = useState(false);
+	const navigate = useNavigate();
 
 	const handleSaveClick = (e: React.MouseEvent) => {
 		e.stopPropagation();
@@ -45,6 +47,7 @@ export function RecipeItem({
 	const handleCardClick = () => {
 		onClick?.(id);
 		// click and navigate to recipe detail page
+		navigate(`/recipes/${encodeURIComponent(id)}`);
 	};
 
 	const renderStars = () => {

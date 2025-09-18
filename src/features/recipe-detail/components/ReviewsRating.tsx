@@ -3,37 +3,43 @@ import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button"; 
 
 export interface ReviewsRatingProps {
-  average: number; // ví dụ 4.0
-  count: number;   // ví dụ 27
+  rating: number;
+  ratingCount: number;
   avatarUrl?: string;
+  onSubmitRating?: (newRating: number) => void; // callback khi user submit
 }
 
-export default function ReviewsRating({ average, count, avatarUrl }: ReviewsRatingProps) {
-
+export default function ReviewsRating({ rating, ratingCount, 
+                                        avatarUrl, onSubmitRating }: ReviewsRatingProps) {
   const [userRating, setUserRating] = useState<number>(0);
   const [hasReviewed, setHasReviewed] = useState(false);
 
   const handleSubmit = () => {
     if (userRating === 0 || hasReviewed) return;
-
+  
     setHasReviewed(true);
+  
+    // Cập nhật UI ở parent
+    if (onSubmitRating) {
+      onSubmitRating(userRating);
+    }
   };
-
+  
   return (
     <section className="mt-8">
       {/* Overall rating */}
       <div>
         <h2 className="text-4xl font-semibold leading-tight text-neutral-700 text-left">
-          Ratings ({count})
+          Ratings ({ratingCount})
         </h2>
         <div className="mt-4 flex items-center gap-3">
           <div className="flex items-center gap-1">
             {Array.from({ length: 5 }).map((_, i) => {
-              const filled = i < Math.round(average);
+              const filled = i < Math.round(rating);
               return (
                 <Star
                   key={i}
-                  className="size-6"
+                  className="size-8"
                   fill={filled ? "#2E5834" : "#ADBBAE"}
                   color={filled ? "#2E5834" : "#ADBBAE"}
                   strokeWidth={0}
@@ -42,7 +48,7 @@ export default function ReviewsRating({ average, count, avatarUrl }: ReviewsRati
             })}
           </div>
           <span className="text-xl font-medium text-neutral-700">
-            {average.toFixed(1)}
+            {rating.toFixed(1)}
           </span>
         </div>
       </div>

@@ -1,15 +1,7 @@
 import axiosInstance from './axiosInstance';
-
+import type { Recipe } from '@/types/TypeRecipe';
 // recipe service functions:
 // getAllRecipes, getRecipesByCategory, getRecipeById, addRecipe, updateRecipe, deleteRecipe,...
-// dưới đây là ví dụ cách dùng, không cần phải viết lại axiosInstance trong file này
-// tham khảo cách viết
-
-// viết dưới dạng lấy list theo query params (tham khảo thôi nhé)
-// export const getRecipesByCategory = async (category: string) => {
-//     const response = await axiosInstance.get(`/recipes?category=${category}`, { withCredentials: true });
-//     return response.data;
-// };
 
 // getAllRecipes
 export const getAllRecipes = async () => {
@@ -30,5 +22,20 @@ export const getRecipeById = async (id: string) => {
     } catch (error) {
         console.error("Error fetching recipe detail:", error);
         throw error;
+    }
+};
+
+// getRecipesByCategory
+export const getRecipesByCategory = async (categoryName: string): Promise<Recipe[]> => {
+    try {
+      const response = await axiosInstance.get(
+        `/api/recipe/get?filter=${encodeURIComponent(categoryName)}`,
+        { withCredentials: true }
+      );
+      // fallback [] if API returns undefined
+      return response.data?.data?.recipes ?? [];
+    } catch (error) {
+      console.error(`Error fetching recipes by category: ${categoryName}`, error);
+      throw error;
     }
 };

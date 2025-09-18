@@ -1,14 +1,27 @@
 import { RecipeList } from "@/features/list-recipes/components/RecipeList";
-import { sampleRecipes } from "@/features/list-recipes/components/tempData";
-export default function RecipeRecommend() {
-    const handleSaveToggle = (id: string) => {
-		console.log('Save toggled for recipe:', id);
-	};
+import { useMemo } from "react";
+import type { RecipeItemProps } from "@/features/list-recipes/components/RecipeItem";
+import type { Recipe } from "../../../types/TypeRecipe";
 
-	const handleRecipeClick = (id: string) => {
-		console.log('Recipe clicked:', id);
-	};
-
+export interface RecipeRecommendProps {
+  recipes: Recipe[];
+}
+export default function RecipeRecommend({ recipes }: RecipeRecommendProps) {
+      // map từ Recipe -> RecipeItemProps để tương ứng với params trong RecipeList
+      const mappedRecipes: RecipeItemProps[] = useMemo(
+        () =>
+          recipes.map((r) => ({
+            id: r.id,
+            title: r.title,
+            creator: r.author.email.split('@')[0],
+            totalTime: `${r.cookTime + r.prepTime} min`,
+            rating: r.rating,
+            reviewCount: r.ratingCount,
+            imageUrl: r.imageUrl ?? "/placeholder.svg",
+          })),
+        [recipes]
+      );
+    
     return (
         <section className="text-left mt-8 w-full max-w-[1420px] mx-auto">
         {/* Header */}
@@ -17,13 +30,9 @@ export default function RecipeRecommend() {
             Recipes You'll Love
         </h2>
         <RecipeList 
-            recipeList={sampleRecipes}
+            recipeList={mappedRecipes}
             layout="2-rows-4"
-            viewAll={{
-                show: false,
-            }}
-            onSaveToggle={handleSaveToggle}
-            onRecipeClick={handleRecipeClick}
+            viewAll={{ show: false,}}
             className="my-8"
         />
         </section>

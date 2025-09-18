@@ -4,24 +4,24 @@ import Breadcrumbs from "@/components/common/BreadCrumbs";
 
 export interface RecipeHeaderProps {
   title: string;
-  image: string;
+  image?: string;
   author: string;
-  publishedAt: string; // ISO date
-  rating: number; // average
+  createdAt: string; // ISO date
+  avgRating: number; // average
   ratingCount: number;
 }
 
 export default function RecipeHeader({
-  rating, ratingCount, title, image, author, publishedAt, }: RecipeHeaderProps) {
+  avgRating, ratingCount, title, image, author, createdAt, }: RecipeHeaderProps) {
 
 
-  const dateLabel = new Date(publishedAt).toLocaleDateString(undefined, {
+  const dateLabel = new Date(createdAt).toLocaleDateString(undefined, {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
 
-  const filledStars = Math.floor(rating);
+  const filledStars = Math.floor(avgRating);
 
   return (
     <section className="w-full">
@@ -46,7 +46,7 @@ export default function RecipeHeader({
             />
           ))}
         </div>
-        <span className="ml-1 text-lg text-neutral-800">{rating.toFixed(1)}</span>
+        <span className="ml-1 text-lg text-neutral-800">{avgRating.toFixed(1)}</span>
         <span className="text-lg text-neutral-600">({ratingCount})</span>
       </div>
 
