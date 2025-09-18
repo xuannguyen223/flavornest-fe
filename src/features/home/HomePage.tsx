@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { RecipeList } from '../list-recipes/components/RecipeList';
 import { sampleRecipes } from '../list-recipes/components/tempData';
 import { useNavigate } from 'react-router-dom';
+import { BlogPost } from './components/BlogPost';
+import { ShowCase } from './components/ShowCase';
 
 export default function HomePage() {
 	const [searchValue, setSearchValue] = useState('');
@@ -38,13 +40,13 @@ export default function HomePage() {
 		<div className="min-h-screen">
 			<SearchSection
 				title="Fuel your body & soul - find recipes that taste amazing!"
-				backgroundImage=""
+				backgroundImage="/home.png"
 				searchPlaceholder="Search by dish, ingredient, ......"
 				searchValue={searchValue}
 				onSearchChange={setSearchValue}
 				onSearch={handleSearch}
 				showBreadcrumbs={false}
-				height="h-96"
+				height="h-120"
 				overlayOpacity={0.3}
 			/>
 			<RecipeList
@@ -58,7 +60,12 @@ export default function HomePage() {
 				}}
 				onSaveToggle={handleSaveToggle}
 				onRecipeClick={handleRecipeClick}
-				className="my-8"
+				className="my-8 mt-20"
+			/>
+			<BlogPost
+				categoryName="Healthy Eating Inspiration"
+				onViewAllClick={() => {}}
+				onRecipeClick={() => {}}
 			/>
 			<RecipeList
 				recipeList={sampleRecipes}
@@ -77,18 +84,9 @@ export default function HomePage() {
 				steps={preferencesData}
 				onComplete={handleComplete}
 			/>
-			<RecipeList
-				recipeList={sampleRecipes}
-				layout="1-row-4"
-				categoryName="Effortless Eats"
-				description="Satisfy your cravings in a flash! Explore our Quick & Easy Meals for effortless recipes without compromising on mouthwatering taste."
-				viewAll={{
-					show: true,
-					onClick: handleViewAll,
-				}}
-				onSaveToggle={handleSaveToggle}
-				onRecipeClick={handleRecipeClick}
-				className="my-8"
+			<ShowCase
+				onViewAll={() => {}}
+				onCardClick={() => {}}
 			/>
 		</div>
 	);
