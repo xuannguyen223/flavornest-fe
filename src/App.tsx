@@ -6,6 +6,7 @@ import AboutUsPage from './features/about-us/AboutUsPage';
 import RecipeListPage from './features/list-recipes/RecipeListPage';
 import RecipeDetailPage from './features/recipe-detail/RecipeDetailPage';
 import AddRecipesPage from './features/add-recipes/AddRecipesPage';
+import MyProfilePage from './features/my-profile/MyProfilePage';
 
 function App() {
 	return (
@@ -36,6 +37,10 @@ function App() {
 						path="/about"
 						element={<AboutUsPage />}
 					/>
+                    <Route 
+                        path="/my-profile/*" 
+                        element={<MyProfilePage />} 
+                    />
 				</Route>
 			</Routes>
 		</BrowserRouter>
