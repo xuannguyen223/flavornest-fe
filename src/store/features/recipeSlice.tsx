@@ -29,6 +29,11 @@ export interface Tags {
   main?: string;
 }
 
+export interface RecipeRating {
+  avgRating: number;
+  ratingCount: number;
+}
+
 export interface Recipe {
   id?: string;
   title: string;
@@ -44,6 +49,7 @@ export interface Recipe {
   photoUrl?: string;
   createdAt?: string;
   updatedAt?: string;
+  rating: RecipeRating;
 }
 
 export interface RecipeFormState {
@@ -55,6 +61,8 @@ export interface RecipeFormState {
   isDirty: boolean;
   isSubmitting: boolean;
 }
+
+
 
 // Initial state
 const createEmptyIngredient = (): Ingredient => ({
@@ -90,6 +98,7 @@ const initialRecipe: Recipe = {
   tips: '',
   tags: {},
   photo: null,
+  rating: { avgRating: 0, ratingCount: 0 },
 };
 
 const initialState: RecipeFormState = {
@@ -263,6 +272,20 @@ export const recipeSlice = createSlice({
     setDirty: (state, action: PayloadAction<boolean>) => {
       state.isDirty = action.payload;
     },
+
+    // Rating system
+    addRating: (state, action: PayloadAction<number>) => {
+      const userRating = action.payload;
+      if (!state.currentRecipe.rating) {
+        state.currentRecipe.rating = { avgRating: 0, ratingCount: 0 };
+      }
+    
+      const rating = state.currentRecipe.rating;
+    
+      rating.avgRating = (rating.avgRating * rating.ratingCount + userRating) / (rating.ratingCount + 1);
+      rating.ratingCount += 1;
+    }
+    
   },
   extraReducers: (builder) => {
     builder
@@ -323,6 +346,7 @@ export const {
   resetForm,
   loadRecipe,
   setDirty,
+  addRating,
 } = recipeSlice.actions;
 
 // Selectors
@@ -333,5 +357,6 @@ export const selectError = (state: { recipe: RecipeFormState }) => state.recipe.
 export const selectValidationErrors = (state: { recipe: RecipeFormState }) => state.recipe.validationErrors;
 export const selectIsDirty = (state: { recipe: RecipeFormState }) => state.recipe.isDirty;
 export const selectIsSubmitting = (state: { recipe: RecipeFormState }) => state.recipe.isSubmitting;
+export const SelectRating = (state: { recipe: RecipeFormState }) => state.recipe.currentRecipe.rating;
 
 export default recipeSlice.reducer;

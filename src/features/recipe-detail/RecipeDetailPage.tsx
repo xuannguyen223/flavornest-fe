@@ -4,15 +4,23 @@ import Overview from "./components/Overview";
 import CookTips from "./components/CookTips";
 import RecipeInfo from "./components/RecipeInfo";
 import IngredientsToggle from "./components/IngredientsToggle";
-import Substitutions from "./components/Substitutions";
 import RecipeVideo from "./components/RecipeVideo";
 import Instructions from "./components/Instructions";
-import NutritionInfoSection from "./components/NutritionInfo";
 import ReviewsRating from "./components/ReviewsRating";
 import RecipeTags from "./components/RecipeTags";
 import RecipeRecommend from "./components/RecipeRecommend";
+// import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+// import { addRating, selectCurrentRecipe } from "@/store/features/recipeSlice";
+
 
 export default function RecipeDetailPage() {
+  // recipeSlice
+  // const dispatch = useAppDispatch();
+  // const recipe = useAppSelector(selectCurrentRecipe);
+  // const handleSubmitRating = () => {
+
+  //   dispatch(addRating(userRating));
+  // };
   const recipe = mockRecipeDetail;
 
   return (
@@ -35,20 +43,13 @@ export default function RecipeDetailPage() {
       <RecipeInfo
         prepTime={recipe.prepTime}
         cookTime={recipe.cookTime}
-        totalTime={recipe.totalTime}
+        totalTime={recipe.prepTime + recipe.cookTime}
         servings={recipe.servings}
       />
 
       <IngredientsToggle
         metricItems={recipe.ingredientsMetric}
-        usItems={recipe.ingredientsUS}
-        metricSections={recipe.ingredientsMetricSections}
-        usSections={recipe.ingredientsUSSections}
       />
-
-      {recipe.substitutions && recipe.substitutions.length > 0 ? (
-        <Substitutions items={recipe.substitutions} />
-      ) : null}
 
       {recipe.videoUrl && (
         <RecipeVideo 
@@ -59,14 +60,6 @@ export default function RecipeDetailPage() {
       )}
 
       <Instructions steps={recipe.instructions} />
-
-      {recipe.nutrition ? (
-        <NutritionInfoSection
-          data={recipe.nutrition}
-          servingsPerRecipe={recipe.servings}
-        />
-      ) : null}
-
 
       {recipe.tags?.length ? <RecipeTags tags={recipe.tags} /> : null}
       
