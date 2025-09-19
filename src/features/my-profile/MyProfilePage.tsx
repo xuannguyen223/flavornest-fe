@@ -1,36 +1,13 @@
 import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-
-const MY_PROFILE_NAV = [
-  {
-    key: "EDIT_PROFILE",
-    label: "Edit Your Profile",
-    path: "/my-profile/edit-profile",
-    isDefault: true,
-  },
-  {
-    key: "ACCOUNT_SETTINGS",
-    label: "Account Settings",
-    path: "/my-profile/account-settings",
-  },
-  {
-    key: "MY_RECIPES",
-    label: "My Recipes",
-    path: "/my-profile/my-recipes",
-  },
-  {
-    key: "SAVED_RECIPES",
-    label: "Saved Recipes",
-    path: "/my-profile/saved-recipes",
-  },
-];
+import { MY_PROFILE_NAV } from "./constants";
 
 function MyProfilePage() {
   const location = useLocation();
   const isBasePath = location.pathname === "/my-profile";
 
   if (isBasePath) {
-    return <Navigate to="/my-profile/edit" replace />;
+    return <Navigate to="/my-profile/edit-profile" replace />;
   }
 
   return (

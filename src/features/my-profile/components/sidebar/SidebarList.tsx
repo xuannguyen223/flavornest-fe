@@ -1,5 +1,5 @@
 import SidebarItem from "./SidebarItem";
-import { MY_PROFILE_NAV } from "../../routes";
+import { MY_PROFILE_NAV } from "../../constants";
 
 function SidebarList() {
   return (
