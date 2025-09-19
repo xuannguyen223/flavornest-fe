@@ -37,13 +37,9 @@ export const fetchAllCategories = createAsyncThunk(
     "recipes/fetchAllCategories",
     async () => {
         const categories = await getAllCategories();
-        // Loại trùng theo type, giữ category đầu tiên mỗi type
-        const uniqueCategories = categories.filter(
-            (cat, index, self) => index === self.findIndex(c => c.type === cat.type)
-        );
   
         // Format type
-        const formattedCategories = uniqueCategories.map(cat => ({
+        const formattedCategories = categories.map(cat => ({
             ...cat,
             type: formatCategoryType(cat.type)
         }));
@@ -65,18 +61,21 @@ const categorySlice = createSlice({
       })
       .addCase(fetchAllCategories.fulfilled, (state, action: PayloadAction<Category[]>) => {
         state.loading = false;
-        state.categories = action.payload;
-        // Trích xuất danh sách type duy nhất
-        state.categoryTypes = [...new Set(action.payload.map(category => category.type))];
+        state.categories = action.payload; // Lưu tất cả category
+      
         // Lưu danh mục theo type
         state.categoriesByType = action.payload.reduce((acc, category) => {
-          const type = category.type;
+          const type = category.type; // có thể dùng formatCategoryType(category.type) nếu muốn đẹp
           if (!acc[type]) {
             acc[type] = [];
           }
           acc[type].push(category);
           return acc;
         }, {} as Record<string, Category[]>);
+        // console.log(state.categoriesByType);
+      
+        // Lấy danh sách type duy nhất (chỉ để hiển thị, nếu cần)
+        state.categoryTypes = Object.keys(state.categoriesByType);
       })
       .addCase(fetchAllCategories.rejected, (state, action) => {
         state.loading = false;

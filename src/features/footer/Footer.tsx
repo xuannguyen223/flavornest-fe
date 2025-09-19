@@ -9,7 +9,8 @@ import { fetchAllCategories } from '@/store/features/categorySlice';
 
 export default function Footer() {
 	const dispatch = useAppDispatch();
-	const categories = useAppSelector((state) => state.category.categories);
+
+	const categoriesByType = useAppSelector((state) => state.category.categoriesByType);
 
 	// Fetch khi component mount
 	useEffect(() => {
@@ -17,8 +18,8 @@ export default function Footer() {
 	}, [dispatch]);
 
 	// Tạo FooterLink[] từ categories
-	const mainCategoryLinks: FooterLink[] = categories.map(cat => ({
-		label: cat.type,        
+	const mainCategoryLinks: FooterLink[] = Object.keys(categoriesByType).map(cat => ({
+		label: cat,        
 		href: '#' // Link đến trang category
 	}));
 
