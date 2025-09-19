@@ -1,17 +1,59 @@
 import axiosInstance from './axiosInstance';
-
+import type { Recipe } from '@/types/TypeRecipe';
 // recipe service functions:
 // getAllRecipes, getRecipesByCategory, getRecipeById, addRecipe, updateRecipe, deleteRecipe,...
-// dưới đây là ví dụ cách dùng, không cần phải viết lại axiosInstance trong file này
-// tham khảo cách viết
 
-// export const getAllRecipes = async () => {
-//     const response = await axiosInstance.get("/recipes", { withCredentials: true });
-//     return response.data;
-// };
+// getAllRecipes
+export const getAllRecipes = async () => {
+    try {
+        const response = await axiosInstance.get(`/api/recipe/get`, { withCredentials: true });
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching recipe detail:", error);
+        throw error;
+    }
+};
 
-// viết dưới dạng lấy list theo query params (tham khảo thôi nhé)
-// export const getRecipesByCategory = async (category: string) => {
-//     const response = await axiosInstance.get(`/recipes?category=${category}`, { withCredentials: true });
-//     return response.data;
-// };
+// getRecipeById
+export const getRecipeById = async (id: string) => {
+    try {
+        const response = await axiosInstance.get(
+            `/api/recipe/get/${id}`, 
+            { withCredentials: true }
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching recipe detail:", error);
+        throw error;
+    }
+};
+
+// getRecipesByCategory
+export const getRecipesByCategory = async (categoryName: string): Promise<Recipe[]> => {
+    try {
+      const response = await axiosInstance.get(
+        `/api/recipe/get?filter=${encodeURIComponent(categoryName)}`,
+        { withCredentials: true }
+      );
+      return response.data.data.recipes;
+    } catch (error) {
+      console.error(`Error fetching recipes by category: ${categoryName}`, error);
+      throw error;
+    }
+};
+// updateRecipeRating
+export const updateRecipeRating = async (recipeId: string, rating: number) => {
+    try {
+      const response = await axiosInstance.put(
+        `/api/recipe/rating/${recipeId}`,
+        { rating },
+        { withCredentials: true }
+      );
+      console.log(response.data);
+      // object: { ok, message, data: { id, value, userId, recipeId, ... } }
+      return response.data; 
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+};

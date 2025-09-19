@@ -50,7 +50,7 @@ export default function HomePage() {
 			<RecipeList
 				recipeList={sampleRecipes}
 				layout="1-row-4"
-				categoryName="Effortless Eats"
+				categoryName="Indian"
 				description="Satisfy your cravings in a flash! Explore our Quick & Easy Meals for effortless recipes without compromising on mouthwatering taste."
 				viewAll={{
 					show: true,

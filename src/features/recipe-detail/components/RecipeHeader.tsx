@@ -4,24 +4,24 @@ import Breadcrumbs from "@/components/common/BreadCrumbs";
 
 export interface RecipeHeaderProps {
   title: string;
-  image: string;
+  image?: string;
   author: string;
-  publishedAt: string; // ISO date
-  rating: number; // average
+  createdAt: string; // ISO date
+  avgRating: number; // average
   ratingCount: number;
 }
 
 export default function RecipeHeader({
-  rating, ratingCount, title, image, author, publishedAt, }: RecipeHeaderProps) {
+  avgRating, ratingCount, title, image, author, createdAt, }: RecipeHeaderProps) {
 
 
-  const dateLabel = new Date(publishedAt).toLocaleDateString(undefined, {
+  const dateLabel = new Date(createdAt).toLocaleDateString(undefined, {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
 
-  const filledStars = Math.floor(rating);
+  // const filledStars = Math.floor(avgRating);
 
   return (
     <section className="w-full">
@@ -36,17 +36,20 @@ export default function RecipeHeader({
       {/* Rating */}
       <div className="mt-4 flex items-center gap-2">
         <div className="flex items-center gap-1">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Star
+          {Array.from({ length: 5 }).map((_, i) => {
+            const filled = i < Math.round(avgRating);
+            return (
+              <Star
               key={i}
               className="size-7"
-              fill={i < filledStars ? "#2E5834" : "#ADBBAE"}
-              color={i < filledStars ? "#2E5834" : "#ADBBAE"}
+              fill={filled ? '#2E5834' : '#ADBBAE'}
+              color={filled ? '#2E5834' : '#ADBBAE'}
               strokeWidth={0}
             />
-          ))}
+            );
+          })}
         </div>
-        <span className="ml-1 text-lg text-neutral-800">{rating.toFixed(1)}</span>
+        <span className="ml-1 text-lg text-neutral-800">{avgRating.toFixed(1)}</span>
         <span className="text-lg text-neutral-600">({ratingCount})</span>
       </div>
 

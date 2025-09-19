@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 // backend api url
-const API_URL = '';
+// trong file .env khai báo: VITE_API_URL=http://localhost:3000
+const API_URL = import.meta.env.VITE_API_URL;
 
 // tạo một instance của axios với cấu hình mặc định
 // để có thể tái sử dụng trong toàn bộ ứng dụng
