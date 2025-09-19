@@ -73,7 +73,7 @@ export default function RecipeListPage() {
 	};
 
 	return (
-		<div className="">
+		<div>
 			<SearchSection
 				backgroundColor="bg-gray-300"
 				searchPlaceholder={searchValue ? searchValue : 'Search by dish, ingredient, ......'}
