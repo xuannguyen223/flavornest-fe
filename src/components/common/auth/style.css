@@ -1,0 +1,146 @@
+@reference "tailwindcss";
+
+:root {
+  --color-primary: #828282;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-dark: #1d1d1d;
+  --color-grey-medium: #636363;
+  --color-grey-light: #a4a4a4;
+}
+
+.auth-layout {
+  @apply flex justify-center items-center h-screen bg-black py-6;
+}
+
+.auth-container {
+  @apply flex w-full max-w-[2000px] aspect-[2/1] 2xl:ml-10 overflow-hidden transition-all duration-500 ease-in-out;
+}
+
+.auth-banner {
+  @apply relative w-[45%] h-full bg-center bg-cover;
+}
+
+.signup-content {
+  @apply absolute flex inset-0 justify-start items-center text-white pl-[10%];
+}
+
+.signup-content h1 {
+  @apply text-[clamp(0.8rem,2vw,2.5rem)];
+}
+
+.auth-main {
+  @apply w-[55%] rounded-l-[4%] h-full 2xl:-ml-10 bg-white relative flex flex-col px-[8%] py-[3%];
+}
+
+.auth-main-container {
+  @apply flex flex-col h-full justify-between;
+}
+
+.auth-main-container .header {
+  @apply flex items-center justify-between mb-[3%];
+}
+
+.auth-main-container .title {
+  @apply text-[clamp(1rem,2vw,3rem)] font-semibold mb-[4%] text-[#1d1d1d];
+}
+
+.auth-main-container .form {
+  @apply flex flex-col gap-[3%] flex-1;
+}
+
+.auth-logo {
+  @apply w-[30%] min-w-[60px] max-w-[223px] h-auto;
+}
+
+.auth-close-button {
+  @apply w-[8%] min-w-[24px] max-w-[70px] cursor-pointer;
+}
+
+.custom-auth-bg {
+  @apply bg-amber-200;
+}
+
+/* ----------------------------------------------- AUTH FORM ----------------------------------------------- */
+
+.btn-show-password {
+  @apply -ml-10 text-gray-400 text-[clamp(0.6rem,1vw,1.3rem)];
+}
+
+.btn-auth-submit-disabled .spinner {
+  @apply w-5 h-5 border-4 border-t-4 border-gray-200 border-t-yellow-400 rounded-full my-1 animate-spin;
+}
+
+.form-input {
+  @apply w-full px-[3%] py-[2%] h-[10%] border rounded-md text-gray-700 mt-1 focus:ring-transparent text-[clamp(0.5rem,1vw,1rem)];
+}
+
+.form-input::placeholder {
+  @apply text-gray-400 font-light;
+}
+
+.err-mess-validation {
+  @apply mt-7 flex text-red-500 text-sm bg-red-100/60 p-2 rounded-sm gap-1 items-center;
+}
+
+.input-error {
+  @apply border-red-300 hover:border-red-500 focus:border-red-500 focus:shadow-red-300;
+}
+
+.input-valid {
+  @apply border-gray-300 hover:border-blue-500 focus:border-blue-500 focus:shadow-blue-300;
+}
+
+.input-disabled {
+  @apply border-gray-300 bg-gray-100;
+}
+
+.error-message {
+  @apply ml-2 md:text-sm text-[12px] text-red-500;
+}
+
+/* ------- */
+
+.register .input-error,
+.login .input-error {
+  @apply border-red-300 hover:border-red-500 focus:border-red-500 focus:shadow-red-300;
+}
+
+.register .input-valid,
+.login .input-valid {
+  @apply border-gray-300 hover:border-blue-500 focus:border-blue-500 focus:shadow-blue-300;
+}
+
+.register .error-message,
+.login .error-message {
+  @apply ml-2 md:text-sm text-[12px] text-red-500;
+}
+
+.register-form .form-input::placeholder,
+.login-form .form-input::placeholder {
+  @apply text-gray-400 font-light;
+}
+
+.btn-auth-submit-disabled {
+  @apply mt-[5%] shadow-md bg-gray-800 text-white px-[3%] py-[2%] h-[10%] rounded-md focus:outline-none w-full
+  flex items-center justify-center space-x-2 text-[clamp(0.7rem,1vw,1.1rem)];
+}
+.btn-auth-submit {
+  @apply mt-[5%] shadow-md bg-gray-800 hover:bg-[#636363] text-white px-[3%] py-[2%] h-[10%] rounded-md focus:outline-none w-full
+  flex items-center justify-center space-x-2 text-[clamp(0.7rem,1vw,1.1rem)];
+}
+
+.register .navigate,
+.login .navigate {
+  @apply mt-[2%] mb-[3%] text-left text-[clamp(0.5rem,1vw,1rem)];
+}
+
+.register .form-group label,
+.login .form-group label {
+  @apply ml-1 text-[clamp(0.5rem,1vw,1.1rem)];
+}
+
+.register .err-mess-validation,
+.login .err-mess-validation {
+  @apply mt-7 flex text-red-500 text-sm bg-red-100/60 p-2 rounded-sm gap-1 items-center;
+}
