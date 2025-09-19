@@ -16,7 +16,7 @@ import {
 } from "@/store/features/recipeSlice";
 import { PhotoUploader } from "./components/form-fields/PhotoUploader";
 import { ReduxInput } from "./components/redux/ReduxInput";
-import { TagsSection } from "./components/tags/TagsSection";
+import { CategorySection } from "./components/categories/CategorySection";
 import { FormActions } from "./components/shared/FormActions";
 import {
   ReduxServings,
@@ -101,7 +101,7 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
     >
       {/* Header */}
       <div className="space-y-4 sm:space-y-6 lg:space-y-8">
-        <h1 className="font-cormorant font-semibold text-3xl sm:text-4xl lg:text-5xl xl:text-[48px]">
+        <h1 className="text-center font-cormorant font-semibold text-3xl sm:text-4xl lg:text-5xl xl:text-[48px]">
           Add a Recipe
         </h1>
         <p className="text-base sm:text-lg lg:text-xl xl:text-[22px] text-left text-(--shadow-gray-color)">
@@ -200,7 +200,7 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
       {/* Instructions */}
       <div className="space-y-4">
         <h2 className="flex font-medium text-lg sm:text-xl lg:text-2xl xl:text-[24px]">
-          Instructions 
+          Instructions
           <span className="text-(--required-color)">&nbsp;*</span>
         </h2>
         <p className="text-base sm:text-lg lg:text-xl xl:text-[22px] text-left text-(--shadow-gray-color)">
@@ -247,7 +247,7 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
       <hr className="text-(--divide-color) my-8 sm:my-12 lg:my-16 xl:my-[60px]" />
 
       {/* Tags */}
-      <TagsSection
+      <CategorySection
         value={currentRecipe.tags}
         onChange={handleUpdateTags}
         errors={undefined}

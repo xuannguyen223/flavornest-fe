@@ -65,7 +65,7 @@ export default function CategoryItemDropdown({
           align="start"
           side="bottom"
           sideOffset={12}
-          className="category-popover min-w-[22rem] p-3 shadow-md border-none rounded-none"
+          className="category-popover p-2 shadow-md border-none rounded-none"
         >
           <div>
             {menuItems.map((item) => (

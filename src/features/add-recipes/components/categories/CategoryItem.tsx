@@ -1,6 +1,6 @@
 import { FormSelect } from "@/components/common/FormSelect";
 
-type TagSelectProps = {
+type CategoryItemProps = {
   value: string;
   onChange: (value: string) => void;
   options: string[];
@@ -8,13 +8,13 @@ type TagSelectProps = {
   error?: string;
 };
 
-export function TagSelect({
+export function CategoryItem({
   value,
   onChange,
   options,
   placeholder,
   error,
-}: TagSelectProps) {
+}: CategoryItemProps) {
   return (
     <FormSelect
       value={value}

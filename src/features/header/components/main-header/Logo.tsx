@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 const Logo = () => {
 	return (
-		<div className="mr-16">
+		<div className="mr-[42px]">
 			<Link
 				to={'/'}
 				aria-label="Go to homepage">
