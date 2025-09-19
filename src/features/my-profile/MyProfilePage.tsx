@@ -1,6 +1,6 @@
 import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { MY_PROFILE_NAV } from "./constants";
+import { MY_PROFILE_NAV } from "./components/sidebar/SidebarList";
 
 function MyProfilePage() {
   const location = useLocation();
