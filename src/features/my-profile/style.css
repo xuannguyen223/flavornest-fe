@@ -1,0 +1,19 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+:root {
+	/* Colors */
+	--primary-color: #404040;
+	--second-color: #8c8c8c;
+	--gray-color: #d1d1d6;
+	--light-gray-color: #acacac;
+	--shadow-gray-color: #444;
+	--accent-color: #929aab;
+	--required-color: #db0f0f;
+	--light-black-color: #1d1d1d;
+
+	--divide-color: rgba(111, 111, 111, 0.3);
+	/* #6f6f6f 30% */
+	--border-color: rgba(130, 130, 130, 0.7);
+	/* #828282 70% */
+}
