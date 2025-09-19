@@ -51,7 +51,7 @@ export default function RecipeListPage() {
             title: r.title,
             creator: r.author.email.split('@')[0],
             totalTime: `${r.cookTime + r.prepTime} min`,
-            rating: r.rating,
+            rating: r.avgRating,
             reviewCount: r.ratingCount,
             imageUrl: r.imageUrl ?? "/placeholder.svg",
           })),

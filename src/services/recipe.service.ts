@@ -17,7 +17,10 @@ export const getAllRecipes = async () => {
 // getRecipeById
 export const getRecipeById = async (id: string) => {
     try {
-        const response = await axiosInstance.get(`/api/recipe/get/${id}`, { withCredentials: true });
+        const response = await axiosInstance.get(
+            `/api/recipe/get/${id}`, 
+            { withCredentials: true }
+        );
         return response.data;
     } catch (error) {
         console.error("Error fetching recipe detail:", error);
@@ -32,10 +35,25 @@ export const getRecipesByCategory = async (categoryName: string): Promise<Recipe
         `/api/recipe/get?filter=${encodeURIComponent(categoryName)}`,
         { withCredentials: true }
       );
-      // fallback [] if API returns undefined
-      return response.data?.data?.recipes ?? [];
+      return response.data.data.recipes;
     } catch (error) {
       console.error(`Error fetching recipes by category: ${categoryName}`, error);
       throw error;
+    }
+};
+// updateRecipeRating
+export const updateRecipeRating = async (recipeId: string, rating: number) => {
+    try {
+      const response = await axiosInstance.put(
+        `/api/recipe/rating/${recipeId}`,
+        { rating },
+        { withCredentials: true }
+      );
+      console.log(response.data);
+      // object: { ok, message, data: { id, value, userId, recipeId, ... } }
+      return response.data; 
+    } catch (err) {
+      console.error(err);
+      throw err;
     }
 };

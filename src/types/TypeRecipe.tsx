@@ -30,6 +30,15 @@ export interface RecipeCategory {
     category: Category;
 }
 
+export interface Rating {
+    id: string;
+    value: number;
+    userId: string;
+    recipeId: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
 export interface Recipe {
     id: string;
     title: string;
@@ -38,7 +47,7 @@ export interface Recipe {
     prepTime: number;
     cookTime: number;
     servings: number;
-    rating: number;
+    avgRating: number;
     ratingCount: number;
     imageUrl?: string;
     createdAt: string;
@@ -47,4 +56,10 @@ export interface Recipe {
     instructions: Instruction[];
     ingredients: Ingredient[];
     categories: RecipeCategory[];
+    // biến lưu user đã rated công thức chưa 
+    // client-side
+    hasReviewed?: boolean;
+    // lưu số sao user hiện tại đã rate 
+    // client-side (localStorage)
+    userRating?: number;
 }

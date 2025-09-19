@@ -32,7 +32,7 @@ export default function RecipeRecommend({ recipes }: RecipeRecommendProps) {
         <RecipeList 
             recipeList={mappedRecipes}
             layout="2-rows-4"
-            viewAll={{ show: false,}}
+            viewAll={{ show: false }}
             className="my-8"
         />
         </section>

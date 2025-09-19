@@ -1,14 +1,8 @@
 import { useNavigate } from 'react-router-dom';
-
-export interface RecipeCategoryProps {
-  id: string;
-  name: string;
-  type: string;
-  description: string;
-}
+import type { Category } from '@/types/TypeRecipe';
 
 interface RecipeCategoriesListProps {
-  categories: RecipeCategoryProps[];
+  categories: Category[];
 }
 
 export default function RecipeCategories({ categories }: RecipeCategoriesListProps) {
