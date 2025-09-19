@@ -1,25 +1,36 @@
-import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import {
-  MY_PROFILE_BASE_PATH,
-  MY_PROFILE_NAV,
-  MY_PROFILE_TABS,
-} from "./routes";
-import EditProfileSection from "./components/sections/EditProfileSection";
-import AccountSettingsSection from "./components/sections/AccountSettingsSection";
-import MyRecipesSection from "./components/sections/MyRecipesSection";
+
+const MY_PROFILE_NAV = [
+  {
+    key: "EDIT_PROFILE",
+    label: "Edit Your Profile",
+    path: "/my-profile/edit-profile",
+    isDefault: true,
+  },
+  {
+    key: "ACCOUNT_SETTINGS",
+    label: "Account Settings",
+    path: "/my-profile/account-settings",
+  },
+  {
+    key: "MY_RECIPES",
+    label: "My Recipes",
+    path: "/my-profile/my-recipes",
+  },
+  {
+    key: "SAVED_RECIPES",
+    label: "Saved Recipes",
+    path: "/my-profile/saved-recipes",
+  },
+];
 
 function MyProfilePage() {
   const location = useLocation();
-  const isBasePath = location.pathname === MY_PROFILE_BASE_PATH;
+  const isBasePath = location.pathname === "/my-profile";
 
   if (isBasePath) {
-    return (
-      <Navigate
-        to={`${MY_PROFILE_BASE_PATH}/${MY_PROFILE_TABS.EDIT_PROFILE}`}
-        replace
-      />
-    );
+    return <Navigate to="/my-profile/edit" replace />;
   }
 
   return (
@@ -52,20 +63,7 @@ function MyProfilePage() {
         </nav>
       </aside>
       <div className="w-full min-w-0 pr-[80px]">
-        <Routes>
-          <Route
-            path={MY_PROFILE_TABS.EDIT_PROFILE}
-            element={<EditProfileSection />}
-          />
-          <Route
-            path={MY_PROFILE_TABS.ACCOUNT_SETTINGS}
-            element={<AccountSettingsSection />}
-          />
-          <Route
-            path={MY_PROFILE_TABS.MY_RECIPES}
-            element={<MyRecipesSection />}
-          />
-        </Routes>
+        <Outlet />
       </div>
     </div>
   );

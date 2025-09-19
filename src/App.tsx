@@ -7,6 +7,9 @@ import RecipeListPage from './features/list-recipes/RecipeListPage';
 import RecipeDetailPage from './features/recipe-detail/RecipeDetailPage';
 import AddRecipesPage from './features/add-recipes/AddRecipesPage';
 import MyProfilePage from './features/my-profile/MyProfilePage';
+import EditProfileSection from './features/my-profile/components/sections/EditProfileSection';
+import AccountSettingsSection from './features/my-profile/components/sections/AccountSettingsSection';
+import MyRecipesSection from './features/my-profile/components/sections/MyRecipesSection';
 
 function App() {
 	return (
@@ -37,10 +40,12 @@ function App() {
 						path="/about"
 						element={<AboutUsPage />}
 					/>
-                    <Route 
-                        path="/my-profile/*" 
-                        element={<MyProfilePage />} 
-                    />
+                    <Route path="/my-profile" element={<MyProfilePage />}>
+                        <Route path="edit-profile" element={<EditProfileSection />} />
+                        <Route path="account-settings" element={<AccountSettingsSection />} />
+                        <Route path="my-recipes" element={<MyRecipesSection />} />
+                        <Route path="saved-recipes" element={<div>...</div>} />
+                    </Route>
 				</Route>
 			</Routes>
 		</BrowserRouter>
