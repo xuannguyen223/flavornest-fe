@@ -7,7 +7,7 @@ export const getAllCategories = async (): Promise<Category[]> => {
       // res.data: { ok, message, data { categoryList: [...] } }
       return res.data.data.categoryList as Category[];
     } catch (err) {
-      console.error("Không thể lấy danh mục:", err);
+      console.error("Error fetching category data:", err);
       throw err;
     }
 };

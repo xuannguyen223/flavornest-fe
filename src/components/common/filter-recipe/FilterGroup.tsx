@@ -1,5 +1,5 @@
 import FilterSection from "./FilterSection";
-import type { Filter } from "@/features/category-page/mock-data/filter-data";
+import type { Filter } from "@/features/list-recipes/components/filterData";
 
 export interface FilterProps{
     filterData: Filter[];

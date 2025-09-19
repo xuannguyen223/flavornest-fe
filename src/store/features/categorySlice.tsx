@@ -49,39 +49,38 @@ export const fetchAllCategories = createAsyncThunk(
 );
 
 const categorySlice = createSlice({
-  name: 'recipes',
-  initialState,
-  reducers: {},
-  extraReducers: (builder) => {
+    name: 'recipes',
+    initialState,
+    reducers: {},
+    extraReducers: (builder) => {
     builder
-      // Xử lý fetchAllCategories
-      .addCase(fetchAllCategories.pending, (state) => {
+        // Xử lý fetchAllCategories
+        .addCase(fetchAllCategories.pending, (state) => {
         state.loading = true;
         state.error = null;
-      })
-      .addCase(fetchAllCategories.fulfilled, (state, action: PayloadAction<Category[]>) => {
+        })
+        .addCase(fetchAllCategories.fulfilled, (state, action: PayloadAction<Category[]>) => {
         state.loading = false;
         state.categories = action.payload; // Lưu tất cả category
-      
+        
         // Lưu danh mục theo type
         state.categoriesByType = action.payload.reduce((acc, category) => {
-          const type = category.type; // có thể dùng formatCategoryType(category.type) nếu muốn đẹp
-          if (!acc[type]) {
+            const type = category.type;
+            if (!acc[type]) {
             acc[type] = [];
-          }
-          acc[type].push(category);
-          return acc;
+            }
+            acc[type].push(category);
+            return acc;
         }, {} as Record<string, Category[]>);
-        // console.log(state.categoriesByType);
-      
-        // Lấy danh sách type duy nhất (chỉ để hiển thị, nếu cần)
+        
+        // Lấy danh sách type duy nhất
         state.categoryTypes = Object.keys(state.categoriesByType);
-      })
-      .addCase(fetchAllCategories.rejected, (state, action) => {
+        })
+        .addCase(fetchAllCategories.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message ?? 'Error';
-      });
-  },
+        });
+    },
 });
 
 export default categorySlice.reducer;

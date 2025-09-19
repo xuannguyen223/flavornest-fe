@@ -41,7 +41,7 @@ export default function CategoryList({
               onMouseLeave={() => onHover?.(null)}
               className={`pb-2 cursor-pointer ${
                 activeId === item.id ? "text-foreground" : "text-foreground/80"
-              }  text-sm sm:text-base lg:text-lg xl:text-[20px] text-(--light-black-color)`}
+              } text-sm sm:text-base lg:text-lg xl:text-[20px]`}
             >
               {item.label}
               {activeId === item.id && (
