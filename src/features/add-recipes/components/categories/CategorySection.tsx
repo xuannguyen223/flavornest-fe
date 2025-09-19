@@ -1,5 +1,8 @@
 import { Label } from "@radix-ui/react-label";
+import { useEffect, useState } from "react";
 import { CategoryItem } from "./CategoryItem";
+import { getAllCategories } from "@/services/category.service";
+import type { Category } from "@/types/TypeRecipe";
 
 type CategoryListProps = {
   cuisine?: string;
@@ -18,92 +21,53 @@ type CategorySectionProps = {
 const CATEGORY_FIELDS = [
   {
     key: "cuisine" as keyof CategoryListProps,
-    options: [
-      "Italian",
-      "Korean",
-      "Mexican",
-      "French",
-      "Chinese",
-      "American",
-      "Indian",
-      "Mediterranean",
-      "Thai",
-      "Greek",
-      "Vietnamese",
-      "Spanish",
-      "Japanese",
-      "German",
-    ],
+    type: "CUISINE",
     placeholder: "Cuisine",
   },
   {
     key: "mealType" as keyof CategoryListProps,
-    options: [
-      "Breakfast",
-      "Brunch",
-      "Lunch",
-      "Dinner",
-      "Dessert",
-      "Snack",
-      "Appetizer",
-      "Beverage",
-    ],
+    type: "MEAL_TYPE",
     placeholder: "Meal Type",
   },
   {
     key: "dietary" as keyof CategoryListProps,
-    options: [
-      "Low-Carb",
-      "Keto",
-      "Gluten-Free",
-      "Dairy-Free",
-      "High-Protein",
-      "Paleo",
-      "Vegetarian",
-      "Nut-Free",
-      "Low-Sodium",
-    ],
+    type: "DIETARY",
     placeholder: "Dietary",
   },
   {
     key: "method" as keyof CategoryListProps,
-    options: [
-      "Baking",
-      "Grilling",
-      "Frying",
-      "Boiling",
-      "Steaming",
-      "Sautéing",
-      "Roasting",
-      "Slow Cooking",
-      "Pressure Cooking",
-      "Raw",
-    ],
+    type: "COOKING_METHOD",
     placeholder: "Method",
   },
   {
     key: "main" as keyof CategoryListProps,
-    options: [
-      "Chicken",
-      "Beef",
-      "Pork",
-      "Fish",
-      "Beans",
-      "Vegetables",
-      "Cheese",
-      "Seafood",
-      "Eggs",
-      "Tofu",
-      "Rice",
-      "Pasta",
-      "Fruits",
-      "Nuts",
-    ],
+    type: "MAIN_INGREDIENT",
     placeholder: "Main Ingredient",
   },
-];
+] as const;
 
 export function CategorySection({ value, onChange, errors }: CategorySectionProps) {
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const data = await getAllCategories();
+        setCategories(data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  const getCategoriesByType = (type: string) => {
+    return categories
+      .filter(category => category.type === type)
+      .map(category => category.name);
+  };
+
   const handleTagChange = (key: keyof CategoryListProps, newValue: string) => {
     if (key === "dietary") {
       onChange({ dietary: newValue ? [newValue] : [] });
@@ -138,7 +102,7 @@ export function CategorySection({ value, onChange, errors }: CategorySectionProp
             key={config.key}
             value={getTagValue(config.key)}
             onChange={(newValue) => handleTagChange(config.key, newValue)}
-            options={config.options}
+            options={getCategoriesByType(config.type)}
             placeholder={config.placeholder}
             error={getTagError(config.key)}
           />
