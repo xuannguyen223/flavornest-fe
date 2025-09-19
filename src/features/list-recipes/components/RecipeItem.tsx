@@ -51,17 +51,19 @@ export function RecipeItem({
 	};
 
 	const renderStars = () => {
-		return Array.from({ length: 5 }, (_, index) => (
-			<Star
+		return Array.from({ length: 5 }, (_, index) => {
+			const filled = index < Math.round(rating);
+			return ( 
+				<Star
 				key={index}
-				className={cn(
-					'w-4 h-4',
-					index < Math.floor(rating)
-						? 'fill-yellow-400 text-yellow-400'
-						: 'fill-gray-300 text-gray-300',
-				)}
+				className={cn('w-4 h-4')}
+				fill={filled ? '#2E5834' : '#ADBBAE'}
+				color={filled ? '#2E5834' : '#ADBBAE'}
+				strokeWidth={0}
 			/>
-		));
+			);
+			
+		});
 	};
 
 	return (
