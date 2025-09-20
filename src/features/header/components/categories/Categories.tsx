@@ -22,8 +22,8 @@ export default function Categories({ itemsByType }: CategoriesProps) {
   }, [itemsByType]);
 
   return (
-    <div className="mx-auto my-4 ml-68 max-w-6xl px-6">
-      <div className="flex items-center gap-10 h-12">
+    <div className="mx-auto py-2.5 max-w-5xl">
+      <div className="flex items-center gap-20 h-8">
         <CategoryList items={headerCategories} />
       </div>
     </div>
