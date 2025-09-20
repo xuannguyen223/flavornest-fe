@@ -16,7 +16,7 @@ export default function FooterLinks({columns}: FooterLinksProps) {
 
           {/* Links */}
           <div className="flex flex-col gap-2 text-sm">
-            {column.links.map((link, index) => (
+            {column.links && column.links.map((link, index) => (
               <a
                 key={index}
                 href={link.href}
