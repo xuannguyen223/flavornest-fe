@@ -1,15 +1,13 @@
-import axiosInstance from './axiosInstance';
-import type { Category } from '@/types/TypeRecipe';
+import type { Category } from "@/types/TypeRecipe";
+import axiosInstance from "./axiosInstance";
 
+// getAllCategories
 export const getAllCategories = async (): Promise<Category[]> => {
     try {
-      const res = await axiosInstance.get('/api/recipe/category/get', { withCredentials: true });
-      // res.data: { ok, message, data { categoryList: [...] } }
-      return res.data.data.categoryList as Category[];
-    } catch (err) {
-      console.error("Error fetching category data:", err);
-      throw err;
+        const response = await axiosInstance.get(`/api/recipe/category/get`, { withCredentials: true });
+        return response.data.data.categoryList;
+    } catch (error) {
+        console.error("Error fetching category detail:", error);
+        throw error;
     }
 };
-
-  
