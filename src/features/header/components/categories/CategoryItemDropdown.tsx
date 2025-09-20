@@ -75,7 +75,7 @@ export default function CategoryItemDropdown({
                 onClick={() => handleClick(item)}
                 >
                 <span className='block w-full font-light text-left 
-                  text-base sm:text-lg lg:text-xl xl:text-[20px] text-(--light-black-color)'>
+                  text-base sm:text-lg lg:text-lg xl:text-[20px] text-(--light-black-color)'>
                   {item.label}
                 </span>
               </DropdownMenuItem>

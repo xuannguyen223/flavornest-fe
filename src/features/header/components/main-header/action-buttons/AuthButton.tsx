@@ -10,7 +10,12 @@ export default function AuthButton({ onClick }: AuthButtonProps) {
     <Button
       variant="default"
       size="lg"
-      className="w-full sm:w-auto h-12 sm:h-14 lg:h-16 xl:h-[48px] font-medium text-base sm:text-lg lg:text-xl xl:text-[22px] text-white px-4 sm:px-5 py-3 sm:py-4 lg:py-5 xl:py-6 bg-(--primary-color) rounded-full cursor-pointer"
+      className="
+        h-5 sm:h-7 lg:h-10 
+        px-4 sm:px-6 
+        text-sm font-medium text-white 
+        bg-(--primary-color) rounded-full 
+        cursor-pointer hover:bg-neutral-400 transition-colors"
       onClick={onClick}
     >
       <span>LOGIN/SIGNUP</span>

@@ -2,7 +2,7 @@ import FeatureItem from "./FeatureItem";
 
 export default function FeatureSection() {
   return (
-    <div className="mt-10 flex flex-col items-center text-center space-y-6">
+    <div className="flex flex-col items-center text-center space-y-2 py-6">
       <h2 className="text-3xl font-semibold text-neutral-800">Why it works</h2>
       <img src="/about-us/vector-1.svg" alt="Decoration" className="w-40 h-auto" />
 

@@ -3,7 +3,7 @@ import FeatureSection from "./component/FeatureSection";
 
 export default function AboutUsPage() {
   return (
-    <section className="px-6 py-8">
+    <section className="min-h-screen">
       {/* Header */}
       <div
         className="relative flex items-center justify-center min-h-[314px] w-full bg-cover bg-center"
