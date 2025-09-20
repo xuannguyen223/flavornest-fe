@@ -13,9 +13,10 @@ import EditProfileSection from './features/my-profile/components/sections/EditPr
 import AccountSettingsSection from './features/my-profile/components/sections/AccountSettingsSection';
 import MyRecipesSection from './features/my-profile/components/sections/MyRecipesSection';
 
-import { useEffect } from "react";
-import { useAppDispatch } from "./store/hooks";
+import { useEffect } from 'react';
+import { useAppDispatch } from './store/hooks';
 import { loginThunk } from './store/features/authSlice';
+import FavoriteRecipesSection from './features/my-profile/components/sections/FavoriteRecipesSection';
 
 function App() {
 	// auto Login use for testing use submit review
@@ -23,15 +24,16 @@ function App() {
 
 	useEffect(() => {
 		dispatch(
-		  loginThunk({
-			email: "johncole2@example.com",
-			password: "@StrongPass9999",
-		  })
+			loginThunk({
+				email: 'johncole10@example.com',
+				password: '@StrongPass8888',
+			}),
 		)
-		  .unwrap()
-		  .then(() => console.log("✅ Auto login success"))
-		  .catch((err) => console.error("❌ Auto login failed", err));
+			.unwrap()
+			.then(() => console.log('✅ Auto login success'))
+			.catch(err => console.error('❌ Auto login failed', err));
 	}, [dispatch]);
+
 	return (
 		<BrowserRouter>
 			<Routes>
@@ -60,15 +62,32 @@ function App() {
 						path="/about"
 						element={<AboutUsPage />}
 					/>
-                    <Route path="/my-profile" element={<MyProfilePage />}>
-                        <Route path="edit-profile" element={<EditProfileSection />} />
-                        <Route path="account-settings" element={<AccountSettingsSection />} />
-                        <Route path="my-recipes" element={<MyRecipesSection />} />
-                        <Route path="saved-recipes" element={<div>...</div>} />
-                    </Route>
+					<Route
+						path="/my-profile"
+						element={<MyProfilePage />}>
+						<Route
+							path="edit-profile"
+							element={<EditProfileSection />}
+						/>
+						<Route
+							path="account-settings"
+							element={<AccountSettingsSection />}
+						/>
+						<Route
+							path="my-recipes"
+							element={<MyRecipesSection />}
+						/>
+						<Route
+							path="favorite-recipes"
+							element={<FavoriteRecipesSection />}
+						/>
+					</Route>
 				</Route>
 			</Routes>
-			<ToastContainer position="top-right" autoClose={2000} />
+			<ToastContainer
+				position="top-right"
+				autoClose={2000}
+			/>
 		</BrowserRouter>
 	);
 }

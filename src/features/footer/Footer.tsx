@@ -1,9 +1,36 @@
 import FooterLinks from './components/FooterLinks';
 import SubscribeNewsletter from './components/SubscribeNewsletter';
 import SocialIcons from './components/SocialIcons';
-import { footerColumns } from './footer-data';
+import { footerColumns as staticFooterColumns } from './footer-data';
+import { useAppSelector, useAppDispatch } from "@/hooks/redux";
+import type { FooterColumn, FooterLink } from './footer-data';
+import { useEffect } from 'react';
+import { fetchAllCategories } from '@/store/features/categorySlice';
 
 export default function Footer() {
+	const dispatch = useAppDispatch();
+
+	const categoriesByType = useAppSelector((state) => state.category.categoriesByType);
+
+	// Fetch khi component mount
+	useEffect(() => {
+		dispatch(fetchAllCategories());
+	}, [dispatch]);
+
+	// Tạo FooterLink[] từ categories
+	const mainCategoryLinks: FooterLink[] = Object.keys(categoriesByType).map(cat => ({
+		label: cat,        
+		href: '#' // Link đến trang category
+	}));
+
+	// Tạo footerColumns mới, thay cột Main Categories bằng dynamic links
+	const footerColumns: FooterColumn[] = staticFooterColumns.map(col => {
+		if (col.title === 'MAIN CATEGORIES') {
+		  return { ...col, links: mainCategoryLinks };
+		}
+		return col;
+	});
+
 	return (
 		<footer className="w-full bg-neutral-200 text-left p-8">
 			<div className="px-6 py-8">
