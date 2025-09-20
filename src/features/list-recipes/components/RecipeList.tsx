@@ -85,7 +85,7 @@ export function RecipeList({
 					)}
 
 					{description && (
-						<div className="w-full text-left text-gray-600 text-lg leading-relaxed text-pretty px-8">
+						<div className="w-full text-left text-gray-600 text-lg leading-relaxed text-pretty px-8 mt-2">
 							{description}
 						</div>
 					)}

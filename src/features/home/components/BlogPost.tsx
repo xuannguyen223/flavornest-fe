@@ -42,7 +42,7 @@ export function BlogPost({
 	];
 
 	return (
-		<div className={`w-full mx-auto px-20 pb-20`}>
+		<div className={`w-full mx-auto px-20`}>
 			<div className="flex items-center justify-between mb-8">
 				<div className="text-5xl font-cormorant font-semibold text-gray-900 tracking-tight text-balance">
 					{categoryName}
