@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import type { Category as HeaderCategory } from "./CategoryList";
 import CategoryList from "./CategoryList";
 import type { Category } from '@/types/TypeRecipe';
+import { formatCategoryType } from '@/lib/utils';
 
 export type CategoriesProps = {
   itemsByType: Record<string, Category[]>;
@@ -12,7 +13,7 @@ export default function Categories({ itemsByType }: CategoriesProps) {
   const headerCategories: HeaderCategory[] = useMemo(() => {
     return Object.entries(itemsByType).map(([type, cats]) => ({
       id: type,
-      label: type, // hiển thị tên type trên dropdown
+      label: formatCategoryType(type), // hiển thị tên type trên dropdown
       items: cats.map(cat => ({
         id: cat.id,
         label: cat.name,
