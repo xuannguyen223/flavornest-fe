@@ -19,6 +19,7 @@ export default function RecipeListPage() {
 		loading,
 		filterData,
 		handleRecipeClick,
+		handleFilterChange,
 	} = useRecipeList();
 
 	return (
@@ -52,7 +53,10 @@ export default function RecipeListPage() {
 				</div>
 
 				<div className="flex flex-row gap-8">
-					<FilterGroup filterData={filterData} />
+					<FilterGroup
+						filterData={filterData}
+						onFilterChange={handleFilterChange}
+					/>
 					{loading ? (
 						<p>Loading recipes...</p>
 					) : hasNoResults ? (

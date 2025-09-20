@@ -5,8 +5,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import {
 	fetchAllRecipes,
-	fetchRecipesByCategory,
-	fetchRecipesByCategoryType,
+	fetchRecipesByCategoryName,
 	fetchRecipesBySearch,
 	selectSearchResults,
 } from '@/store/features/recipeAPISlice';
@@ -20,57 +19,44 @@ export function useRecipeList() {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 
-	const categoryName = params.get('category');
+	const categoryName = params.get('filter');
 	const description = params.get('desc');
-	const categoryType = params.get('categoryType');
 	const searchValue = params.get('search') || '';
 
 	const [searchInput, setSearchInput] = useState(searchValue);
 
-	const { allRecipes, recipesByCategory, recipesByCategoryType, loading } = useAppSelector(
-		state => state.recipeAPI,
-	);
+	const { allRecipes, recipesByCategory, loading } = useAppSelector(state => state.recipeAPI);
 	const searchResults = useAppSelector(selectSearchResults);
 	const categoriesByType = useAppSelector(state => state.category.categoriesByType);
 
 	useEffect(() => {
-		if (searchValue) {
-			dispatch(fetchRecipesBySearch(searchValue));
-			return;
-		}
-
-		if (categoryType && !recipesByCategoryType[categoryType]) {
-			dispatch(fetchRecipesByCategoryType(categoryType));
-		} else if (categoryName && !recipesByCategory[categoryName]) {
-			dispatch(fetchRecipesByCategory(categoryName));
-		} else if (!categoryName && !categoryType && allRecipes.length === 0) {
+		if (searchValue && categoryName) {
+			// Search within a specific category - pass both parameters to the thunk
+			dispatch(fetchRecipesBySearch({ searchValue, categoryName }));
+		} else if (searchValue) {
+			// Search only - pass just search value
+			dispatch(fetchRecipesBySearch({ searchValue }));
+		} else if (categoryName) {
+			dispatch(fetchRecipesByCategoryName(categoryName));
+		} else {
 			dispatch(fetchAllRecipes());
 		}
-	}, [categoryType, categoryName, searchValue, dispatch]);
+	}, [categoryName, searchValue, dispatch]);
 
 	useEffect(() => {
 		setSearchInput(searchValue);
 	}, [searchValue]);
 
 	const displayRecipes: Recipe[] = useMemo(() => {
-		if (searchValue && searchResults.length > 0) {
+		if (searchValue) {
+			// When searching (with or without category), use search results
 			return searchResults;
-		} else if (categoryType) {
-			return recipesByCategoryType[categoryType] ?? [];
 		} else if (categoryName) {
-			return recipesByCategory[categoryName] ?? [];
+			return recipesByCategory[categoryName] || [];
 		} else {
 			return allRecipes;
 		}
-	}, [
-		searchValue,
-		searchResults,
-		categoryType,
-		categoryName,
-		allRecipes,
-		recipesByCategory,
-		recipesByCategoryType,
-	]);
+	}, [searchValue, searchResults, categoryName, recipesByCategory, allRecipes]);
 
 	const mappedRecipes: RecipeItemProps[] = useMemo(
 		() =>
@@ -100,15 +86,36 @@ export function useRecipeList() {
 		[categoriesByType],
 	);
 
+	console.log('Filter Data:', filterData);
+
 	const handleSearch = (value: string) => {
 		setSearchInput(value);
 
-		if (value.length > 0 && value.trim()) {
-			navigate(`?search=${encodeURIComponent(value.trim())}`);
+		const currentParams = new URLSearchParams(params);
+
+		if (value.trim()) {
+			currentParams.set('search', value.trim());
 		} else {
-			// Clear search and show all recipes
-			navigate(`/recipes`);
+			currentParams.delete('search');
 		}
+
+		const queryString = currentParams.toString();
+		navigate(queryString ? `?${queryString}` : '/recipes');
+	};
+
+	const handleFilterChange = (selectedCategories: string[]) => {
+		const currentParams = new URLSearchParams(params);
+		console.log('Selected Categories:', selectedCategories);
+
+		if (selectedCategories.length > 0) {
+			// For now, use the first selected category (can be extended for multiple)
+			currentParams.set('filter', selectedCategories[0]);
+		} else {
+			currentParams.delete('filter');
+		}
+
+		const queryString = currentParams.toString();
+		navigate(queryString ? `?${queryString}` : '/recipes');
 	};
 
 	const handleRecipeClick = (id: string) => {
@@ -117,8 +124,8 @@ export function useRecipeList() {
 	};
 
 	const hasNoResults = useMemo(() => {
-		return searchValue && searchResults.length === 0 && !loading;
-	}, [searchValue, searchResults.length, loading]);
+		return (searchValue || categoryName) && displayRecipes.length === 0 && !loading;
+	}, [searchValue, categoryName, displayRecipes.length, loading]);
 
 	return {
 		categoryName,
@@ -127,10 +134,11 @@ export function useRecipeList() {
 		searchInput,
 		setSearchInput,
 		handleSearch,
-		hasNoResults,
 		mappedRecipes,
 		loading,
+		hasNoResults,
 		filterData,
 		handleRecipeClick,
+		handleFilterChange,
 	};
 }

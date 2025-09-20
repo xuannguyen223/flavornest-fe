@@ -3,16 +3,30 @@ import type { Recipe } from '@/types/TypeRecipe';
 // recipe service functions:
 // getAllRecipes, getRecipesByCategory, getRecipeById, addRecipe, updateRecipe, deleteRecipe,...
 
-// getAllRecipes
-export const getAllRecipes = async (searchValue?: string) => {
+export const getListRecipes = async (
+	searchValue?: string,
+	categoryName?: string,
+): Promise<Recipe[]> => {
 	try {
-		const url = searchValue ? `/api/recipe/get?search=${searchValue}` : `/api/recipe/get`;
+		const queryParams = new URLSearchParams();
+
+		if (searchValue) {
+			queryParams.append('search', searchValue);
+		}
+		if (categoryName) {
+			queryParams.append('filter', categoryName);
+		}
+
+		const url = queryParams.toString()
+			? `/api/recipe/get?${queryParams.toString()}`
+			: `/api/recipe/get`;
 
 		const response = await axiosInstance.get(url, { withCredentials: true });
-		console.log(`${searchValue}: `, response.data);
-		return response.data;
+		console.log('API Response:', response.data.data);
+
+		return response.data.data.recipes as Recipe[];
 	} catch (error) {
-		console.error('Error fetching recipe detail:', error);
+		console.error('Error fetching recipes:', error);
 		throw error;
 	}
 };
@@ -24,21 +38,6 @@ export const getRecipeById = async (id: string) => {
 		return response.data;
 	} catch (error) {
 		console.error('Error fetching recipe detail:', error);
-		throw error;
-	}
-};
-
-// getRecipesByCategory
-export const getRecipesByCategory = async (categoryName: string): Promise<Recipe[]> => {
-	try {
-		const response = await axiosInstance.get(
-			`/api/recipe/get?category=${encodeURIComponent(categoryName)}`,
-			{ withCredentials: true },
-		);
-		console.log(response.data.data.recipes);
-		return response.data.data.recipes;
-	} catch (error) {
-		console.error(`Error fetching recipes by category: ${categoryName}`, error);
 		throw error;
 	}
 };
@@ -101,20 +100,5 @@ export const removeFavoriteRecipe = async (userId: string, recipeId: string) => 
 	} catch (err) {
 		console.error(err);
 		throw err;
-	}
-};
-
-export const getRecipesByCategoryType = async (categoryType: string): Promise<Recipe[]> => {
-	try {
-		const response = await axiosInstance.get(
-			`/api/recipe/get?categoryType=${encodeURIComponent(categoryType)}`,
-			{
-				withCredentials: true,
-			},
-		);
-		return response.data.data.recipes;
-	} catch (error) {
-		console.error('Error fetching recipes by category:', error);
-		throw error;
 	}
 };

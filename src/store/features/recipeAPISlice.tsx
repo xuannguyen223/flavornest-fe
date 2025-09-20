@@ -2,14 +2,12 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { Recipe } from '@/types/TypeRecipe';
 import {
+	getListRecipes,
 	getRecipeById,
-	getRecipesByCategory,
-	getAllRecipes,
 	updateRecipeRating,
 	addFavoriteRecipe,
 	removeFavoriteRecipe,
 	getFavoriteRecipes,
-	getRecipesByCategoryType, // Added getFavoriteRecipes import
 } from '@/services/recipe.service';
 import type { RootState } from '../store';
 // Contains API for Recipe Service
@@ -17,7 +15,6 @@ import type { RootState } from '../store';
 export interface RecipeState {
 	recipesById: Record<string, Recipe>;
 	recipesByCategory: Record<string, Recipe[]>;
-	recipesByCategoryType: Record<string, Recipe[]>;
 	allRecipes: Recipe[];
 	searchRecipes: Recipe[];
 	favoriteRecipesList: Recipe[];
@@ -28,7 +25,6 @@ export interface RecipeState {
 const initialState: RecipeState = {
 	recipesById: {},
 	recipesByCategory: {},
-	recipesByCategoryType: {},
 	allRecipes: [],
 	searchRecipes: [],
 	favoriteRecipesList: [],
@@ -42,32 +38,24 @@ export const fetchRecipeById = createAsyncThunk('recipes/fetchById', async (id: 
 	return res.data.recipe as Recipe;
 });
 
-export const fetchRecipesByCategory = createAsyncThunk(
+export const fetchRecipesByCategoryName = createAsyncThunk(
 	'recipes/fetchByCategory',
 	async (categoryName: string) => {
-		const data = await getRecipesByCategory(categoryName);
+		const data = await getListRecipes(categoryName);
 		return { categoryName, data };
 	},
 );
 
-export const fetchRecipesByCategoryType = createAsyncThunk(
-	'recipe/fetchByCategoryType',
-	async (categoryType: string) => {
-		const data = await getRecipesByCategoryType(categoryType);
-		return { categoryType, recipes: data };
-	},
-);
-
 export const fetchAllRecipes = createAsyncThunk('recipes/fetchAll', async () => {
-	const res = await getAllRecipes();
-	return res.data.recipes as Recipe[];
+	const res = await getListRecipes();
+	return res as Recipe[];
 });
 
 export const fetchRecipesBySearch = createAsyncThunk(
 	'recipes/fetchBySearch',
-	async (searchValue: string) => {
-		const res = await getAllRecipes(searchValue);
-		return res.data.recipes as Recipe[];
+	async ({ searchValue, categoryName }: { searchValue: string; categoryName?: string }) => {
+		const res = await getListRecipes(searchValue, categoryName);
+		return res as Recipe[];
 	},
 );
 
@@ -151,18 +139,18 @@ const recipeAPISlice = createSlice({
 				state.error = action.error.message ?? 'Error';
 			})
 
-			.addCase(fetchRecipesByCategory.pending, state => {
+			.addCase(fetchRecipesByCategoryName.pending, state => {
 				state.loading = true;
 				state.error = null;
 			})
 			.addCase(
-				fetchRecipesByCategory.fulfilled,
+				fetchRecipesByCategoryName.fulfilled,
 				(state, action: PayloadAction<{ categoryName: string; data: Recipe[] }>) => {
 					state.loading = false;
 					state.recipesByCategory[action.payload.categoryName] = action.payload.data;
 				},
 			)
-			.addCase(fetchRecipesByCategory.rejected, (state, action) => {
+			.addCase(fetchRecipesByCategoryName.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.error.message ?? 'Error';
 			})
@@ -191,21 +179,6 @@ const recipeAPISlice = createSlice({
 			.addCase(fetchRecipesBySearch.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.error.message ?? 'Failed to search recipes';
-			})
-
-			// ===== fetchRecipesByCategoryType =====
-			.addCase(fetchRecipesByCategoryType.pending, state => {
-				state.loading = true;
-				state.error = null;
-			})
-			.addCase(fetchRecipesByCategoryType.fulfilled, (state, action) => {
-				state.loading = false;
-				const { categoryType, recipes } = action.payload;
-				state.recipesByCategoryType[categoryType] = recipes;
-			})
-			.addCase(fetchRecipesByCategoryType.rejected, (state, action) => {
-				state.loading = false;
-				state.error = action.error.message ?? 'Failed to fetch recipes by categoryType';
 			})
 
 			.addCase(submitRecipeRating.pending, state => {
