@@ -1,4 +1,4 @@
-import axiosInstance from './axiosInstance';
+// import axiosInstance from './axiosInstance';
 
 // user service functions: getUserProfile, updateUserProfile
 // dưới đây là ví dụ cách dùng, không cần phải viết lại axiosInstance trong file này
