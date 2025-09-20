@@ -3,6 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import type { Recipe, Category } from '@/types/TypeRecipe';
 import { getAllCategories } from '@/services/category.service';
 import { formatCategoryType } from '@/lib/utils';
+
 export interface CategoryState {
     recipesById: Record<string, Recipe>; 
     allRecipes: Recipe[];
@@ -23,13 +24,13 @@ const initialState: CategoryState = {
     error: null,
 };
 
+
 // fetchAllCategories
 export const fetchAllCategories = createAsyncThunk(
     "recipes/fetchAllCategories",
     async () => {
         const categories = await getAllCategories();
   
-        // Format type, CUISINE => Cuisine
         const formattedCategories = categories.map(cat => ({
             ...cat,
             type: formatCategoryType(cat.type)
@@ -72,6 +73,7 @@ const categorySlice = createSlice({
         state.error = action.error.message ?? 'Error';
         });
     },
+
 });
 
 export default categorySlice.reducer;
