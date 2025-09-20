@@ -1,104 +1,31 @@
+'use client';
+
+import { useRecipeList } from '@/hooks/useRecipeList';
+import SearchSection from '@/components/common/search-bar/SearchSection';
+import { RecipeSort } from './components/RecipeSort';
 import FilterGroup from '@/components/common/filter-recipe/FilterGroup';
 import { RecipeList } from './components/RecipeList';
-import type { RecipeItemProps } from "@/features/list-recipes/components/RecipeItem";
-import { RecipeSort } from './components/RecipeSort';
-import SearchSection from '@/components/common/search-bar/SearchSection';
-import { useState, useEffect, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import type { Recipe } from '@/types/TypeRecipe';
-import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { fetchAllRecipes, fetchRecipesByCategory, fetchRecipesByCategoryType } from "@/store/features/recipeAPISlice";
-import type { Filter } from './components/filterData';
-import { formatCategoryType } from '@/lib/utils';
 
 export default function RecipeListPage() {
-	const [params] = useSearchParams();
-	const searchValue = params.get('search');
-	const categoryName = params.get('category');
-	const description = params.get('desc');
-	const categoryType = params.get('categoryType');
-
-	const [searchInput, setSearchInput] = useState(searchValue || '');
-
-	const dispatch = useAppDispatch();
 	const {
-		allRecipes,
-		recipesByCategory,
-		recipesByCategoryType,
+		categoryName,
+		description,
+		searchInput,
+		searchValue,
+		setSearchInput,
+		handleSearch,
+		hasNoResults,
+		mappedRecipes,
 		loading,
-	} = useAppSelector((state) => state.recipeAPI);
-
-	const categoriesByType = useAppSelector((state) => state.category.categoriesByType);
-
-	const [displayRecipes, setDisplayRecipes] = useState<Recipe[]>([]);
-
-	// Gọi API khi mount hoặc params thay đổi
-	useEffect(() => {
-    if (categoryType) {
-      if (!recipesByCategoryType[categoryType]) {
-        dispatch(fetchRecipesByCategoryType(categoryType));
-      }
-    } else if (categoryName) {
-      if (!recipesByCategory[categoryName]) {
-        dispatch(fetchRecipesByCategory(categoryName));
-		console.log(categoryName);
-      }
-    } else {
-      if (allRecipes.length === 0) {
-        dispatch(fetchAllRecipes());
-      }
-    }
-  	}, [categoryName, categoryType, dispatch]);
-
-	// Update displayRecipes khi data Redux thay đổi
-	useEffect(() => {
-		if (categoryType) {
-		  setDisplayRecipes(recipesByCategoryType[categoryType] ?? []);
-		} else if (categoryName) {
-		  setDisplayRecipes(recipesByCategory[categoryName] ?? []);
-		} else {
-		  setDisplayRecipes(allRecipes);
-		}
-	  }, [categoryName, categoryType, recipesByCategory, recipesByCategoryType, allRecipes]);
-
-	// map from Recipe -> RecipeItemProps to coordinate with params in RecipeList Component
-	const mappedRecipes: RecipeItemProps[] = useMemo(
-        () =>
-          displayRecipes.map((r) => ({
-            id: r.id,
-            title: r.title,
-            creator: r.author.email.split('@')[0],
-            totalTime: `${r.cookTime + r.prepTime} min`,
-            rating: r.avgRating,
-            reviewCount: r.ratingCount,
-            imageUrl: r.imageUrl ?? "/placeholder.svg",
-          })),
-        [displayRecipes]
-    );
-
-	const filterData: Filter[] = Object.entries(categoriesByType).map(([type, items]) => ({
-		id: type,
-		title: formatCategoryType(type), 
-		options: items.map(item => ({
-		  id: item.id,
-		  label: item.name, // 'Thai', 'Italian'
-		  value: item.id
-		}))
-	  }));
-
-	const handleSearch = (value: string) => {
-		console.log('Searching for:', value);
-	};
-
-	const handleRecipeClick = (id: string) => {
-		console.log('Recipe clicked:', id);
-	};
+		filterData,
+		handleRecipeClick,
+	} = useRecipeList();
 
 	return (
 		<div>
 			<SearchSection
 				backgroundColor="bg-neutral-300"
-				searchPlaceholder={searchValue ? searchValue : 'Search by dish, ingredient, ......'}
+				searchPlaceholder="Search by dish, ingredient, ......"
 				searchValue={searchInput}
 				onSearchChange={setSearchInput}
 				onSearch={handleSearch}
@@ -128,11 +55,22 @@ export default function RecipeListPage() {
 					<FilterGroup filterData={filterData} />
 					{loading ? (
 						<p>Loading recipes...</p>
+					) : hasNoResults ? (
+						<div className="flex-1 flex flex-col items-center justify-center py-16">
+							<div className="text-center">
+								<h3 className="text-2xl font-semibold text-gray-900 mb-2">No Results Found</h3>
+								<p className="text-gray-600 text-lg">There are no results from "{searchValue}"</p>
+								<p className="text-gray-500 text-sm mt-2">
+									Try searching with different keywords or browse all recipes
+								</p>
+							</div>
+						</div>
 					) : (
-						<RecipeList 
-							recipeList={mappedRecipes} 
-							layout="default" 
-							onRecipeClick={handleRecipeClick} />
+						<RecipeList
+							recipeList={mappedRecipes}
+							layout="default"
+							onRecipeClick={handleRecipeClick}
+						/>
 					)}
 				</div>
 			</div>

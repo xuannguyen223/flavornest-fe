@@ -13,7 +13,9 @@ export default function HomePage() {
 	const navigate = useNavigate();
 
 	const handleSearch = (value: string) => {
-		navigate(`/recipes?search=${encodeURIComponent(value)}`);
+		if (value.trim()) {
+			navigate(`/recipes?search=${encodeURIComponent(value.trim())}`);
+		}
 	};
 
 	const handleViewAll = (categoryName: string, description: string) => {
@@ -45,6 +47,7 @@ export default function HomePage() {
 				height="h-120"
 				overlayOpacity={0.3}
 			/>
+
 			<RecipeList
 				recipeList={sampleRecipes}
 				layout="1-row-4"
@@ -57,11 +60,13 @@ export default function HomePage() {
 				onRecipeClick={handleRecipeClick}
 				className="my-8 mt-20"
 			/>
+
 			<BlogPost
 				categoryName="Healthy Eating Inspiration"
 				onViewAllClick={() => {}}
 				onRecipeClick={() => {}}
 			/>
+
 			<RecipeList
 				recipeList={sampleRecipes}
 				layout="1-row-4"
@@ -74,6 +79,7 @@ export default function HomePage() {
 				onRecipeClick={handleRecipeClick}
 				className="my-8"
 			/>
+
 			<Preferences
 				steps={preferencesData}
 				onComplete={handleComplete}

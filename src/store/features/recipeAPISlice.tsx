@@ -19,7 +19,8 @@ export interface RecipeState {
 	recipesByCategory: Record<string, Recipe[]>;
 	recipesByCategoryType: Record<string, Recipe[]>;
 	allRecipes: Recipe[];
-	favoriteRecipesList: Recipe[]; // Full favorite recipes list
+	searchRecipes: Recipe[];
+	favoriteRecipesList: Recipe[];
 	loading: boolean;
 	error: string | null;
 }
@@ -29,7 +30,8 @@ const initialState: RecipeState = {
 	recipesByCategory: {},
 	recipesByCategoryType: {},
 	allRecipes: [],
-	favoriteRecipesList: [], // Initialize favorite recipes list
+	searchRecipes: [],
+	favoriteRecipesList: [],
 	loading: false,
 	error: null,
 };
@@ -49,17 +51,25 @@ export const fetchRecipesByCategory = createAsyncThunk(
 );
 
 export const fetchRecipesByCategoryType = createAsyncThunk(
-	"recipe/fetchByCategoryType",
+	'recipe/fetchByCategoryType',
 	async (categoryType: string) => {
-	  const data = await getRecipesByCategoryType(categoryType);
-	  return { categoryType, recipes: data };
-	}
+		const data = await getRecipesByCategoryType(categoryType);
+		return { categoryType, recipes: data };
+	},
 );
 
 export const fetchAllRecipes = createAsyncThunk('recipes/fetchAll', async () => {
 	const res = await getAllRecipes();
 	return res.data.recipes as Recipe[];
 });
+
+export const fetchRecipesBySearch = createAsyncThunk(
+	'recipes/fetchBySearch',
+	async (searchValue: string) => {
+		const res = await getAllRecipes(searchValue);
+		return res.data.recipes as Recipe[];
+	},
+);
 
 export const submitRecipeRating = createAsyncThunk<
 	any,
@@ -170,11 +180,24 @@ const recipeAPISlice = createSlice({
 				state.error = action.error.message ?? 'Error';
 			})
 
-			// ===== fetchRecipesByCategoryType =====
-			.addCase(fetchRecipesByCategoryType.pending, (state) => {
+			.addCase(fetchRecipesBySearch.pending, state => {
 				state.loading = true;
 				state.error = null;
-			  })
+			})
+			.addCase(fetchRecipesBySearch.fulfilled, (state, action: PayloadAction<Recipe[]>) => {
+				state.loading = false;
+				state.searchRecipes = action.payload;
+			})
+			.addCase(fetchRecipesBySearch.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error.message ?? 'Failed to search recipes';
+			})
+
+			// ===== fetchRecipesByCategoryType =====
+			.addCase(fetchRecipesByCategoryType.pending, state => {
+				state.loading = true;
+				state.error = null;
+			})
 			.addCase(fetchRecipesByCategoryType.fulfilled, (state, action) => {
 				state.loading = false;
 				const { categoryType, recipes } = action.payload;
@@ -182,7 +205,7 @@ const recipeAPISlice = createSlice({
 			})
 			.addCase(fetchRecipesByCategoryType.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.error.message ?? "Failed to fetch recipes by categoryType";
+				state.error = action.error.message ?? 'Failed to fetch recipes by categoryType';
 			})
 
 			.addCase(submitRecipeRating.pending, state => {
@@ -247,8 +270,11 @@ const recipeAPISlice = createSlice({
 
 export const { toggleFavoriteLocal } = recipeAPISlice.actions;
 
+export const selectSearchResults = (state: RootState) => state.recipeAPI.searchRecipes;
+
 export const selectFavoriteRecipes = (state: RootState) =>
 	state.recipeAPI.favoriteRecipesList.map(recipe => recipe.id);
+
 export const selectFavoriteRecipesList = (state: RootState) => state.recipeAPI.favoriteRecipesList;
 export const selectFavoriteRecipeIds = (state: RootState) =>
 	state.recipeAPI.favoriteRecipesList.map(recipe => recipe.id);

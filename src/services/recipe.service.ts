@@ -1,12 +1,15 @@
 import axiosInstance from './axiosInstance';
-import type { Recipe} from '@/types/TypeRecipe';
+import type { Recipe } from '@/types/TypeRecipe';
 // recipe service functions:
 // getAllRecipes, getRecipesByCategory, getRecipeById, addRecipe, updateRecipe, deleteRecipe,...
 
 // getAllRecipes
-export const getAllRecipes = async () => {
+export const getAllRecipes = async (searchValue?: string) => {
 	try {
-		const response = await axiosInstance.get(`/api/recipe/get`, { withCredentials: true });
+		const url = searchValue ? `/api/recipe/get?search=${searchValue}` : `/api/recipe/get`;
+
+		const response = await axiosInstance.get(url, { withCredentials: true });
+		console.log(`${searchValue}: `, response.data);
 		return response.data;
 	} catch (error) {
 		console.error('Error fetching recipe detail:', error);
@@ -32,7 +35,7 @@ export const getRecipesByCategory = async (categoryName: string): Promise<Recipe
 			`/api/recipe/get?category=${encodeURIComponent(categoryName)}`,
 			{ withCredentials: true },
 		);
-		console.log(response.data.data.recipes)
+		console.log(response.data.data.recipes);
 		return response.data.data.recipes;
 	} catch (error) {
 		console.error(`Error fetching recipes by category: ${categoryName}`, error);
@@ -103,12 +106,15 @@ export const removeFavoriteRecipe = async (userId: string, recipeId: string) => 
 
 export const getRecipesByCategoryType = async (categoryType: string): Promise<Recipe[]> => {
 	try {
-	  const response = await axiosInstance.get(`/api/recipe/get?categoryType=${encodeURIComponent(categoryType)}`, {
-		withCredentials: true,
-	  });
-	  return response.data.data.recipes;
+		const response = await axiosInstance.get(
+			`/api/recipe/get?categoryType=${encodeURIComponent(categoryType)}`,
+			{
+				withCredentials: true,
+			},
+		);
+		return response.data.data.recipes;
 	} catch (error) {
-	  console.error("Error fetching recipes by category:", error);
-	  throw error;
+		console.error('Error fetching recipes by category:', error);
+		throw error;
 	}
-  };
+};
