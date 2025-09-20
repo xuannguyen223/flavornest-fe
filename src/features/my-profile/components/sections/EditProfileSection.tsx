@@ -4,19 +4,24 @@ import Sections from "@/features/my-profile/components/sections/Sections";
 import { FormInput } from "@/components/common/FormInput";
 import UserPhotoSvg from "@/assets/user-photo.svg";
 import CameraIconSvg from "@/assets/camera-icon.svg";
+import { useAppDispatch } from "@/hooks/redux";
+import { handleUpdateUserProfile } from "@/store/features/user/userAction";
 
 function EditProfileSection() {
   const [firstName, setFirstName] = useState("Alina");
   const [lastName, setLastName] = useState("Dcruz");
   const [website, setWebsite] = useState("");
   const [aboutMe, setAboutMe] = useState("");
-  const [, setProfilePhoto] = useState<File | null>(null);
+  const [profilePhoto, setProfilePhoto] = useState<File | null>(null);
   const [profilePhotoPreview, setProfilePhotoPreview] = useState<string | null>(
     null
   );
+  const [fileType, setFileType] = useState("");
+  const [fileName, setFileName] = useState("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const isSubmitting = false;
   const canSubmit = firstName.trim().length > 0 && lastName.trim().length > 0;
+  const dispatch = useAppDispatch();
 
   const handleSelectPhoto = () => {
     fileInputRef.current?.click();
@@ -32,9 +37,20 @@ function EditProfileSection() {
         setProfilePhotoPreview(e.target?.result as string);
       };
       reader.readAsDataURL(file);
+      setFileType(file.type);
+      setFileName(file.name);
     } else {
       setProfilePhotoPreview(null);
     }
+  };
+
+  const handleSubmitUpdateProfile = () => {
+    // Handle update profile logic here
+    const userProfile = {
+      name: firstName + " " + lastName,
+      avatarUrl: "",
+    };
+    dispatch(handleUpdateUserProfile(userProfile, profilePhoto));
   };
 
   return (
@@ -65,7 +81,11 @@ function EditProfileSection() {
             <img src={UserPhotoSvg} alt="Default user photo" />
           )}
           {/* camera-icon */}
-          <img src={CameraIconSvg} alt="Camera icon" className="absolute right-[10px] bottom-[10px] w-[58px] h-[58px]" />
+          <img
+            src={CameraIconSvg}
+            alt="Camera icon"
+            className="absolute right-[10px] bottom-[10px] w-[58px] h-[58px]"
+          />
         </Button>
       </section>
 
@@ -108,9 +128,12 @@ function EditProfileSection() {
         />
         <div>
           <Button
-            type="submit"
+            type="button"
             disabled={isSubmitting || !canSubmit}
             className="w-full sm:w-auto h-12 sm:h-14 lg:h-16 xl:h-[56px] font-medium text-base sm:text-lg lg:text-xl xl:text-[24px] text-white px-4 sm:px-5 py-3 sm:py-4 lg:py-5 xl:py-6 bg-(--primary-color) rounded-full"
+            onClick={() => {
+              handleSubmitUpdateProfile();
+            }}
           >
             Update Profile
           </Button>
