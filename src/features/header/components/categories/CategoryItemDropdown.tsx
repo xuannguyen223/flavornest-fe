@@ -1,4 +1,6 @@
 import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -10,7 +12,7 @@ import "../../style.css";
 export type CategoryDropdownItem = {
   id: string;
   label: string;
-  href?: string;
+  description: string;
 };
 
 type CategoryItemDropdownProps = {
@@ -25,8 +27,17 @@ export default function CategoryItemDropdown({
   isActive,
 }: CategoryItemDropdownProps) {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const menuItems = useMemo(() => items, [items]);
+
+  const handleClick = (item: CategoryDropdownItem) => {
+    navigate(
+      `/recipes?category=${encodeURIComponent(item.label)}&desc=${encodeURIComponent(
+        item.description || ""
+      )}`
+    );
+  };
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -58,13 +69,15 @@ export default function CategoryItemDropdown({
         >
           <div>
             {menuItems.map((item) => (
-              <DropdownMenuItem key={item.id} className="px-1 py-2">
-                <a
-                  href={item.href || "#"}
-                  className="block font-light text-left text-base sm:text-lg lg:text-xl xl:text-[20px] text-(--light-black-color)"
+              <DropdownMenuItem 
+                key={item.id} 
+                className="px-1 py-2 rounded hover:bg-gray-100 transition-colors"
+                onClick={() => handleClick(item)}
                 >
+                <span className='block w-full font-light text-left 
+                  text-base sm:text-lg lg:text-xl xl:text-[20px] text-(--light-black-color)'>
                   {item.label}
-                </a>
+                </span>
               </DropdownMenuItem>
             ))}
           </div>

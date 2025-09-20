@@ -5,10 +5,12 @@ import AuthButton from './action-buttons/AuthButton';
 import UserMenu from './action-buttons/UserMenu';
 import '../../style.css';
 import { Categories } from '../categories';
-import { CATEGORY_DATA } from '../categories/constants';
 import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from "@/hooks/redux";
 
 export default function MainHeader() {
+	const categoriesByType = useAppSelector((state) => state.category.categoriesByType);
+	
 	const navigate = useNavigate();
 	const isLoggedIn = typeof window !== 'undefined' && !!localStorage.getItem('auth_token');
 	const displayName =
@@ -51,7 +53,7 @@ export default function MainHeader() {
 					</div>
 				</div>
 			</div>
-			<Categories items={CATEGORY_DATA} />
+			<Categories itemsByType={categoriesByType} />
 		</header>
 	);
 }
