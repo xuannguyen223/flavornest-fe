@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { Recipe, Category } from '@/types/TypeRecipe';
 import { getAllCategories } from '@/services/category.service';
-
+import { formatCategoryType } from '@/lib/utils';
 export interface CategoryState {
     recipesById: Record<string, Recipe>; 
     allRecipes: Recipe[];
@@ -23,22 +23,13 @@ const initialState: CategoryState = {
     error: null,
 };
 
-// Format lại chữ
-export const formatCategoryType = (type: string) => {
-    return type
-      .toLowerCase()              // chuyển về chữ thường
-      .split('_')                 // tách theo dấu _
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // viết hoa chữ cái đầu
-      .join(' ');                 // nối lại bằng space
-};
-
 // fetchAllCategories
 export const fetchAllCategories = createAsyncThunk(
     "recipes/fetchAllCategories",
     async () => {
         const categories = await getAllCategories();
   
-        // Format type
+        // Format type, CUISINE => Cuisine
         const formattedCategories = categories.map(cat => ({
             ...cat,
             type: formatCategoryType(cat.type)
@@ -54,7 +45,7 @@ const categorySlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
     builder
-        // Xử lý fetchAllCategories
+        // fetchAllCategories
         .addCase(fetchAllCategories.pending, (state) => {
         state.loading = true;
         state.error = null;
