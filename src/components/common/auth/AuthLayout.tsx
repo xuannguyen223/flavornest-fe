@@ -2,7 +2,6 @@ import "./style.css";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import AuthLeft from "./AuthLeft";
 import AuthRight from "./AuthRight";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/store/store";
@@ -19,7 +18,7 @@ const AuthLayout = () => {
   );
 
   useEffect(() => {
-    dispatch(checkLogin());
+    dispatch(checkLogin(true));
   }, []);
 
   if (isAuthenticated) {
@@ -42,14 +41,6 @@ const AuthLayout = () => {
           <AuthRight isSignUpPage={isSignUpPage} handleClose={handleClose} />
         </div>
       </div>
-
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        closeOnClick
-        pauseOnHover
-      />
     </>
   );
 };

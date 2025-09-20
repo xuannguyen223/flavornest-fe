@@ -5,6 +5,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import { Link } from "react-router-dom";
 
 type UserMenuProps = {
   displayName?: string;
@@ -32,9 +33,7 @@ export default function UserMenu({
           >
             {initials}
           </span>
-          <span
-            className="hidden sm:block text-(--light-black-color) text-sm sm:text-base lg:text-lg xl:text-[20px]"
-          >
+          <span className="hidden sm:block text-(--light-black-color) text-sm sm:text-base lg:text-lg xl:text-[20px]">
             {displayName}
           </span>
           <span aria-hidden className="ml-1">
@@ -62,26 +61,19 @@ export default function UserMenu({
         className="min-w-[12rem] py-2 bg-white shadow-md border-none rounded-none"
       >
         <DropdownMenuItem className="px-3 py-2">
-          <a
-            href="#"
+          <Link
+            to="/my-profile"
             className="block w-full text-left text-base sm:text-lg lg:text-lg xl:text-[20px] text-(--light-black-color)"
           >
             My Profile
-          </a>
-        </DropdownMenuItem>
-        <DropdownMenuItem className="px-3 py-2">
-          <a
-            href="#"
-            className="block w-full text-left text-base sm:text-lg lg:text-lg xl:text-[20px] text-(--light-black-color)"
-          >
-            Preferences
-          </a>
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem className="px-3 py-2" onClick={onLogout}>
-          <span className="block w-full text-left text-base sm:text-lg lg:text-lg xl:text-[20px] text-(--light-black-color)">Log Out</span>
+          <span className="block w-full text-left text-base sm:text-lg lg:text-lg xl:text-[20px] text-(--light-black-color)">
+            Log Out
+          </span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
-

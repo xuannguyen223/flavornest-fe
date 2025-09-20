@@ -16,28 +16,9 @@ import MyRecipesSection from "./features/my-profile/components/sections/MyRecipe
 import AuthLayout from "./components/common/auth/AuthLayout";
 import SignupPage from "./features/signup/SignupPage";
 import LoginPage from "./features/login/LoginPage";
-
-import { useEffect } from "react";
-import { useAppDispatch } from "./store/hooks";
-import { loginThunk } from "./store/features/authSlice";
 import FavoriteRecipesSection from "./features/my-profile/components/sections/FavoriteRecipesSection";
 
 function App() {
-  // auto Login use for testing use submit review
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(
-      loginThunk({
-        email: "johncole10@example.com",
-        password: "@StrongPass8888",
-      })
-    )
-      .unwrap()
-      .then(() => console.log("✅ Auto login success"))
-      .catch((err) => console.error("❌ Auto login failed", err));
-  }, [dispatch]);
-
   return (
     <BrowserRouter>
       <Routes>

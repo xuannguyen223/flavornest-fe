@@ -7,12 +7,16 @@ import Instructions from "./components/Instructions";
 import ReviewsRating from "./components/ReviewsRating";
 import RecipeCategories from "./components/RecipeCategories";
 import RecipeRecommend from "./components/RecipeRecommend";
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import type { Recipe } from "../../types/TypeRecipe";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { fetchRecipeById, fetchRecipesByCategory, submitRecipeRating } from "@/store/features/recipeAPISlice";
-import { toast } from 'react-toastify';
+import {
+  fetchRecipeById,
+  fetchRecipesByCategory,
+  submitRecipeRating,
+} from "@/store/features/recipeAPISlice";
+import { toast } from "react-toastify";
 
 export default function RecipeDetailPage() {
   const { recipeId } = useParams<{ recipeId: string }>();
@@ -21,10 +25,14 @@ export default function RecipeDetailPage() {
   const recipe = useAppSelector((state) =>
     recipeId ? state.recipeAPI.recipesById[recipeId] : undefined
   );
-  const recipesByCategory = useAppSelector((state) => state.recipeAPI.recipesByCategory);
+  const recipesByCategory = useAppSelector(
+    (state) => state.recipeAPI.recipesByCategory
+  );
   const loading = useAppSelector((state) => state.recipeAPI.loading);
   const error = useAppSelector((state) => state.recipeAPI.error);
-  const { isAuthenticated} = useAppSelector((state) => state.auth);
+  const isAuthenticated = useAppSelector(
+    (state) => state.loginSlice.isAuthenticated
+  );
 
   const [hasReviewed, setHasReviewed] = useState(false);
 
@@ -52,19 +60,25 @@ export default function RecipeDetailPage() {
 
   const handleSubmitRating = async (newRating: number) => {
     if (!isAuthenticated) {
-      toast.error('Login or SignUp to submit review!');
+      toast.error("Login or SignUp to submit review!");
       return;
     }
 
     if (!recipeId) return;
 
     try {
-      await dispatch(submitRecipeRating({ recipeId, rating: newRating })).unwrap();
-      toast.success(hasReviewed ? 'Rating updated successfully!' : 'Rating submitted successfully!');
+      await dispatch(
+        submitRecipeRating({ recipeId, rating: newRating })
+      ).unwrap();
+      toast.success(
+        hasReviewed
+          ? "Rating updated successfully!"
+          : "Rating submitted successfully!"
+      );
       setHasReviewed(true);
-      localStorage.setItem(`hasReviewed_${recipeId}`, 'true'); // Save hasReviewed
+      localStorage.setItem(`hasReviewed_${recipeId}`, "true"); // Save hasReviewed
     } catch (err: any) {
-      toast.error(err.message || 'Failed to submit rating');
+      toast.error(err.message || "Failed to submit rating");
     }
   };
 
@@ -84,12 +98,12 @@ export default function RecipeDetailPage() {
   }
 
   if (loading && !recipe) return <div>Loading...</div>;
-  if (error || !recipe) return <div>{error || 'Recipe not found'}</div>;
+  if (error || !recipe) return <div>{error || "Recipe not found"}</div>;
 
-  const createdDate = new Date(recipe.createdAt).toLocaleDateString('en-GB', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
+  const createdDate = new Date(recipe.createdAt).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
   });
 
   return (
@@ -115,16 +129,20 @@ export default function RecipeDetailPage() {
       <Ingredients ingredients={recipe.ingredients} />
       <Instructions steps={recipe.instructions} />
       {recipe.categories?.length ? (
-        <RecipeCategories categories={recipe.categories.map((c) => c.category)} />
+        <RecipeCategories
+          categories={recipe.categories.map((c) => c.category)}
+        />
       ) : null}
       <ReviewsRating
         rating={recipe.avgRating}
         ratingCount={recipe.ratingCount}
         onSubmitRating={handleSubmitRating}
         hasReviewed={hasReviewed}
-        recipeId={recipeId || ''} // Truyền recipeId
+        recipeId={recipeId || ""} // Truyền recipeId
       />
-      {relatedRecipes.length > 0 && <RecipeRecommend recipes={relatedRecipes} />}
+      {relatedRecipes.length > 0 && (
+        <RecipeRecommend recipes={relatedRecipes} />
+      )}
     </div>
   );
 }
