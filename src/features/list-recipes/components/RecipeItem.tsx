@@ -1,11 +1,17 @@
 'use client';
 
 import React from 'react';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Bookmark, Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import {
+	addToFavorites,
+	removeFromFavorites,
+	selectIsRecipeFavorite,
+	toggleFavoriteLocal,
+} from '@/store/features/recipeAPISlice';
 
 export interface RecipeItemProps {
 	id: string;
@@ -14,9 +20,7 @@ export interface RecipeItemProps {
 	totalTime: string;
 	rating: number;
 	reviewCount: number;
-	imageUrl: string;
-	isSaved?: boolean;
-	onSaveToggle?: (id: string) => void;
+	imageUrl?: string;
 	onClick?: (id: string) => void; // click then navigate to recipe detail page
 	className?: string;
 }
@@ -29,19 +33,37 @@ export function RecipeItem({
 	rating,
 	reviewCount,
 	imageUrl,
-	isSaved = false,
-	onSaveToggle,
 	onClick,
 	className,
 }: RecipeItemProps) {
-	const [saved, setSaved] = useState(isSaved);
-	const [imageLoaded, setImageLoaded] = useState(false);
+	const dispatch = useAppDispatch();
+	const isFavorite = useAppSelector(selectIsRecipeFavorite(id));
+	const { userId, isAuthenticated } = useAppSelector(state => state.auth);
+	const [imageLoaded, setImageLoaded] = React.useState(false);
 	const navigate = useNavigate();
 
-	const handleSaveClick = (e: React.MouseEvent) => {
+	const handleFavoriteClick = async (e: React.MouseEvent) => {
 		e.stopPropagation();
-		setSaved(!saved);
-		onSaveToggle?.(id);
+
+		if (!isAuthenticated || !userId) {
+			console.warn('User must be logged in to save recipes');
+			return;
+		}
+
+		// Optimistic update
+		dispatch(toggleFavoriteLocal(id));
+
+		try {
+			if (isFavorite) {
+				await dispatch(removeFromFavorites({ userId, recipeId: id })).unwrap();
+			} else {
+				await dispatch(addToFavorites({ userId, recipeId: id })).unwrap();
+			}
+		} catch (error) {
+			// Revert optimistic update on error
+			dispatch(toggleFavoriteLocal(id));
+			console.error('Failed to update favorite status:', error);
+		}
 	};
 
 	const handleCardClick = () => {
@@ -89,12 +111,12 @@ export function RecipeItem({
 						strokeWidth={0.5}
 						className={cn(
 							'absolute top-2 right-2 w-10 h-10 cursor-pointer',
-							saved
+							isFavorite
 								? 'fill-yellow-400 drop-shadow-sm'
 								: 'fill-white text-gray-800 drop-shadow-sm hover:fill-gray-100',
 						)}
-						onClick={handleSaveClick}
-						fill={saved ? '#facc15' : '#fff'}
+						onClick={handleFavoriteClick}
+						fill={isFavorite ? '#facc15' : '#fff'}
 					/>
 				</div>
 				<div className="mt-2 font-poppins flex flex-col gap-2 text-black text-left">

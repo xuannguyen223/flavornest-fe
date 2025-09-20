@@ -9,15 +9,20 @@ import {
 } from '@/components/ui/select';
 import { useSort } from '@/hooks';
 
-const sortOptions = [
+const defaultSortOptions = [
 	{ value: 'relevance', label: 'Relevance' },
 	{ value: 'newest', label: 'Newest' },
 	{ value: 'oldest', label: 'Oldest' },
 	{ value: 'most-positive', label: 'Most positive' },
 	{ value: 'least-positive', label: 'Least positive' },
-] as const;
+];
 
-export function RecipeSort() {
+interface RecipeSortProps {
+	sortOptions?: { value: string; label: string }[];
+	className?: string;
+}
+
+export function RecipeSort({ sortOptions = defaultSortOptions, className = '' }: RecipeSortProps) {
 	const { sortBy, updateSort } = useSort();
 
 	const getCurrentLabel = () => {
@@ -25,7 +30,7 @@ export function RecipeSort() {
 	};
 
 	return (
-		<div className="flex items-center gap-2 p-4">
+		<div className={`flex items-center gap-2 p-4 ${className}`}>
 			<div className="text-lg text-gray-700">Sort by:</div>
 			<Select
 				value={sortBy}

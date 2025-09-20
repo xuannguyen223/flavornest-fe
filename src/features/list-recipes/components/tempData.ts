@@ -9,7 +9,6 @@ export const sampleRecipes: RecipeItemProps[] = [
 		rating: 4.8,
 		reviewCount: 18,
 		imageUrl: '/delicious-egg-fried-rice-in-a-pan.jpg',
-		isSaved: false,
 	},
 	{
 		id: '2',
@@ -19,7 +18,7 @@ export const sampleRecipes: RecipeItemProps[] = [
 		rating: 4.7,
 		reviewCount: 29,
 		imageUrl: '/creamy-mac-and-cheese-in-instant-pot.jpg',
-		isSaved: true,
+	
 	},
 	{
 		id: '3',
@@ -29,7 +28,6 @@ export const sampleRecipes: RecipeItemProps[] = [
 		rating: 4.9,
 		reviewCount: 11,
 		imageUrl: '/french-bread-pepperoni-pizza-on-baking-sheet.jpg',
-		isSaved: false,
 	},
 	{
 		id: '4',
@@ -39,7 +37,6 @@ export const sampleRecipes: RecipeItemProps[] = [
 		rating: 4.6,
 		reviewCount: 33,
 		imageUrl: '/garlic-shrimp-with-chorizo-in-rice-cooker.jpg',
-		isSaved: false,
 	},
 	{
 		id: '5',
@@ -49,7 +46,7 @@ export const sampleRecipes: RecipeItemProps[] = [
 		rating: 4.8,
 		reviewCount: 45,
 		imageUrl: '/classic-beef-tacos-with-fresh-toppings.jpg',
-		isSaved: true,
+	
 	},
 	{
 		id: '6',
@@ -59,7 +56,6 @@ export const sampleRecipes: RecipeItemProps[] = [
 		rating: 4.7,
 		reviewCount: 22,
 		imageUrl: '/creamy-chicken-alfredo.png',
-		isSaved: false,
 	},
 	{
 		id: '7',
@@ -69,7 +65,6 @@ export const sampleRecipes: RecipeItemProps[] = [
 		rating: 4.7,
 		reviewCount: 22,
 		imageUrl: '/creamy-chicken-alfredo.png',
-		isSaved: false,
 	},
 	{
 		id: '8',
@@ -79,6 +74,5 @@ export const sampleRecipes: RecipeItemProps[] = [
 		rating: 4.7,
 		reviewCount: 22,
 		imageUrl: '/creamy-chicken-alfredo.png',
-		isSaved: false,
 	},
 ];

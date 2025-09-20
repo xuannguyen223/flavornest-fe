@@ -75,10 +75,6 @@ export default function RecipeListPage() {
 		console.log('Searching for:', value);
 	};
 
-	const handleSaveToggle = (id: string) => {
-		console.log('Save toggled for recipe:', id);
-	};
-
 	const handleRecipeClick = (id: string) => {
 		console.log('Recipe clicked:', id);
 	};
@@ -118,7 +114,6 @@ export default function RecipeListPage() {
 					<RecipeList
 						recipeList={mappedRecipes}
 						layout="default"
-						onSaveToggle={handleSaveToggle}
 						onRecipeClick={handleRecipeClick}
 					/>
 				</div>

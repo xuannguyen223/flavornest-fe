@@ -24,10 +24,6 @@ export default function HomePage() {
 		);
 	};
 
-	const handleSaveToggle = (id: string) => {
-		console.log('Save toggled for recipe:', id);
-	};
-
 	const handleRecipeClick = (id: string) => {
 		console.log('Recipe clicked:', id);
 	};
@@ -58,7 +54,6 @@ export default function HomePage() {
 					show: true,
 					onClick: handleViewAll,
 				}}
-				onSaveToggle={handleSaveToggle}
 				onRecipeClick={handleRecipeClick}
 				className="my-8 mt-20"
 			/>
@@ -76,7 +71,6 @@ export default function HomePage() {
 					show: true,
 					onClick: handleViewAll,
 				}}
-				onSaveToggle={handleSaveToggle}
 				onRecipeClick={handleRecipeClick}
 				className="my-8"
 			/>
