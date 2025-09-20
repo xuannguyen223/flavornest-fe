@@ -1,17 +1,98 @@
 import SearchSection from '@/components/common/search-bar/SearchSection';
 import { Preferences } from './components/Preferences';
 import { preferencesData } from './components/tempData';
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { RecipeList } from '../list-recipes/components/RecipeList';
-import { sampleRecipes } from '../list-recipes/components/tempData';
 import { useNavigate } from 'react-router-dom';
 import { BlogPost } from './components/BlogPost';
 import { ShowCase } from './components/ShowCase';
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import type { Recipe } from '@/types/TypeRecipe';
+import type { RecipeItemProps } from "@/features/list-recipes/components/RecipeItem";
+import { fetchAllRecipes } from '@/store/features/recipeAPISlice';
 
 export default function HomePage() {
 	const [searchValue, setSearchValue] = useState('');
 	const navigate = useNavigate();
 
+	const dispatch = useAppDispatch();
+	const { allRecipes, loading } = useAppSelector((state) => state.recipeAPI);
+
+	useEffect(() => {
+		dispatch(fetchAllRecipes()); 
+	}, [dispatch]);
+	
+	// Lấy danh sách category từ tất cả công thức
+	const categories = useMemo(
+		() =>
+		  Array.from(
+			new Set(
+			  allRecipes.flatMap((r: Recipe) => r.categories.map((c) => c.category.name))
+			)
+		  ),
+		[allRecipes]
+	);
+	  
+	// --- Chia nhóm group1 (>4 món) & group2 (>=4 món) ---
+	// đang set default là 1 để có hiện lên với DB local
+	// Chia nhóm group1 và group2, đảm bảo g1 và g2 là hai danh mục khác nhau
+	// const { group1, group2 } = useMemo(() => {
+	// 	let g1: { name: string; recipes: Recipe[] } | null = null;
+	// 	let g2: { name: string; recipes: Recipe[] } | null = null;
+	
+	// 	for (const catName of categories) {
+	// 	  const recipesForCat = allRecipes.filter((r) =>
+	// 		r.categories.some((c) => c.category.name === catName)
+	// 	  );
+	// 	  if (!recipesForCat.length) continue;
+	
+	// 	  if (recipesForCat.length >= 1 && !g1) {
+	// 		g1 = { name: catName, recipes: recipesForCat };
+	// 	  } else if (recipesForCat.length >= 1 && !g2 && catName !== g1?.name) {
+	// 		// khác g1
+	// 		g2 = { name: catName, recipes: recipesForCat };
+	// 	  }
+	
+	// 	  // Thoát sớm nếu đã tìm thấy cả g1 và g2
+	// 	  if (g1 && g2) break;
+	// 	}
+	
+	// 	return { group1: g1, group2: g2 };
+	//   }, [allRecipes, categories]);
+
+	const { group1, group2 } = useMemo(() => {
+		let g1: { name: string; recipes: Recipe[]; description: string } | null = null;
+		let g2: { name: string; recipes: Recipe[]; description: string } | null = null;
+	  
+		for (const catName of categories) {
+		  const recipesForCat = allRecipes.filter((r) =>
+			r.categories.some((c) => c.category.name === catName)
+		  );
+		  if (!recipesForCat.length) continue;
+	  
+		  if (recipesForCat.length >= 1 && !g1) {
+			// Gán danh mục đầu tiên có từ 4 công thức trở lên cho g1
+			g1 = {
+			  name: catName,
+			  recipes: recipesForCat,
+			  description: recipesForCat[0]?.categories.find((c) => c.category.name === catName)?.category.description || 'No description available',
+			};
+		  } else if (recipesForCat.length >= 1 && !g2 && catName !== g1?.name) {
+			// Gán danh mục tiếp theo có từ 4 công thức trở lên (khác với g1) cho g2
+			g2 = {
+			  name: catName,
+			  recipes: recipesForCat,
+			  description: recipesForCat[0]?.categories.find((c) => c.category.name === catName)?.category.description || 'No description available',
+			};
+		  }
+	  
+		  // Thoát sớm nếu đã tìm thấy cả g1 và g2
+		  if (g1 && g2) break;
+		}
+	  
+		return { group1: g1, group2: g2 };
+	  }, [allRecipes, categories]);
+	
 	const handleSearch = (value: string) => {
 		navigate(`/recipes?search=${encodeURIComponent(value)}`);
 	};
@@ -24,16 +105,30 @@ export default function HomePage() {
 		);
 	};
 
-	const handleRecipeClick = (id: string) => {
-		console.log('Recipe clicked:', id);
-	};
-
 	const handleComplete = (selections: Record<number, string[]>) => {
 		console.log('User preferences:', selections);
 	};
 
+	// --- Hàm map Recipe -> RecipeItemProps ---
+	const mapToRecipeItemProps = (recipes: Recipe[]): RecipeItemProps[] =>
+		recipes.map((r) => ({
+			id: r.id,
+			title: r.title,
+			creator: r.author.profile.name,
+			totalTime: `${(r.cookTime || 0) + (r.prepTime || 0)} min`,
+			rating: r.avgRating || 0,
+			reviewCount: r.ratingCount || 0,
+			imageUrl: r.imageUrl ?? "/placeholder.svg",
+	}));
+
 	return (
 		<div className="min-h-screen">
+			{loading ? (
+				<div>Loading...</div>
+			) : !allRecipes.length ? (
+				<div>No recipes found</div>
+			) : (
+			<>
 			<SearchSection
 				title="Fuel your body & soul - find recipes that taste amazing!"
 				backgroundImage="/home.png"
@@ -45,35 +140,33 @@ export default function HomePage() {
 				height="h-120"
 				overlayOpacity={0.3}
 			/>
-			<RecipeList
-				recipeList={sampleRecipes}
+			{group1 && (
+				<RecipeList
+				key={group1.name}
+				recipeList={mapToRecipeItemProps(group1.recipes)}
 				layout="1-row-4"
-				categoryName="Indian"
-				description="Satisfy your cravings in a flash! Explore our Quick & Easy Meals for effortless recipes without compromising on mouthwatering taste."
-				viewAll={{
-					show: true,
-					onClick: handleViewAll,
-				}}
-				onRecipeClick={handleRecipeClick}
-				className="my-8 mt-20"
-			/>
+				categoryName={group1.name}
+				description={group1.description}
+				viewAll={{ show: true, onClick: handleViewAll }}
+				className="my-8 mt-10"
+				/>
+          	)}
 			<BlogPost
 				categoryName="Healthy Eating Inspiration"
 				onViewAllClick={() => {}}
 				onRecipeClick={() => {}}
 			/>
-			<RecipeList
-				recipeList={sampleRecipes}
+			{group2 && (
+				<RecipeList
+				key={group2.name}
+				recipeList={mapToRecipeItemProps(group2.recipes)}
 				layout="1-row-4"
-				categoryName="Effortless Eats"
-				description="Satisfy your cravings in a flash! Explore our Quick & Easy Meals for effortless recipes without compromising on mouthwatering taste."
-				viewAll={{
-					show: true,
-					onClick: handleViewAll,
-				}}
-				onRecipeClick={handleRecipeClick}
-				className="my-8"
-			/>
+				categoryName={group2.name}
+				description={group2.description}
+				viewAll={{ show: true, onClick: handleViewAll }}
+				className="my-8 mt-10"
+				/>
+			)}
 			<Preferences
 				steps={preferencesData}
 				onComplete={handleComplete}
@@ -82,6 +175,8 @@ export default function HomePage() {
 				onViewAll={() => {}}
 				onCardClick={() => {}}
 			/>
+			</>
+			)}
 		</div>
 	);
 }

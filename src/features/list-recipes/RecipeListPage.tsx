@@ -41,7 +41,6 @@ export default function RecipeListPage() {
     } else if (categoryName) {
       if (!recipesByCategory[categoryName]) {
         dispatch(fetchRecipesByCategory(categoryName));
-		console.log(categoryName);
       }
     } else {
       if (allRecipes.length === 0) {
@@ -67,7 +66,7 @@ export default function RecipeListPage() {
           displayRecipes.map((r) => ({
             id: r.id,
             title: r.title,
-            creator: r.author.email.split('@')[0],
+            creator: r.author.profile.name,
             totalTime: `${r.cookTime + r.prepTime} min`,
             rating: r.avgRating,
             reviewCount: r.ratingCount,

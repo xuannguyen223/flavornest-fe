@@ -12,6 +12,7 @@ import {
   selectIsRecipeFavorite,
   toggleFavoriteLocal,
 } from "@/store/features/recipeAPISlice";
+import { toast } from "react-toastify";
 
 export interface RecipeItemProps {
   id: string;
@@ -50,7 +51,8 @@ export function RecipeItem({
     e.stopPropagation();
 
     if (!isAuthenticated || !userId) {
-      console.warn("User must be logged in to save recipes");
+      toast.error("Login or SignUp to save a recipe!");
+      navigate("/login");
       return;
     }
 
@@ -133,8 +135,8 @@ export function RecipeItem({
 
           <div className="flex items-center gap-2 text-sm">
             By
-            <div className="font-medium text-amber-600">
-              {creator.toUpperCase()}
+            <div className="font-semibold text-green-700">
+              {creator}
             </div>
           </div>
 
