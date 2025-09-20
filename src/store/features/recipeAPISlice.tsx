@@ -8,7 +8,8 @@ import {
 	updateRecipeRating,
 	addFavoriteRecipe,
 	removeFavoriteRecipe,
-	getFavoriteRecipes, // Added getFavoriteRecipes import
+	getFavoriteRecipes,
+	getRecipesByCategoryType, // Added getFavoriteRecipes import
 } from '@/services/recipe.service';
 import type { RootState } from '../store';
 // Contains API for Recipe Service
@@ -16,6 +17,7 @@ import type { RootState } from '../store';
 export interface RecipeState {
 	recipesById: Record<string, Recipe>;
 	recipesByCategory: Record<string, Recipe[]>;
+	recipesByCategoryType: Record<string, Recipe[]>;
 	allRecipes: Recipe[];
 	favoriteRecipesList: Recipe[]; // Full favorite recipes list
 	loading: boolean;
@@ -25,6 +27,7 @@ export interface RecipeState {
 const initialState: RecipeState = {
 	recipesById: {},
 	recipesByCategory: {},
+	recipesByCategoryType: {},
 	allRecipes: [],
 	favoriteRecipesList: [], // Initialize favorite recipes list
 	loading: false,
@@ -43,6 +46,14 @@ export const fetchRecipesByCategory = createAsyncThunk(
 		const data = await getRecipesByCategory(categoryName);
 		return { categoryName, data };
 	},
+);
+
+export const fetchRecipesByCategoryType = createAsyncThunk(
+	"recipe/fetchByCategoryType",
+	async (categoryType: string) => {
+	  const data = await getRecipesByCategoryType(categoryType);
+	  return { categoryType, recipes: data };
+	}
 );
 
 export const fetchAllRecipes = createAsyncThunk('recipes/fetchAll', async () => {
@@ -157,6 +168,21 @@ const recipeAPISlice = createSlice({
 			.addCase(fetchAllRecipes.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.error.message ?? 'Error';
+			})
+
+			// ===== fetchRecipesByCategoryType =====
+			.addCase(fetchRecipesByCategoryType.pending, (state) => {
+				state.loading = true;
+				state.error = null;
+			  })
+			.addCase(fetchRecipesByCategoryType.fulfilled, (state, action) => {
+				state.loading = false;
+				const { categoryType, recipes } = action.payload;
+				state.recipesByCategoryType[categoryType] = recipes;
+			})
+			.addCase(fetchRecipesByCategoryType.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error.message ?? "Failed to fetch recipes by categoryType";
 			})
 
 			.addCase(submitRecipeRating.pending, state => {

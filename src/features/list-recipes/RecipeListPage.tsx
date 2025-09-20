@@ -7,44 +7,59 @@ import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import type { Recipe } from '@/types/TypeRecipe';
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { fetchAllRecipes, fetchRecipesByCategory } from "@/store/features/recipeAPISlice";
+import { fetchAllRecipes, fetchRecipesByCategory, fetchRecipesByCategoryType } from "@/store/features/recipeAPISlice";
 import type { Filter } from './components/filterData';
+import { formatCategoryType } from '@/lib/utils';
 
 export default function RecipeListPage() {
 	const [params] = useSearchParams();
 	const searchValue = params.get('search');
 	const categoryName = params.get('category');
 	const description = params.get('desc');
+	const categoryType = params.get('categoryType');
 
 	const [searchInput, setSearchInput] = useState(searchValue || '');
 
 	const dispatch = useAppDispatch();
-	const allRecipes = useAppSelector(state => state.recipeAPI.allRecipes);
-	const recipesByCategory = useAppSelector(state => state.recipeAPI.recipesByCategory);
+	const {
+		allRecipes,
+		recipesByCategory,
+		recipesByCategoryType,
+		loading,
+	} = useAppSelector((state) => state.recipeAPI);
+
 	const categoriesByType = useAppSelector((state) => state.category.categoriesByType);
 
 	const [displayRecipes, setDisplayRecipes] = useState<Recipe[]>([]);
 
-	// Fetch call API when component mounts or category changes
+	// Gọi API khi mount hoặc params thay đổi
 	useEffect(() => {
-		if (categoryName) {
-			if (!recipesByCategory[categoryName]) 
-				dispatch(fetchRecipesByCategory(categoryName));
-		} else {
-			if (allRecipes.length === 0) 
-				dispatch(fetchAllRecipes());
-		}
-	}, [categoryName]);
+    if (categoryType) {
+      if (!recipesByCategoryType[categoryType]) {
+        dispatch(fetchRecipesByCategoryType(categoryType));
+      }
+    } else if (categoryName) {
+      if (!recipesByCategory[categoryName]) {
+        dispatch(fetchRecipesByCategory(categoryName));
+		console.log(categoryName);
+      }
+    } else {
+      if (allRecipes.length === 0) {
+        dispatch(fetchAllRecipes());
+      }
+    }
+  	}, [categoryName, categoryType, dispatch]);
 
-	// Update local state for rendering
+	// Update displayRecipes khi data Redux thay đổi
 	useEffect(() => {
-		// click View All in Homepage => render category's list recipe
-		if (categoryName) 
-			setDisplayRecipes(recipesByCategory[categoryName] ?? []);
-		// click Recipe in Header => show all recipe
-		else 
-			setDisplayRecipes(allRecipes);
-	}, [categoryName, recipesByCategory, allRecipes]);
+		if (categoryType) {
+		  setDisplayRecipes(recipesByCategoryType[categoryType] ?? []);
+		} else if (categoryName) {
+		  setDisplayRecipes(recipesByCategory[categoryName] ?? []);
+		} else {
+		  setDisplayRecipes(allRecipes);
+		}
+	  }, [categoryName, categoryType, recipesByCategory, recipesByCategoryType, allRecipes]);
 
 	// map from Recipe -> RecipeItemProps to coordinate with params in RecipeList Component
 	const mappedRecipes: RecipeItemProps[] = useMemo(
@@ -63,7 +78,7 @@ export default function RecipeListPage() {
 
 	const filterData: Filter[] = Object.entries(categoriesByType).map(([type, items]) => ({
 		id: type,
-		title: type, 
+		title: formatCategoryType(type), 
 		options: items.map(item => ({
 		  id: item.id,
 		  label: item.name, // 'Thai', 'Italian'
@@ -82,7 +97,7 @@ export default function RecipeListPage() {
 	return (
 		<div>
 			<SearchSection
-				backgroundColor="bg-gray-300"
+				backgroundColor="bg-neutral-300"
 				searchPlaceholder={searchValue ? searchValue : 'Search by dish, ingredient, ......'}
 				searchValue={searchInput}
 				onSearchChange={setSearchInput}
@@ -92,9 +107,9 @@ export default function RecipeListPage() {
 				height="h-40"
 			/>
 
-			<div className="px-8 py-5">
+			<div className="px-8 py-3">
 				{categoryName && (
-					<div className="text-center py-8">
+					<div className="text-center">
 						<div className="text-5xl font-cormorant font-semibold text-gray-900 tracking-tight text-balance mb-4">
 							{categoryName}
 						</div>
@@ -111,11 +126,14 @@ export default function RecipeListPage() {
 
 				<div className="flex flex-row gap-8">
 					<FilterGroup filterData={filterData} />
-					<RecipeList
-						recipeList={mappedRecipes}
-						layout="default"
-						onRecipeClick={handleRecipeClick}
-					/>
+					{loading ? (
+						<p>Loading recipes...</p>
+					) : (
+						<RecipeList 
+							recipeList={mappedRecipes} 
+							layout="default" 
+							onRecipeClick={handleRecipeClick} />
+					)}
 				</div>
 			</div>
 		</div>

@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { Recipe, Category } from '@/types/TypeRecipe';
 import { getAllCategories } from '@/services/category.service';
-import { formatCategoryType } from '@/lib/utils';
 
 export interface CategoryState {
     recipesById: Record<string, Recipe>; 
@@ -31,12 +30,7 @@ export const fetchAllCategories = createAsyncThunk(
     async () => {
         const categories = await getAllCategories();
   
-        const formattedCategories = categories.map(cat => ({
-            ...cat,
-            type: formatCategoryType(cat.type)
-        }));
-  
-        return formattedCategories; // trả về Category[]
+        return categories; // trả về Category[]
     }
 );
 

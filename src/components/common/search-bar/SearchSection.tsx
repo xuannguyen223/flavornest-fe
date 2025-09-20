@@ -78,7 +78,7 @@ export default function SearchSection({
 					)}
 
 					{showSearchBar && (
-						<div className="w-full max-w-8xl py-8">
+						<div className="w-full max-w-8xl">
 							<SearchBar
 								placeholder={searchPlaceholder}
 								value={searchValue}

@@ -6,6 +6,7 @@ import { useAppSelector, useAppDispatch } from "@/hooks/redux";
 import type { FooterColumn, FooterLink } from './footer-data';
 import { useEffect } from 'react';
 import { fetchAllCategories } from '@/store/features/categorySlice';
+import { formatCategoryType } from '@/lib/utils';
 
 export default function Footer() {
 	const dispatch = useAppDispatch();
@@ -19,8 +20,8 @@ export default function Footer() {
 
 	// Tạo FooterLink[] từ categories
 	const mainCategoryLinks: FooterLink[] = Object.keys(categoriesByType).map(cat => ({
-		label: cat,        
-		href: '#' // Link đến trang category
+		label: formatCategoryType(cat),       
+		href: `/recipes?categoryType=${cat}`,
 	}));
 
 	// Tạo footerColumns mới, thay cột Main Categories bằng dynamic links
