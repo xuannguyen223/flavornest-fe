@@ -11,10 +11,10 @@ import { useState } from 'react';
 
 export default function MainHeader() {
 	const categoriesByType = useAppSelector((state) => state.category.categoriesByType);
+	const isLoggedIn = useAppSelector((state) => state.auth.isAuthenticated);
+	const displayName = useAppSelector((state) => state.auth.displayName) || "Name";
+
 	const navigate = useNavigate();
-	const isLoggedIn = typeof window !== 'undefined' && !!localStorage.getItem('auth_token');
-	const displayName =
-		(typeof window !== 'undefined' && localStorage.getItem('display_name')) || 'Name';
 
 	const [menuOpen, setMenuOpen] = useState(false);
 

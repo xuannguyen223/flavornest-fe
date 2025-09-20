@@ -64,7 +64,7 @@ export default function UserMenu({
         <DropdownMenuItem className="px-3 py-2">
           <a
             href="#"
-            className="block w-full text-left text-base sm:text-lg lg:text-xl xl:text-[20px] text-(--light-black-color)"
+            className="block w-full text-left text-base sm:text-lg lg:text-lg xl:text-[20px] text-(--light-black-color)"
           >
             My Profile
           </a>
@@ -72,13 +72,13 @@ export default function UserMenu({
         <DropdownMenuItem className="px-3 py-2">
           <a
             href="#"
-            className="block w-full text-left text-base sm:text-lg lg:text-xl xl:text-[20px] text-(--light-black-color)"
+            className="block w-full text-left text-base sm:text-lg lg:text-lg xl:text-[20px] text-(--light-black-color)"
           >
             Preferences
           </a>
         </DropdownMenuItem>
         <DropdownMenuItem className="px-3 py-2" onClick={onLogout}>
-          <span className="block w-full text-left text-base sm:text-lg lg:text-xl xl:text-[20px] text-(--light-black-color)">Log Out</span>
+          <span className="block w-full text-left text-base sm:text-lg lg:text-lg xl:text-[20px] text-(--light-black-color)">Log Out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
