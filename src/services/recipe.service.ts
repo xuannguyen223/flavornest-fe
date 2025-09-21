@@ -16,7 +16,7 @@ export const getListRecipes = async (
 		}
 		if (categoryNames && categoryNames.length > 0) {
 			categoryNames.forEach(categoryName => {
-				queryParams.append('filter', categoryName);
+				queryParams.append('category', categoryName);
 			});
 		}
 		if (categoryType) {

@@ -21,7 +21,7 @@ export function useRecipeList() {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 
-	const categoryNames = params.getAll('filter');
+	const categoryNames = params.getAll('category');
 	const categoryType = params.get('categoryType');
 	const description = params.get('desc');
 	const searchValue = params.get('search') || '';
@@ -165,7 +165,7 @@ export function useRecipeList() {
 
 	const handleCategorySelect = (categoryName: string) => {
 		const currentParams = new URLSearchParams(params);
-		currentParams.set('filter', categoryName);
+		currentParams.set('category', categoryName);
 
 		const queryString = currentParams.toString();
 		navigate(`?${queryString}`);
@@ -179,10 +179,10 @@ export function useRecipeList() {
 	const handleFilterChange = (selectedCategories: string[]) => {
 		const currentParams = new URLSearchParams(params);
 
-		currentParams.delete('filter');
+		currentParams.delete('category');
 
 		selectedCategories.forEach(category => {
-			currentParams.append('filter', category);
+			currentParams.append('category', category);
 		});
 
 		const queryString = currentParams.toString();
