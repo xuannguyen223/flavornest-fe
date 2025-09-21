@@ -8,7 +8,6 @@ import { Categories } from "../categories";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { useState } from "react";
-import { USER_ID } from "@/utils/constants";
 import { handleLogOutFromBE } from "@/store/features/user/userAction";
 
 export default function MainHeader() {
@@ -32,10 +31,7 @@ export default function MainHeader() {
   const handleAddRecipes = () =>
     isLoggedIn ? navigate("/add-recipe") : navigate("/login");
   const handleLogout = () => {
-    dispatch(handleLogOutFromBE());
-    localStorage.removeItem(USER_ID);
-    navigate("/");
-    window.location.reload();
+    dispatch(handleLogOutFromBE(navigate));
   };
 
   // SVG Hamburger

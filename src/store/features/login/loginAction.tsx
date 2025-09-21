@@ -30,8 +30,6 @@ export const handleLoginAction = (data: LoginFormValues) => {
 
     try {
       const response = await axiosInstance.post(LOGIN_API, payload);
-      console.log("response id: ", response.data.data.id);
-      console.log("response ", response);
       if (response.status === 200) {
         const userID = response.data.data.id;
         localStorage.setItem(USER_ID, userID);
@@ -68,8 +66,7 @@ export const checkLogin = (authMode: boolean = false) => {
           }
         }
       }
-    } catch (error) {
-      console.log("error: ", error);
+    } catch {
       dispatch(handleIsLogin(false));
     }
   };

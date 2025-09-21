@@ -8,8 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/store/store";
 import { handleLoading } from "@/store/features/login/loginSlice";
 import { handleLoginAction } from "@/store/features/login/loginAction";
-import { toast } from "react-toastify";
 import SubmitButton from "@/components/common/auth/SubmitButton";
+import { handleNavigateUtil } from "@/utils/navigation";
 
 const LoginPage = () => {
   const submitLoading = useSelector(
@@ -28,10 +28,9 @@ const LoginPage = () => {
       dispatch(handleLoading(true));
       const success = await dispatch(handleLoginAction(values));
       if (success) {
-        toast.info("You will be redirected to the Homepage !");
         setTimeout(() => {
-          navigate("/");
-        }, 1500);
+          handleNavigateUtil(navigate);
+        }, 500);
       }
     },
   });
