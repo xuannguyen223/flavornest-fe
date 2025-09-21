@@ -37,10 +37,10 @@ function FavoriteRecipesSection() {
   const favoriteRecipesForDisplay = favoriteRecipesList.map((recipe) => ({
     id: recipe.id,
     title: recipe.title,
-    creator: recipe.authorId, // Using authorId as creator for now
+    creator: recipe.author.profile.name, // Using authorId as creator for now
     totalTime: `${recipe.prepTime + recipe.cookTime} min`,
-    rating: 4.5, // Default rating since it's not in the API response
-    reviewCount: 0, // Default review count since it's not in the API response
+    rating: recipe.avgRating, // Default rating since it's not in the API response
+    reviewCount: recipe.ratingCount, // Default review count since it's not in the API response
     imageUrl: recipe.imageUrl,
   }));
 
