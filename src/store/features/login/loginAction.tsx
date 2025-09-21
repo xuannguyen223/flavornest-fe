@@ -1,6 +1,7 @@
 import axiosInstance from "@/services/axiosInstance";
 import { handleIsLogin, handleLoading } from "./loginSlice";
 import {
+  GOOGLE_AUTH_URL,
   LOGIN_API,
   REFRESH_TOKEN_API,
   USER_ID,
@@ -68,6 +69,22 @@ export const checkLogin = (authMode: boolean = false) => {
       }
     } catch {
       dispatch(handleIsLogin(false));
+    }
+  };
+};
+
+// Dùng cho continue with Google hẹ hẹ
+export const handleLoginGoogleAction = () => {
+  console.log("Google login clicked 🚀");
+  return async (dispatch: Dispatch) => {
+    try {
+      const response = await axiosInstance.get(GOOGLE_AUTH_URL);
+      if (response.status === 200) {
+        console.log("response: ", response.data.data);
+        window.location.href = response.data.data;
+      }
+    } catch (error) {
+      console.log("error: ", error.message);
     }
   };
 };

@@ -1,6 +1,8 @@
 import { Outlet } from "react-router-dom";
 import AuthLogo from "./AuthLogo";
 import { GoogleButtonContent } from "./GoogleBtnContent";
+import { useAppDispatch } from "@/hooks/redux";
+import { handleLoginGoogleAction } from "@/store/features/login/loginAction";
 
 const AuthRight = ({
   isSignUpPage,
@@ -9,6 +11,7 @@ const AuthRight = ({
   isSignUpPage: boolean;
   handleClose: () => void;
 }) => {
+  const dispatch = useAppDispatch();
   return (
     <div className="auth-main">
       <div className="auth-main-container">
@@ -40,7 +43,12 @@ const AuthRight = ({
 
         {/* Social Login */}
         <div className="social-login">
-          <button className="button-google">
+          <button
+            className="button-google"
+            onClick={() => {
+              dispatch(handleLoginGoogleAction());
+            }}
+          >
             <GoogleButtonContent />
           </button>
         </div>
