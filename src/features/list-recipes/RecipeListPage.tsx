@@ -61,10 +61,12 @@ export default function RecipeListPage() {
 					{loading ? (
 						<p>Loading recipes...</p>
 					) : hasNoResults ? (
-						<div className="flex-1 flex flex-col items-center justify-center py-16">
+						<div className="flex-1 flex flex-col items-center justify-center">
 							<div className="text-center">
 								<h3 className="text-2xl font-semibold text-gray-900 mb-2">No Results Found</h3>
-								<p className="text-gray-600 text-lg">There are no results from "{searchValue}"</p>
+								<p className="text-gray-600 text-lg">
+									There are no results from "{searchValue || categoryNames.join(', ')}"
+								</p>
 								<p className="text-gray-500 text-sm mt-2">
 									Try searching with different keywords or browse all recipes
 								</p>

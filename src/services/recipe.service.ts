@@ -6,6 +6,7 @@ import type { Recipe } from '@/types/TypeRecipe';
 export const getListRecipes = async (
 	searchValue?: string,
 	categoryNames?: string[],
+	categoryType?: string,
 ): Promise<Recipe[]> => {
 	try {
 		const queryParams = new URLSearchParams();
@@ -17,6 +18,9 @@ export const getListRecipes = async (
 			categoryNames.forEach(categoryName => {
 				queryParams.append('filter', categoryName);
 			});
+		}
+		if (categoryType) {
+			queryParams.append('categoryType', categoryType);
 		}
 
 		const url = queryParams.toString()

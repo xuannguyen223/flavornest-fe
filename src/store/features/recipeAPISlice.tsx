@@ -15,6 +15,7 @@ import type { RootState } from '../store';
 export interface RecipeState {
 	recipesById: Record<string, Recipe>;
 	recipesByCategory: Record<string, Recipe[]>;
+	recipesByCategoryType: Record<string, Recipe[]>;
 	allRecipes: Recipe[];
 	searchRecipes: Recipe[];
 	favoriteRecipesList: Recipe[];
@@ -25,6 +26,7 @@ export interface RecipeState {
 const initialState: RecipeState = {
 	recipesById: {},
 	recipesByCategory: {},
+	recipesByCategoryType: {},
 	allRecipes: [],
 	searchRecipes: [],
 	favoriteRecipesList: [],
@@ -51,19 +53,27 @@ export const fetchRecipesBySearch = createAsyncThunk(
 	},
 );
 
-export const fetchRecipesByCategoryName = createAsyncThunk(
-	'recipes/fetchByCategory',
-	async (categoryName: string) => {
-		const data = await getListRecipes(categoryName);
-		return { categoryName, data };
-	},
-);
-
 export const fetchRecipesByCategoryNames = createAsyncThunk(
 	'recipes/fetchByCategoryNames',
 	async ({ searchValue, categoryNames }: { searchValue?: undefined; categoryNames?: string[] }) => {
 		const data = await getListRecipes(searchValue, categoryNames);
 		return { categoryNames: categoryNames || [], data };
+	},
+);
+
+export const fetchRecipesByCategoryType = createAsyncThunk(
+	'recipes/fetchByCategoryType',
+	async ({
+		searchValue,
+		categoryNames,
+		categoryType,
+	}: {
+		searchValue?: undefined;
+		categoryNames?: undefined;
+		categoryType?: string;
+	}) => {
+		const data = await getListRecipes(searchValue, categoryNames, categoryType);
+		return { categoryType: categoryType || '', data };
 	},
 );
 
@@ -143,27 +153,30 @@ const recipeAPISlice = createSlice({
 				};
 			})
 
-			.addCase(fetchRecipesByCategoryName.pending, state => {
-				state.loading = true;
-				state.error = null;
-			})
-			.addCase(
-				fetchRecipesByCategoryName.fulfilled,
-				(state, action: PayloadAction<{ categoryName: string; data: Recipe[] }>) => {
-					state.loading = false;
-					state.recipesByCategory[action.payload.categoryName] = action.payload.data;
-				},
-			)
-			.addCase(fetchRecipesByCategoryName.rejected, (state, action) => {
-				state.loading = false;
-				state.error = action.error.message ?? 'Error';
-			})
-
 			.addCase(fetchRecipeById.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.error.message ?? 'Error';
 			})
 
+			.addCase(fetchRecipesByCategoryType.pending, state => {
+				state.loading = true;
+				state.error = null;
+			})
+
+			.addCase(
+				fetchRecipesByCategoryType.fulfilled,
+				(state, action: PayloadAction<{ categoryType: string; data: Recipe[] }>) => {
+					state.loading = false;
+					state.error = null;
+					state.recipesByCategoryType[action.payload.categoryType] = action.payload.data;
+				},
+			)
+			.addCase(fetchRecipesByCategoryType.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error.message ?? 'Error fetching recipes by category type';
+			})
+
+			// theo categoryNames
 			.addCase(fetchRecipesByCategoryNames.pending, state => {
 				state.loading = true;
 				state.error = null;
