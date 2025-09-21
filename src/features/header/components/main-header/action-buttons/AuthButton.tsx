@@ -11,8 +11,7 @@ export default function AuthButton({ onClick }: AuthButtonProps) {
       variant="default"
       size="lg"
       className="
-        h-5 sm:h-7 lg:h-10 
-        px-4 sm:px-6 
+        h-7 px-4 sm:px-6 
         text-sm font-medium text-white 
         bg-(--primary-color) rounded-full 
         cursor-pointer hover:bg-neutral-400 transition-colors"
