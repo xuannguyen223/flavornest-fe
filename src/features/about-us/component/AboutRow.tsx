@@ -1,13 +1,14 @@
 import ViewMoreButton from "./ViewMoreButton";
 
 interface AboutRowProps {
+  linkRecipe: string;
   title: string;
   content: string;
   image: string;
   reverse?: boolean; // Reverse Content & Text
 }
 
-export default function AboutRow({ title, content, image, reverse }: AboutRowProps) {
+export default function AboutRow({ linkRecipe, title, content, image, reverse }: AboutRowProps) {
     return (
       <div
         className={`
@@ -25,7 +26,7 @@ export default function AboutRow({ title, content, image, reverse }: AboutRowPro
             <h2 className="text-xl font-semibold text-neutral-700">{title}</h2>
             <div className="w-1/3 h-1 bg-neutral-700 rounded-full" />
             <p className="text-neutral-600 text-base">{content}</p>
-            <ViewMoreButton to="/category/1" />
+            <ViewMoreButton to={linkRecipe} />
         </div>
 
   

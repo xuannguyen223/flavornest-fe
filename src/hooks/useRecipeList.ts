@@ -89,7 +89,7 @@ export function useRecipeList() {
 			displayRecipes.map(r => ({
 				id: r.id,
 				title: r.title,
-				creator: r.author.email.split('@')[0],
+				creator: r.author.profile.name,
 				totalTime: `${r.cookTime + r.prepTime} min`,
 				rating: r.avgRating,
 				reviewCount: r.ratingCount,
