@@ -11,3 +11,16 @@ export const getAllCategories = async (): Promise<Category[]> => {
         throw error;
     }
 };
+
+// createCategory
+export const createCategory = async (name: string) => {
+    try {
+        const response = await axiosInstance.post('/api/recipe/category/create', { name }, {
+            withCredentials: true,
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error creating category:', error);
+        throw error;
+    }
+};

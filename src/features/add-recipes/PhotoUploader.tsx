@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useImperativeHandle, forwardRef } from "react";
 import { Button } from "@/components/ui/button";
 import { uploadImageToCDN } from "@/utils/CdnUtil";
 
@@ -8,16 +8,50 @@ type PhotoUploaderProps = {
   onImageUploaded?: (imageUrl: string) => void;
 };
 
-export function PhotoUploader({
+export type PhotoUploaderRef = {
+  uploadImage: () => Promise<string | null>;
+  reset: () => void;
+};
+
+export const PhotoUploader = forwardRef<PhotoUploaderRef, PhotoUploaderProps>(({
   value,
   onChange,
   onImageUploaded,
-}: PhotoUploaderProps) {
+}, ref) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [dragActive, setDragActive] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const handleSelect = () => inputRef.current?.click();
+
+  const uploadImage = useCallback(async (): Promise<string | null> => {
+    if (!value || !onImageUploaded) {
+      return null;
+    }
+
+    try {
+      const imageUrl = await uploadImageToCDN(value);
+      onImageUploaded(imageUrl);
+      console.log("Image Url: ", imageUrl);
+      return imageUrl;
+    } catch (error) {
+      console.error("Error uploading image to CDN:", error);
+      throw error;
+    }
+  }, [value, onImageUploaded]);
+
+  const reset = useCallback(() => {
+    setImagePreview(null);
+    setDragActive(false);
+    if (inputRef.current) {
+      inputRef.current.value = '';
+    }
+  }, []);
+
+  useImperativeHandle(ref, () => ({
+    uploadImage,
+    reset,
+  }));
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -25,7 +59,7 @@ export function PhotoUploader({
   };
 
   const handleFile = useCallback(
-    async (file: File | null) => {
+    (file: File | null) => {
       onChange(file);
       if (file) {
         const reader = new FileReader();
@@ -33,22 +67,11 @@ export function PhotoUploader({
           setImagePreview(e.target?.result as string);
         };
         reader.readAsDataURL(file);
-
-        // Upload to CDN
-        if (onImageUploaded) {
-          try {
-            const imageUrl = await uploadImageToCDN(file);
-            onImageUploaded(imageUrl);
-            console.log("Image Url: ", imageUrl);
-          } catch (error) {
-            console.error("Error uploading image to CDN:", error);
-          }
-        }
       } else {
         setImagePreview(null);
       }
     },
-    [onChange, onImageUploaded]
+    [onChange]
   );
 
   const handleDrag = useCallback((e: React.DragEvent) => {
@@ -148,4 +171,4 @@ export function PhotoUploader({
       )}
     </div>
   );
-}
+});
