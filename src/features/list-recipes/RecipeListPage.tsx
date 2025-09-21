@@ -8,15 +8,15 @@ import { RecipeList } from './components/RecipeList';
 
 export default function RecipeListPage() {
 	const {
-		categoryName,
+		categoryNames,
 		description,
 		searchInput,
-		searchValue,
 		setSearchInput,
 		handleSearch,
-		hasNoResults,
 		mappedRecipes,
 		loading,
+		hasNoResults,
+		searchValue,
 		filterData,
 		handleRecipeClick,
 		handleFilterChange,
@@ -36,10 +36,10 @@ export default function RecipeListPage() {
 			/>
 
 			<div className="px-8 py-3">
-				{categoryName && (
+				{categoryNames.length > 0 && (
 					<div className="text-center">
 						<div className="text-5xl font-cormorant font-semibold text-gray-900 tracking-tight text-balance mb-4">
-							{categoryName}
+							{categoryNames.join(' - ')}
 						</div>
 						<div className="w-full text-gray-600 text-lg leading-relaxed text-pretty">
 							{description}
@@ -56,6 +56,7 @@ export default function RecipeListPage() {
 					<FilterGroup
 						filterData={filterData}
 						onFilterChange={handleFilterChange}
+						initialSelected={categoryNames}
 					/>
 					{loading ? (
 						<p>Loading recipes...</p>

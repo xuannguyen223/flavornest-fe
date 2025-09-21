@@ -5,7 +5,7 @@ import type { Recipe } from '@/types/TypeRecipe';
 
 export const getListRecipes = async (
 	searchValue?: string,
-	categoryName?: string,
+	categoryNames?: string[],
 ): Promise<Recipe[]> => {
 	try {
 		const queryParams = new URLSearchParams();
@@ -13,8 +13,10 @@ export const getListRecipes = async (
 		if (searchValue) {
 			queryParams.append('search', searchValue);
 		}
-		if (categoryName) {
-			queryParams.append('filter', categoryName);
+		if (categoryNames && categoryNames.length > 0) {
+			categoryNames.forEach(categoryName => {
+				queryParams.append('filter', categoryName);
+			});
 		}
 
 		const url = queryParams.toString()
@@ -22,7 +24,6 @@ export const getListRecipes = async (
 			: `/api/recipe/get`;
 
 		const response = await axiosInstance.get(url, { withCredentials: true });
-		console.log('API Response:', response.data.data);
 
 		return response.data.data.recipes as Recipe[];
 	} catch (error) {

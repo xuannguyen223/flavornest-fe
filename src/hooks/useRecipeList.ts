@@ -5,13 +5,13 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import {
 	fetchAllRecipes,
-	fetchRecipesByCategoryName,
+	fetchRecipesByCategoryNames,
 	fetchRecipesBySearch,
 	selectSearchResults,
 } from '@/store/features/recipeAPISlice';
 import type { Recipe } from '@/types/TypeRecipe';
 import type { RecipeItemProps } from '@/features/list-recipes/components/RecipeItem';
-import type { Filter } from '@/features/list-recipes/components/filterData';
+import type { Filter } from '@/components/common/filter-recipe/FilterGroup';
 import { formatCategoryType } from '@/lib/utils';
 
 export function useRecipeList() {
@@ -19,7 +19,7 @@ export function useRecipeList() {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 
-	const categoryName = params.get('filter');
+	const categoryNames = params.getAll('filter');
 	const description = params.get('desc');
 	const searchValue = params.get('search') || '';
 
@@ -29,19 +29,19 @@ export function useRecipeList() {
 	const searchResults = useAppSelector(selectSearchResults);
 	const categoriesByType = useAppSelector(state => state.category.categoriesByType);
 
+	const memoizedCategoryNames = useMemo(() => categoryNames, [categoryNames.join(',')]);
+
 	useEffect(() => {
-		if (searchValue && categoryName) {
-			// Search within a specific category - pass both parameters to the thunk
-			dispatch(fetchRecipesBySearch({ searchValue, categoryName }));
+		if (searchValue && memoizedCategoryNames.length > 0) {
+			dispatch(fetchRecipesBySearch({ searchValue, categoryNames: memoizedCategoryNames }));
 		} else if (searchValue) {
-			// Search only - pass just search value
 			dispatch(fetchRecipesBySearch({ searchValue }));
-		} else if (categoryName) {
-			dispatch(fetchRecipesByCategoryName(categoryName));
+		} else if (memoizedCategoryNames.length) {
+			dispatch(fetchRecipesByCategoryNames({ categoryNames: memoizedCategoryNames }));
 		} else {
 			dispatch(fetchAllRecipes());
 		}
-	}, [categoryName, searchValue, dispatch]);
+	}, [memoizedCategoryNames, searchValue, dispatch]);
 
 	useEffect(() => {
 		setSearchInput(searchValue);
@@ -49,21 +49,22 @@ export function useRecipeList() {
 
 	const displayRecipes: Recipe[] = useMemo(() => {
 		if (searchValue) {
-			// When searching (with or without category), use search results
 			return searchResults;
-		} else if (categoryName) {
-			return recipesByCategory[categoryName] || [];
+		} else if (memoizedCategoryNames.length > 1) {
+			return searchResults;
+		} else if (memoizedCategoryNames.length === 1) {
+			return recipesByCategory[memoizedCategoryNames[0]] || [];
 		} else {
 			return allRecipes;
 		}
-	}, [searchValue, searchResults, categoryName, recipesByCategory, allRecipes]);
+	}, [searchValue, searchResults, memoizedCategoryNames, recipesByCategory, allRecipes]);
 
 	const mappedRecipes: RecipeItemProps[] = useMemo(
 		() =>
 			displayRecipes.map(r => ({
 				id: r.id,
 				title: r.title,
-				creator: r.author.email.split('@')[0],
+				creator: r.author.profile.name,
 				totalTime: `${r.cookTime + r.prepTime} min`,
 				rating: r.avgRating,
 				reviewCount: r.ratingCount,
@@ -86,7 +87,24 @@ export function useRecipeList() {
 		[categoriesByType],
 	);
 
-	console.log('Filter Data:', filterData);
+	const displayCategoryNames = useMemo(() => {
+		if (memoizedCategoryNames.length === 0) return [];
+
+		const categoryMap = new Map();
+		filterData.forEach(filter => {
+			filter.options.forEach(option => {
+				categoryMap.set(option.value, option.label);
+			});
+		});
+
+		return memoizedCategoryNames.map(id => categoryMap.get(id)).filter(Boolean);
+	}, [memoizedCategoryNames, filterData]);
+
+	const hasNoResults = useMemo(() => {
+		return (
+			(searchValue || memoizedCategoryNames.length > 0) && displayRecipes.length === 0 && !loading
+		);
+	}, [searchValue, memoizedCategoryNames.length, displayRecipes.length, loading]);
 
 	const handleSearch = (value: string) => {
 		setSearchInput(value);
@@ -103,19 +121,12 @@ export function useRecipeList() {
 		navigate(queryString ? `?${queryString}` : '/recipes');
 	};
 
-	const handleFilterChange = (selectedCategories: string[]) => {
+	const handleCategorySelect = (categoryName: string) => {
 		const currentParams = new URLSearchParams(params);
-		console.log('Selected Categories:', selectedCategories);
-
-		if (selectedCategories.length > 0) {
-			// For now, use the first selected category (can be extended for multiple)
-			currentParams.set('filter', selectedCategories[0]);
-		} else {
-			currentParams.delete('filter');
-		}
+		currentParams.set('filter', categoryName);
 
 		const queryString = currentParams.toString();
-		navigate(queryString ? `?${queryString}` : '/recipes');
+		navigate(`?${queryString}`);
 	};
 
 	const handleRecipeClick = (id: string) => {
@@ -123,22 +134,37 @@ export function useRecipeList() {
 		// Add navigation logic here if needed
 	};
 
-	const hasNoResults = useMemo(() => {
-		return (searchValue || categoryName) && displayRecipes.length === 0 && !loading;
-	}, [searchValue, categoryName, displayRecipes.length, loading]);
+	const handleFilterChange = (selectedCategories: string[]) => {
+		const currentParams = new URLSearchParams(params);
+
+		currentParams.delete('filter');
+
+		selectedCategories.forEach(category => {
+			currentParams.append('filter', category);
+		});
+
+		const queryString = currentParams.toString();
+		navigate(queryString ? `?${queryString}` : '/recipes');
+	};
 
 	return {
-		categoryName,
+		categoryNames: memoizedCategoryNames,
+		displayCategoryNames,
 		description,
 		searchValue,
+
 		searchInput,
 		setSearchInput,
 		handleSearch,
+
 		mappedRecipes,
 		loading,
 		hasNoResults,
+
 		filterData,
-		handleRecipeClick,
 		handleFilterChange,
+
+		handleRecipeClick,
+		handleCategorySelect,
 	};
 }

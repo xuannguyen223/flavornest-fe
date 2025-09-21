@@ -38,6 +38,19 @@ export const fetchRecipeById = createAsyncThunk('recipes/fetchById', async (id: 
 	return res.data.recipe as Recipe;
 });
 
+export const fetchAllRecipes = createAsyncThunk('recipes/fetchAll', async () => {
+	const res = await getListRecipes();
+	return res as Recipe[];
+});
+
+export const fetchRecipesBySearch = createAsyncThunk(
+	'recipes/fetchBySearch',
+	async ({ searchValue, categoryNames }: { searchValue: string; categoryNames?: string[] }) => {
+		const res = await getListRecipes(searchValue, categoryNames);
+		return res as Recipe[];
+	},
+);
+
 export const fetchRecipesByCategoryName = createAsyncThunk(
 	'recipes/fetchByCategory',
 	async (categoryName: string) => {
@@ -46,16 +59,11 @@ export const fetchRecipesByCategoryName = createAsyncThunk(
 	},
 );
 
-export const fetchAllRecipes = createAsyncThunk('recipes/fetchAll', async () => {
-	const res = await getListRecipes();
-	return res as Recipe[];
-});
-
-export const fetchRecipesBySearch = createAsyncThunk(
-	'recipes/fetchBySearch',
-	async ({ searchValue, categoryName }: { searchValue: string; categoryName?: string }) => {
-		const res = await getListRecipes(searchValue, categoryName);
-		return res as Recipe[];
+export const fetchRecipesByCategoryNames = createAsyncThunk(
+	'recipes/fetchByCategoryNames',
+	async ({ searchValue, categoryNames }: { searchValue?: undefined; categoryNames?: string[] }) => {
+		const data = await getListRecipes(searchValue, categoryNames);
+		return { categoryNames: categoryNames || [], data };
 	},
 );
 
@@ -134,10 +142,6 @@ const recipeAPISlice = createSlice({
 					userRating: state.recipesById[action.payload.id]?.userRating || 0,
 				};
 			})
-			.addCase(fetchRecipeById.rejected, (state, action) => {
-				state.loading = false;
-				state.error = action.error.message ?? 'Error';
-			})
 
 			.addCase(fetchRecipesByCategoryName.pending, state => {
 				state.loading = true;
@@ -151,6 +155,31 @@ const recipeAPISlice = createSlice({
 				},
 			)
 			.addCase(fetchRecipesByCategoryName.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error.message ?? 'Error';
+			})
+
+			.addCase(fetchRecipeById.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error.message ?? 'Error';
+			})
+
+			.addCase(fetchRecipesByCategoryNames.pending, state => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(
+				fetchRecipesByCategoryNames.fulfilled,
+				(state, action: PayloadAction<{ categoryNames: string[]; data: Recipe[] }>) => {
+					state.loading = false;
+					state.searchRecipes = action.payload.data;
+					// Also store individual categories for single category access
+					if (action.payload.categoryNames.length === 1) {
+						state.recipesByCategory[action.payload.categoryNames[0]] = action.payload.data;
+					}
+				},
+			)
+			.addCase(fetchRecipesByCategoryNames.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.error.message ?? 'Error';
 			})

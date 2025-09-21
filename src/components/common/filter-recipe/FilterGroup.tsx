@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import FilterSection from './FilterSection'; 
+import { useState, useEffect } from 'react';
+import FilterSection from './FilterSection';
 
 export interface FilterOption {
 	id: string;
@@ -18,10 +18,19 @@ export interface Filter {
 interface FilterGroupProps {
 	filterData: Filter[];
 	onFilterChange?: (selectedCategories: string[]) => void;
+	initialSelected?: string[];
 }
 
-export default function FilterGroup({ filterData, onFilterChange }: FilterGroupProps) {
-	const [selected, setSelected] = useState<string[]>([]);
+export default function FilterGroup({
+	filterData,
+	onFilterChange,
+	initialSelected = [],
+}: FilterGroupProps) {
+	const [selected, setSelected] = useState<string[]>(initialSelected);
+
+	useEffect(() => {
+		setSelected(initialSelected);
+	}, [initialSelected]);
 
 	const handleSelect = (optionValue: string) => {
 		const newSelected = selected.includes(optionValue)

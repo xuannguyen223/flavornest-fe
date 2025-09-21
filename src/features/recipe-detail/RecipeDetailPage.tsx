@@ -1,3 +1,5 @@
+'use client';
+
 import RecipeHeader from './components/RecipeHeader';
 import Overview from './components/Overview';
 import CookTips from './components/CookTips';
@@ -13,7 +15,7 @@ import type { Recipe } from '../../types/TypeRecipe';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import {
 	fetchRecipeById,
-	fetchRecipesByCategoryName,
+	fetchRecipesByCategoryNames,
 	submitRecipeRating,
 } from '@/store/features/recipeAPISlice';
 import { toast } from 'react-toastify';
@@ -48,7 +50,7 @@ export default function RecipeDetailPage() {
 			recipe.categories.forEach(c => {
 				const name = c.category.name;
 				if (!recipesByCategory[name]) {
-					dispatch(fetchRecipesByCategoryName(name));
+					dispatch(fetchRecipesByCategoryNames({ categoryNames: [name] }));
 				}
 			});
 		}

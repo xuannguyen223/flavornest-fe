@@ -1,65 +1,70 @@
+export interface AuthorProfile {
+	name: string;
+}
+
 export interface Author {
-    id: string;
-    email: string;
+	id: string;
+	email: string;
+	profile: AuthorProfile;
 }
 
 export interface Instruction {
-    id: number;
-    step: number;
-    description: string;
-    imageUrl: string | null;
+	id: number;
+	step: number;
+	description: string;
+	imageUrl: string | null;
 }
 
 export interface Ingredient {
-    id: number;
-    name: string;
-    quantity: number;
-    unit: string;
+	id: number;
+	name: string;
+	quantity: number;
+	unit: string;
 }
 
 export interface Category {
-    id: string;
-    name: string;
-    type: string;
-    description: string;
+	id: string;
+	name: string;
+	type: string;
+	description: string;
 }
-  
+
 export interface RecipeCategory {
-    recipeId: string;
-    categoryId: string;
-    category: Category;
+	recipeId: string;
+	categoryId: string;
+	category: Category;
 }
 
 export interface Rating {
-    id: string;
-    value: number;
-    userId: string;
-    recipeId: string;
-    createdAt: string;
-    updatedAt: string;
+	id: string;
+	value: number;
+	userId: string;
+	recipeId: string;
+	createdAt: string;
+	updatedAt: string;
 }
 
 export interface Recipe {
-    id: string;
-    title: string;
-    description: string;
-    cookTips: string;
-    prepTime: number;
-    cookTime: number;
-    servings: number;
-    avgRating: number;
-    ratingCount: number;
-    imageUrl?: string;
-    createdAt: string;
-    authorId: string;
-    author: Author;    
-    instructions: Instruction[];
-    ingredients: Ingredient[];
-    categories: RecipeCategory[];
-    // biến lưu user đã rated công thức chưa 
-    // client-side
-    hasReviewed?: boolean;
-    // lưu số sao user hiện tại đã rate 
-    // client-side (localStorage)
-    userRating?: number;
+	id: string;
+	title: string;
+	description: string;
+	cookTips: string;
+	prepTime: number;
+	cookTime: number;
+	servings: number;
+	avgRating: number;
+	ratingCount: number;
+	imageUrl?: string;
+	createdAt: string;
+	authorId: string;
+	author: Author;
+	instructions: Instruction[];
+	ingredients: Ingredient[];
+	categories: RecipeCategory[];
+	// biến lưu user đã rated công thức chưa
+	// client-side
+	hasReviewed?: boolean;
+	// lưu số sao user hiện tại đã rate
+	// client-side (localStorage)
+	userRating?: number;
 }
