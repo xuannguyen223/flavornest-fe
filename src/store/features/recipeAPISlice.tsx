@@ -74,15 +74,43 @@ export const submitRecipeRating = createAsyncThunk<
 });
 
 export const fetchFavoriteRecipes = createAsyncThunk<
-	Recipe[], // Return type is Recipe[]
-	{ userId: string },
-	{ state: RootState }
+  Recipe[], 
+  { userId: string }, 
+  { state: RootState } 
 >('recipes/fetchFavoriteRecipes', async ({ userId }) => {
+
 	const response = await getFavoriteRecipes(userId);
-	// Handle the nested API response structure: { data: { favorites: [...] } }
-	const favoritesData = response.data?.favorites || response.favorites || [];
-	const recipes = favoritesData.map((favorite: any) => favorite.recipe);
-	return recipes;
+    // Xử lý cấu trúc response
+    const favoritesData = response.data?.favorites || response.favorites || [];
+
+    // Nếu không có favorites, trả về mảng rỗng
+    if (!favoritesData.length) {
+      return [];
+    }
+
+    // Lấy danh sách recipeId và gọi getRecipeById cho mỗi id
+    const recipePromises = favoritesData.map((favorite: any) => {
+      const recipeId = favorite.recipeId || favorite.recipe?.id;
+      if (!recipeId) {
+        throw new Error(`Missing recipeId in favorite: ${JSON.stringify(favorite)}`);
+      }
+      return getRecipeById(recipeId);
+    });
+
+    const recipeResponses = await Promise.all(recipePromises);
+
+    // Ánh xạ response thành mảng Recipe[]
+	const recipes = recipeResponses.map((response) => {
+		// Kiểm tra cấu trúc response: { data: { recipe: {...} } } hoặc { recipe: {...} }
+		if (response.data?.recipe) {
+		  return response.data.recipe;
+		} else if (response.recipe) {
+		  return response.recipe;
+		} else {
+		  return response; // Fallback nếu response đã là Recipe
+		}
+	});
+    return recipes;
 });
 
 export const addToFavorites = createAsyncThunk<

@@ -32,7 +32,6 @@ export const getRecipesByCategory = async (categoryName: string): Promise<Recipe
 			`/api/recipe/get?category=${encodeURIComponent(categoryName)}`,
 			{ withCredentials: true },
 		);
-		console.log(response.data.data.recipes)
 		return response.data.data.recipes;
 	} catch (error) {
 		console.error(`Error fetching recipes by category: ${categoryName}`, error);
@@ -48,7 +47,6 @@ export const updateRecipeRating = async (recipeId: string, rating: number) => {
 			{ rating },
 			{ withCredentials: true },
 		);
-		console.log(response.data);
 		// object: { ok, message, data: { id, value, userId, recipeId, ... } }
 		return response.data;
 	} catch (err) {
@@ -79,7 +77,6 @@ export const addFavoriteRecipe = async (userId: string, recipeId: string) => {
 			{ recipeId, userId },
 			{ withCredentials: true },
 		);
-		console.log(response.data);
 		return response.data;
 	} catch (err) {
 		console.error(err);
@@ -93,7 +90,6 @@ export const removeFavoriteRecipe = async (userId: string, recipeId: string) => 
 		const response = await axiosInstance.delete(`/api/recipe/favorites/${userId}/${recipeId}`, {
 			withCredentials: true,
 		});
-		console.log(response.data);
 		return response.data;
 	} catch (err) {
 		console.error(err);

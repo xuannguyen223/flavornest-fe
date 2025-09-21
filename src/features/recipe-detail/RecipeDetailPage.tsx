@@ -8,7 +8,7 @@ import ReviewsRating from "./components/ReviewsRating";
 import RecipeCategories from "./components/RecipeCategories";
 import RecipeRecommend from "./components/RecipeRecommend";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import type { Recipe } from "../../types/TypeRecipe";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import {
@@ -33,6 +33,8 @@ export default function RecipeDetailPage() {
   const isAuthenticated = useAppSelector(
     (state) => state.loginSlice.isAuthenticated
   );
+
+  const navigate = useNavigate();
 
   const [hasReviewed, setHasReviewed] = useState(false);
 
@@ -61,6 +63,7 @@ export default function RecipeDetailPage() {
   const handleSubmitRating = async (newRating: number) => {
     if (!isAuthenticated) {
       toast.error("Login or SignUp to submit review!");
+      navigate("/login");
       return;
     }
 

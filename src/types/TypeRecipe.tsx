@@ -1,6 +1,11 @@
+export interface AuthorProfile {
+    name: string;
+}
+  
 export interface Author {
     id: string;
     email: string;
+    profile: AuthorProfile;
 }
 
 export interface Instruction {
