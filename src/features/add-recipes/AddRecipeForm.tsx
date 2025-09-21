@@ -1,98 +1,35 @@
-import { useState, useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import {
-  addIngredient,
-  removeIngredient,
-  addStep,
-  removeStep,
-  updateTags,
-  setValidationErrors,
-  clearValidationErrors,
-  saveRecipe,
-  selectCurrentRecipe,
-  selectValidationErrors,
-  selectIsSubmitting,
-  selectError,
-} from "@/store/features/recipeSlice";
-import { PhotoUploader } from "./components/form-fields/PhotoUploader";
-import { ReduxInput } from "./components/redux/ReduxInput";
-import { CategorySection } from "./components/categories/CategorySection";
-import { FormActions } from "./components/shared/FormActions";
-import {
-  ReduxServings,
-  ReduxTime,
-  ReduxIngredient,
-  ReduxInstruction,
-} from "./components/redux";
-import { validateRecipe, formatValidationErrors } from "./validation";
-import { Button } from "@/components/ui/button";
-import type { Recipe } from "@/store/features/recipeSlice";
+import { useRecipeForm } from '../../hooks/useRecipeForm';
+import { PhotoUploader } from './PhotoUploader';
+import { ReduxInput } from './components/redux/ReduxInput';
+import { ReduxServings } from './components/redux/ReduxServings';
+import { ReduxTime } from './components/redux/ReduxTime';
+import { ReduxIngredient } from './components/redux/ReduxIngredient';
+import { ReduxInstruction } from './components/redux/ReduxInstruction';
+import { CategorySection } from './components/categories/CategorySection';
+import { FormActions } from './FormActions';
+import { Button } from '@/components/ui/button';
+import { addIngredient, removeIngredient, addStep, removeStep, updateCategories } from '@/store/features/recipeSlice';
+import type { RecipeFormData } from '@/store/features/recipeSlice';
 
-type AddRecipeFormProps = {
-  onSubmit?: (data: Recipe) => void;
-  defaultValues?: Partial<Recipe>;
-};
+interface AddRecipeFormProps {
+  defaultValues?: Partial<RecipeFormData>;
+  onSubmit?: (result: any) => void;
+}
 
-export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
-  const dispatch = useAppDispatch();
-  const currentRecipe = useAppSelector(selectCurrentRecipe);
-  const validationErrors = useAppSelector(selectValidationErrors);
-  const isSubmitting = useAppSelector(selectIsSubmitting);
-  const error = useAppSelector(selectError);
-
-  const [photo, setPhoto] = useState<File | null>(defaultValues?.photo || null);
-
-  useEffect(() => {
-    if (defaultValues) {
-      setPhoto(defaultValues.photo || null);
-    }
-  }, [defaultValues?.photo]);
-
-  const handleFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    dispatch(clearValidationErrors());
-
-    const recipeWithPhoto = { ...currentRecipe, photo };
-    const validationErrors = validateRecipe(recipeWithPhoto);
-
-    if (validationErrors.length > 0) {
-      const formattedErrors = formatValidationErrors(validationErrors);
-      dispatch(setValidationErrors(formattedErrors));
-      return;
-    }
-
-    try {
-      const result = await dispatch(saveRecipe(recipeWithPhoto)).unwrap();
-
-      if (onSubmit) {
-        onSubmit(result);
-      }
-
-      console.log("Recipe saved successfully:", result);
-    } catch (error) {
-      console.error("Failed to save recipe:", error);
-    }
-  };
-
-  const handleAddIngredient = () => {
-    dispatch(addIngredient());
-  };
-
-  const handleRemoveIngredient = (ingredientId: string) => {
-    dispatch(removeIngredient(ingredientId));
-  };
-
-  const handleAddStep = () => {
-    dispatch(addStep());
-  };
-
-  const handleRemoveStep = (stepId: string) => {
-    dispatch(removeStep(stepId));
-  };
-
-  const handleUpdateTags = (updates: Partial<Recipe["tags"]>) => {
-    dispatch(updateTags(updates));
-  };
+export const AddRecipeForm = ({ defaultValues, onSubmit }: AddRecipeFormProps) => {
+  const {
+    currentRecipe,
+    validationErrors,
+    error,
+    isSubmitting,
+    photo,
+    setPhoto,
+    photoUploaderRef,
+    handleFormSubmit,
+    handleImageUploaded,
+    handleCancel,
+    dispatch,
+  } = useRecipeForm(defaultValues, onSubmit);
 
   return (
     <form
@@ -113,7 +50,12 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
       <hr className="text-(--divide-color) my-8 sm:my-12 lg:my-16 xl:my-[60px]" />
 
       {/* Photo Upload */}
-      <PhotoUploader value={photo} onChange={setPhoto} />
+      <PhotoUploader
+        ref={photoUploaderRef}
+        value={photo}
+        onChange={setPhoto}
+        onImageUploaded={handleImageUploaded}
+      />
 
       {/* Recipe Details */}
       <div className="space-y-6">
@@ -151,16 +93,16 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
         />
 
         {/* Prep Time */}
-        <ReduxTime field="prep" label="Prep Time" required />
+        <ReduxTime field="prepTime" label="Prep Time" required />
 
         {/* Cook Time */}
-        <ReduxTime field="cook" label="Cook Time" required />
+        <ReduxTime field="cookTime" label="Cook Time" required />
       </div>
 
       <hr className="text-(--divide-color) my-8 sm:my-12 lg:my-16 xl:my-[60px]" />
 
       {/* Ingredients */}
-      <div className="space-y-4">
+      <div data-field="ingredients" className="space-y-4">
         <h2 className="flex font-medium text-lg sm:text-xl lg:text-2xl xl:text-[24px]">
           Ingredients
           <span className="text-(--required-color)">&nbsp;*</span>
@@ -176,7 +118,7 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
             <ReduxIngredient
               key={ingredient.id}
               ingredient={ingredient}
-              onRemove={() => handleRemoveIngredient(ingredient.id)}
+              onRemove={() => dispatch(removeIngredient(ingredient.id.toString()))}
             />
           ))}
         </div>
@@ -184,7 +126,7 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
         <Button
           type="button"
           variant="default"
-          onClick={handleAddIngredient}
+          onClick={() => dispatch(addIngredient())}
           className="block w-full font-medium text-lg sm:text-xl lg:text-2xl xl:text-[24px] text-left"
         >
           + Add ingredient
@@ -198,7 +140,7 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
       <hr className="text-(--divide-color) my-8 sm:my-12 lg:my-16 xl:my-[60px]" />
 
       {/* Instructions */}
-      <div className="space-y-4">
+      <div data-field="instructions" className="space-y-4">
         <h2 className="flex font-medium text-lg sm:text-xl lg:text-2xl xl:text-[24px]">
           Instructions
           <span className="text-(--required-color)">&nbsp;*</span>
@@ -208,12 +150,12 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
         </p>
 
         <div className="space-y-4">
-          {currentRecipe.steps.map((step, index) => (
+          {currentRecipe.instructions.map((instruction) => (
             <ReduxInstruction
-              key={step.id}
-              step={step}
-              stepNumber={index + 1}
-              onRemove={() => handleRemoveStep(step.id)}
+              key={instruction.id}
+              step={instruction}
+              stepNumber={instruction.step}
+              onRemove={() => dispatch(removeStep(instruction.id.toString()))}
             />
           ))}
         </div>
@@ -221,14 +163,16 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
         <Button
           type="button"
           variant="default"
-          onClick={handleAddStep}
+          onClick={() => dispatch(addStep())}
           className="block w-full font-medium text-lg sm:text-xl lg:text-2xl xl:text-[24px] text-left"
         >
           + Add step
         </Button>
 
-        {validationErrors.steps && (
-          <p className="text-sm text-red-500">{validationErrors.steps}</p>
+        {validationErrors.instructions && (
+          <p className="text-sm text-red-500">
+            {validationErrors.instructions}
+          </p>
         )}
       </div>
 
@@ -236,7 +180,7 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
 
       {/* Cook's Tips */}
       <ReduxInput
-        field="tips"
+        field="cookTips"
         label="Cook's Tips"
         placeholder="Share your kitchen secrets! Oven hacks, swaps, or any tips for ultimate recipe success."
         as="textarea"
@@ -246,12 +190,14 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
 
       <hr className="text-(--divide-color) my-8 sm:my-12 lg:my-16 xl:my-[60px]" />
 
-      {/* Tags */}
-      <CategorySection
-        value={currentRecipe.tags}
-        onChange={handleUpdateTags}
-        errors={undefined}
-      />
+      {/* Categories */}
+      <div data-field="categories">
+        <CategorySection
+          value={currentRecipe.categories}
+          onChange={(updates) => dispatch(updateCategories(updates))}
+          errors={undefined}
+        />
+      </div>
 
       {/* Error Display */}
       {error && (
@@ -261,10 +207,9 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
       )}
 
       {/* Form Actions */}
-      <FormActions
-        onCancel={() => window.history.back()}
+      <FormActions 
+        onCancel={handleCancel}
         isSubmitting={isSubmitting}
-        canSubmit={true}
       />
 
       <hr className="text-(--divide-color) my-6 sm:my-8 lg:my-10 xl:my-[40px]" />
@@ -281,4 +226,4 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
       </div>
     </form>
   );
-}
+};

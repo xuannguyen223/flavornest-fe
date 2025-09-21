@@ -1,5 +1,5 @@
 import axiosInstance from './axiosInstance';
-import type { Recipe} from '@/types/TypeRecipe';
+import type { Recipe, Ingredient, Instruction, RecipeCategory } from '@/types/TypeRecipe';
 // recipe service functions:
 // getAllRecipes, getRecipesByCategory, getRecipeById, addRecipe, updateRecipe, deleteRecipe,...
 
@@ -108,3 +108,52 @@ export const getRecipesByCategoryType = async (categoryType: string): Promise<Re
 	  throw error;
 	}
   };
+
+// createRecipe
+export const createRecipe = async (recipeData: Pick<Recipe, 'title' | 'description' | 'cookTips' | 'prepTime' | 'cookTime' | 'servings' | 'imageUrl'> & {
+	ingredients: Pick<Ingredient, 'name' | 'quantity' | 'unit'>[];
+	instructions: Pick<Instruction, 'step' | 'description'>[];
+	categories: Pick<RecipeCategory, 'categoryId'>[];
+}) => {
+	try {
+		const response = await axiosInstance.post('/api/recipe/create', recipeData, {
+			withCredentials: true,
+		});
+		return response.data;
+	} catch (error) {
+		console.error('Error creating recipe:', error);
+		throw error;
+	}
+};
+
+// createRecipeInstruction
+export const createRecipeInstruction = async (data: {
+	recipeId: string;
+	instructions: Pick<Instruction, 'step' | 'description' | 'imageUrl'>[];
+}) => {
+	try {
+		const response = await axiosInstance.post('/api/recipe/instruction/create', data, {
+			withCredentials: true,
+		});
+		return response.data;
+	} catch (error) {
+		console.error('Error creating recipe instructions:', error);
+		throw error;
+	}
+};
+
+// createRecipeIngredient
+export const createRecipeIngredient = async (data: {
+	recipeId: string;
+	ingredients: Pick<Ingredient, 'name' | 'quantity' | 'unit'>[];
+}) => {
+	try {
+		const response = await axiosInstance.post('/api/recipe/ingredient/create', data, {
+			withCredentials: true,
+		});
+		return response.data;
+	} catch (error) {
+		console.error('Error creating recipe ingredients:', error);
+		throw error;
+	}
+};

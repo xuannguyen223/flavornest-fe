@@ -1,121 +1,136 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import Sections from "@/features/my-profile/components/sections/Sections";
 import { FormInput } from "@/components/common/FormInput";
-import UserPhotoSvg from "@/assets/user-photo.svg";
-import CameraIconSvg from "@/assets/camera-icon.svg";
+import {
+  PhotoUpload,
+  type PhotoUploadRef,
+} from "../PhotoUpload";
+import { useAppSelector, useAppDispatch } from "@/hooks/redux";
+import { updateUserProfile, type UpdateUserProfileData } from "@/services/user.service";
+import { setUserProfile } from "@/store/features/user/userSlice";
 
 function EditProfileSection() {
-  const [firstName, setFirstName] = useState("Alina");
-  const [lastName, setLastName] = useState("Dcruz");
-  const [website, setWebsite] = useState("");
-  const [aboutMe, setAboutMe] = useState("");
-  const [, setProfilePhoto] = useState<File | null>(null);
-  const [profilePhotoPreview, setProfilePhotoPreview] = useState<string | null>(
-    null
-  );
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const isSubmitting = false;
-  const canSubmit = firstName.trim().length > 0 && lastName.trim().length > 0;
+  const dispatch = useAppDispatch();
+  const userProfile = useAppSelector((state) => state.userSlice.profile);
+  const [fullName, setFullName] = useState(userProfile.name || "");
+  const [website, setWebsite] = useState(() => {
+    // Load website from localStorage on component mount
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('userWebsite') || "";
+    }
+    return "";
+  });
+  const [aboutMe, setAboutMe] = useState(userProfile.bio || "");
+  const [profilePhoto, setProfilePhoto] = useState<File | null>(null);
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState<string | null>(null);
+  const profilePhotoUploaderRef = useRef<PhotoUploadRef>(null);
+  const canSubmit = fullName.trim().length > 0;
 
-  const handleSelectPhoto = () => {
-    fileInputRef.current?.click();
+  useEffect(() => {
+    setFullName(userProfile.name || "");
+    setAboutMe(userProfile.bio || "");
+  }, [userProfile]);
+
+  const handleWebsiteChange = (value: string) => {
+    setWebsite(value);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('userWebsite', value);
+    }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-    setProfilePhoto(file);
+  const handleImageUploaded = (imageUrl: string) => {
+    setProfilePhotoUrl(imageUrl);
+  };
 
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setProfilePhotoPreview(e.target?.result as string);
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      // Upload image to CDN first if photo exists
+      let uploadedImageUrl = profilePhotoUrl;
+      if (profilePhoto && profilePhotoUploaderRef.current) {
+        try {
+          uploadedImageUrl =
+            await profilePhotoUploaderRef.current.uploadImage();
+        } catch (uploadError) {
+          console.error("Failed to upload profile image:", uploadError);
+          return;
+        }
+      }
+
+      const profileData: UpdateUserProfileData = {
+        name: fullName.trim(),
+        bio: aboutMe.trim() || undefined,
+        ...(uploadedImageUrl && { avatarUrl: uploadedImageUrl }),
       };
-      reader.readAsDataURL(file);
-    } else {
-      setProfilePhotoPreview(null);
+
+      // Call API to update profile
+      const result = await updateUserProfile(userProfile.userId, profileData);
+      console.log("Profile updated successfully:", result);
+
+      dispatch(setUserProfile({
+        ...userProfile,
+        name: fullName.trim(),
+        bio: aboutMe.trim() || null,
+        avatarUrl: uploadedImageUrl || userProfile.avatarUrl,
+      }));
+    } catch (error) {
+      console.error("Error updating profile:", error);
     }
   };
 
   return (
     <Sections title="Edit Your Profile">
-      <section className="space-y-4">
-        <h2 className="text-[32px] font-medium">Profile Photo</h2>
-        <Button
-          type="button"
-          variant="default"
-          className="relative w-[200px] h-[200px] p-0 overflow-visible [&>svg:nth-child(2)]:!w-full [&>svg:nth-child(2)]:!h-full [&>svg:last-child]:!w-[56px] [&>svg:last-child]:!h-[56px] border-none shadow-none"
-          onClick={handleSelectPhoto}
-        >
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handleFileChange}
+      <form onSubmit={handleFormSubmit}>
+        <section className="space-y-4">
+          <PhotoUpload
+            ref={profilePhotoUploaderRef}
+            value={profilePhoto}
+            onChange={setProfilePhoto}
+            onImageUploaded={handleImageUploaded}
+            avatarUrl={userProfile.avatarUrl}
           />
-          {/* user-photo */}
-          {profilePhotoPreview ? (
-            <img
-              src={profilePhotoPreview}
-              alt="Profile preview"
-              className="w-full h-full object-cover rounded-full"
-            />
-          ) : (
-            <img src={UserPhotoSvg} alt="Default user photo" />
-          )}
-          {/* camera-icon */}
-          <img src={CameraIconSvg} alt="Camera icon" className="absolute right-[10px] bottom-[10px] w-[58px] h-[58px]" />
-        </Button>
-      </section>
+        </section>
 
-      <section className="space-y-12">
-        <h2 className="text-[32px] font-medium">Profile Information</h2>
-        <div className="grid gap-4 md:grid-cols-2">
+         <section className="space-y-12">
+           <h2 className="text-[32px] font-medium">Profile Information</h2>
+           <FormInput
+             as="input"
+             label="Full Name"
+             value={fullName}
+             onChange={setFullName}
+             placeholder="Enter your full name"
+             className="space-y-4"
+           />
+           <FormInput
+             as="input"
+             label="Website"
+             value={website}
+             onChange={handleWebsiteChange}
+             placeholder="https://"
+             className="space-y-4"
+           />
           <FormInput
-            as="input"
-            label="First Name"
-            value={firstName}
-            onChange={setFirstName}
-            placeholder="First name"
+            as="textarea"
+            label="About Me"
+            value={aboutMe}
+            onChange={setAboutMe}
+            placeholder="Tell us about yourself"
+            rows={5}
             className="space-y-4"
           />
-          <FormInput
-            as="input"
-            label="Last Name"
-            value={lastName}
-            onChange={setLastName}
-            placeholder="Last name"
-            className="space-y-4"
-          />
-        </div>
-        <FormInput
-          as="input"
-          label="Website"
-          value={website}
-          onChange={setWebsite}
-          placeholder="https://"
-          className="space-y-4"
-        />
-        <FormInput
-          as="textarea"
-          label="About Me"
-          value={aboutMe}
-          onChange={setAboutMe}
-          placeholder="Tell us about yourself"
-          rows={5}
-          className="space-y-4"
-        />
-        <div>
-          <Button
-            type="submit"
-            disabled={isSubmitting || !canSubmit}
-            className="w-full sm:w-auto h-12 sm:h-14 lg:h-16 xl:h-[56px] font-medium text-base sm:text-lg lg:text-xl xl:text-[24px] text-white px-4 sm:px-5 py-3 sm:py-4 lg:py-5 xl:py-6 bg-(--primary-color) rounded-full"
-          >
-            Update Profile
-          </Button>
-        </div>
-      </section>
+          <div>
+            <Button
+              type="submit"
+              disabled={!canSubmit}
+              className="w-full sm:w-auto h-12 sm:h-14 lg:h-16 xl:h-[56px] font-medium text-base sm:text-lg lg:text-xl xl:text-[24px] text-white px-4 sm:px-5 py-3 sm:py-4 lg:py-5 xl:py-6 bg-(--primary-color) rounded-full"
+            >
+              Update Profile
+            </Button>
+          </div>
+        </section>
+      </form>
     </Sections>
   );
 }

@@ -2,10 +2,10 @@ import { useAppDispatch } from "@/store/hooks";
 import { updateStep } from "@/store/features/recipeSlice";
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/common/FormInput";
-import type { InstructionStep } from "@/store/features/recipeSlice";
+import type { Instruction } from "@/types/TypeRecipe";
 
 type ReduxInstructionStepProps = {
-  step: InstructionStep;
+  step: Instruction;
   stepNumber: number;
   onRemove: () => void;
   dragHandleProps?: any;
@@ -19,8 +19,13 @@ export function ReduxInstruction({
 }: ReduxInstructionStepProps) {
   const dispatch = useAppDispatch();
 
+  // Add null check to prevent errors
+  if (!step) {
+    return null;
+  }
+
   const handleTextChange = (value: string) => {
-    dispatch(updateStep({ id: step.id, text: value }));
+    dispatch(updateStep({ id: step.id.toString(), text: value }));
   };
 
   return (
@@ -29,33 +34,7 @@ export function ReduxInstruction({
         {...dragHandleProps}
         className="cursor-grab flex-shrink-0 flex items-center"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="26"
-          height="18"
-          viewBox="0 0 26 18"
-          fill="none"
-          className="w-6 sm:w-8 block mx-auto"
-        >
-          <path
-            d="M1 1H25"
-            stroke="#1D1D1D"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-          <path
-            d="M1 9H25"
-            stroke="#1D1D1D"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-          <path
-            d="M1 17H25"
-            stroke="#1D1D1D"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-        </svg>
+        <img src="src/assets/re-order icon.svg" />
       </div>
 
       <div className="flex-1 min-w-0">
@@ -66,7 +45,7 @@ export function ReduxInstruction({
         </div>
         <FormInput
           as="textarea"
-          value={step.text}
+          value={step.description || ''}
           onChange={handleTextChange}
           placeholder="Describe this step in detail..."
           inputClassName="w-full h-24 sm:h-28 lg:h-32 xl:h-[140px] placeholder:text-(--light-gray-color) text-(--primary-color) text-base sm:text-lg lg:text-xl xl:text-[20px] border-1 border-solid border-(--border-color) rounded-[10px]"
@@ -82,7 +61,7 @@ export function ReduxInstruction({
           onClick={onRemove}
           className="p-0 flex-shrink-0"
         >
-          <img src="src\assets\remove-icon.svg" alt="Remove instruction step" />
+          <img src="src/assets/remove-icon.svg" alt="Remove instruction step" />
         </Button>
       </div>
     </div>
