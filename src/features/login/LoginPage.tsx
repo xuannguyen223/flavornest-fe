@@ -9,7 +9,6 @@ import type { AppDispatch, RootState } from "@/store/store";
 import { handleLoading } from "@/store/features/login/loginSlice";
 import { handleLoginAction } from "@/store/features/login/loginAction";
 import SubmitButton from "@/components/common/auth/SubmitButton";
-import { handleNavigateUtil } from "@/utils/navigation";
 
 const LoginPage = () => {
   const submitLoading = useSelector(
@@ -29,7 +28,7 @@ const LoginPage = () => {
       const success = await dispatch(handleLoginAction(values));
       if (success) {
         setTimeout(() => {
-          handleNavigateUtil(navigate);
+          navigate(-1);
         }, 500);
       }
     },

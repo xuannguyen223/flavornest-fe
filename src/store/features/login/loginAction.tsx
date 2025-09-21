@@ -1,7 +1,8 @@
 import axiosInstance from "@/services/axiosInstance";
 import { handleIsLogin, handleLoading } from "./loginSlice";
 import {
-  GOOGLE_AUTH_URL,
+  GOOGLE_AUTH_URL_API,
+  GOOGLE_USER_PROFILE_API,
   LOGIN_API,
   REFRESH_TOKEN_API,
   USER_ID,
@@ -57,13 +58,15 @@ export const checkLogin = (authMode: boolean = false) => {
         dispatch(handleIsLogin(true));
         if (!authMode) {
           const userID = localStorage.getItem(USER_ID);
-          const profileResponse = await axiosInstance.get(
-            `${USER_PROFILE_API}/${userID}`
-          );
+          const finalUrl = userID
+            ? `${USER_PROFILE_API}/${userID}`
+            : GOOGLE_USER_PROFILE_API;
+          const profileResponse = await axiosInstance.get(finalUrl);
           if (profileResponse.status === 200) {
+            if (!userID) {
+              localStorage.setItem(USER_ID, profileResponse.data.data.userId);
+            }
             dispatch(setUserProfile(profileResponse.data.data));
-          } else {
-            console.warn("No userID found in localStorage");
           }
         }
       }
@@ -75,15 +78,13 @@ export const checkLogin = (authMode: boolean = false) => {
 
 // Dùng cho continue with Google hẹ hẹ
 export const handleLoginGoogleAction = () => {
-  console.log("Google login clicked 🚀");
-  return async (dispatch: Dispatch) => {
+  return async () => {
     try {
-      const response = await axiosInstance.get(GOOGLE_AUTH_URL);
+      const response = await axiosInstance.get(GOOGLE_AUTH_URL_API);
       if (response.status === 200) {
-        console.log("response: ", response.data.data);
         window.location.href = response.data.data;
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log("error: ", error.message);
     }
   };
