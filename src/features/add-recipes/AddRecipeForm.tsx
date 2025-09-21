@@ -41,6 +41,7 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
   const error = useAppSelector(selectError);
 
   const [photo, setPhoto] = useState<File | null>(defaultValues?.photo || null);
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (defaultValues) {
@@ -94,6 +95,10 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
     dispatch(updateTags(updates));
   };
 
+  const handleImageUploaded = (imageUrl: string) => {
+    setPhotoUrl(imageUrl);
+  };
+
   return (
     <form
       onSubmit={handleFormSubmit}
@@ -113,7 +118,11 @@ export function AddRecipeForm({ onSubmit, defaultValues }: AddRecipeFormProps) {
       <hr className="text-(--divide-color) my-8 sm:my-12 lg:my-16 xl:my-[60px]" />
 
       {/* Photo Upload */}
-      <PhotoUploader value={photo} onChange={setPhoto} />
+      <PhotoUploader 
+        value={photo} 
+        onChange={setPhoto} 
+        onImageUploaded={handleImageUploaded}
+      />
 
       {/* Recipe Details */}
       <div className="space-y-6">
