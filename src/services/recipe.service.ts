@@ -55,7 +55,6 @@ export const updateRecipeRating = async (recipeId: string, rating: number) => {
 			{ rating },
 			{ withCredentials: true },
 		);
-		console.log(response.data);
 		// object: { ok, message, data: { id, value, userId, recipeId, ... } }
 		return response.data;
 	} catch (err) {
@@ -86,7 +85,6 @@ export const addFavoriteRecipe = async (userId: string, recipeId: string) => {
 			{ recipeId, userId },
 			{ withCredentials: true },
 		);
-		console.log(response.data);
 		return response.data;
 	} catch (err) {
 		console.error(err);
@@ -100,7 +98,6 @@ export const removeFavoriteRecipe = async (userId: string, recipeId: string) => 
 		const response = await axiosInstance.delete(`/api/recipe/favorites/${userId}/${recipeId}`, {
 			withCredentials: true,
 		});
-		console.log(response.data);
 		return response.data;
 	} catch (err) {
 		console.error(err);

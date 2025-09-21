@@ -1,18 +1,17 @@
-'use client';
+import RecipeHeader from "./components/RecipeHeader";
+import Overview from "./components/Overview";
+import CookTips from "./components/CookTips";
+import RecipeInfo from "./components/RecipeInfo";
+import Ingredients from "./components/Ingredients";
+import Instructions from "./components/Instructions";
+import ReviewsRating from "./components/ReviewsRating";
+import RecipeCategories from "./components/RecipeCategories";
+import RecipeRecommend from "./components/RecipeRecommend";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import type { Recipe } from "../../types/TypeRecipe";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 
-import RecipeHeader from './components/RecipeHeader';
-import Overview from './components/Overview';
-import CookTips from './components/CookTips';
-import RecipeInfo from './components/RecipeInfo';
-import Ingredients from './components/Ingredients';
-import Instructions from './components/Instructions';
-import ReviewsRating from './components/ReviewsRating';
-import RecipeCategories from './components/RecipeCategories';
-import RecipeRecommend from './components/RecipeRecommend';
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import type { Recipe } from '../../types/TypeRecipe';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import {
 	fetchRecipeById,
 	fetchRecipesByCategoryNames,
@@ -32,7 +31,9 @@ export default function RecipeDetailPage() {
 	const error = useAppSelector(state => state.recipeAPI.error);
 	const isAuthenticated = useAppSelector(state => state.loginSlice.isAuthenticated);
 
-	const [hasReviewed, setHasReviewed] = useState(false);
+  const navigate = useNavigate();
+
+  const [hasReviewed, setHasReviewed] = useState(false);
 
 	// Load recipe using dispatch()
 	// Load hasReviewed from localStorage
@@ -56,11 +57,12 @@ export default function RecipeDetailPage() {
 		}
 	}, [recipe, recipesByCategory, dispatch]);
 
-	const handleSubmitRating = async (newRating: number) => {
-		if (!isAuthenticated) {
-			toast.error('Login or SignUp to submit review!');
-			return;
-		}
+  const handleSubmitRating = async (newRating: number) => {
+    if (!isAuthenticated) {
+      toast.error("Login or SignUp to submit review!");
+      navigate("/login");
+      return;
+    }
 
 		if (!recipeId) return;
 
