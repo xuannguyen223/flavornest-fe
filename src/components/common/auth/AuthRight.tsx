@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import AuthLogo from "./AuthLogo";
+import { GoogleButtonContent } from "./GoogleBtnContent";
 
 const AuthRight = ({
   isSignUpPage,
@@ -36,6 +37,20 @@ const AuthRight = ({
         <h1 className="title">
           {isSignUpPage ? "Create an Account" : "Login"}
         </h1>
+
+        {/* Social Login */}
+        <div className="social-login">
+          <button className="button-google">
+            <GoogleButtonContent />
+          </button>
+        </div>
+
+        {/* Divider */}
+        <div className="divider">
+          <div></div>
+          <span>OR</span>
+          <div></div>
+        </div>
 
         {/* Placeholder Form */}
         <div className="form">
