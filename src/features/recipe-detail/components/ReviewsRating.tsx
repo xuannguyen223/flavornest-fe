@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAppSelector } from '@/hooks/redux';
+import { useNavigate } from 'react-router-dom';
 
 interface ReviewsRatingProps {
   rating: number;
@@ -9,6 +11,7 @@ interface ReviewsRatingProps {
   onSubmitRating?: (rating: number) => Promise<void>;
   hasReviewed: boolean;
   recipeId: string;
+  userRating: number; // Nhận userRating từ parent
 }
 
 export default function ReviewsRating({
@@ -18,28 +21,35 @@ export default function ReviewsRating({
   onSubmitRating,
   hasReviewed,
   recipeId,
+  userRating,
 }: ReviewsRatingProps) {
-  const [userRating, setUserRating] = useState<number>(0);
+  const [currentRating, setCurrentRating] = useState<number>(userRating); // Khởi tạo từ prop userRating
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // hasReviewed: hiển thị trạng thái đã đánh giá
-  // userRating: giữ số sao đã chọn, ko reset sau khi click submit
-  // Load userRating từ localStorage khi component mount
+
+  // Đồng bộ currentRating với userRating khi userRating thay đổi
   useEffect(() => {
-    if (hasReviewed) {
-      const storedRating = localStorage.getItem(`userRating_${recipeId}`);
-      if (storedRating) {
-        setUserRating(parseInt(storedRating, 10));
-      }
-    }
-  }, [hasReviewed, recipeId]);
+    setCurrentRating(userRating); // Cập nhật currentRating khi userRating thay đổi
+  }, [userRating]);
+
+  const isAuthenticated = useAppSelector(
+    (state) => state.loginSlice.isAuthenticated
+  );
+  const user = useAppSelector((state) => state.userSlice.profile);
+  const navigate = useNavigate();
+
+  const initials = useMemo(() => {
+    const parts = user.name.trim().split(" ").filter(Boolean);
+    const first = parts[0]?.[0] ?? "N";
+    const last = parts.length > 1 ? parts[parts.length - 1][0] : "";
+    return (first + last).toUpperCase();
+  }, [user.name]);
 
   const handleSubmit = async () => {
-    if (userRating === 0 || isSubmitting) return;
+    if (currentRating === 0 || isSubmitting) return;
 
     setIsSubmitting(true);
     try {
-      await onSubmitRating?.(userRating);
-      localStorage.setItem(`userRating_${recipeId}`, userRating.toString()); // Lưu userRating
+      await onSubmitRating?.(currentRating);
     } catch (err) {
       console.error(err);
     } finally {
@@ -62,8 +72,8 @@ export default function ReviewsRating({
                 <Star
                   key={i}
                   className="size-8"
-                  fill={filled ? '#2E5834' : '#ADBBAE'}
-                  color={filled ? '#2E5834' : '#ADBBAE'}
+                  fill={filled ? "#facc15" : "#FFECC0"}
+                  color={filled ? "#facc15" : "#FFECC0"}
                   strokeWidth={0}
                 />
               );
@@ -74,64 +84,86 @@ export default function ReviewsRating({
           </span>
         </div>
       </div>
-
-      <div className="w-fit mt-6 rounded-md bg-neutral-100 p-6">
-        <div className="flex items-start gap-6">
-          {/* Avatar */}
-          {avatarUrl ? (
-            <img
-              src={avatarUrl}
-              alt="Your avatar"
-              className="rounded-full object-cover size-16 sm:size-20 md:size-24"
-            />
-          ) : (
-            <div className="grid place-items-center rounded-full bg-neutral-200 size-16 sm:size-20 md:size-24">
+      {/* Submit rating, check auth */}
+      {!isAuthenticated ? (
+        <div className="w-fit mt-6 flex justify-center items-center bg-neutral-100 rounded-md p-6">
+          <p className="text-center text-neutral-700 text-lg">
+            <span
+              className="font-semibold underline cursor-pointer"
+              onClick={() => navigate('/login')}>
+              Login
+            </span> {' '} or {' '}
+            <span
+              className="font-semibold underline cursor-pointer"
+              onClick={() => navigate('/signup')}>
+              Signup
+            </span>{' '} to rate this Recipe!
+          </p>
+        </div>
+      ) : (
+        // Nếu đã login → hiện khung rating bình thường
+        <div className="w-fit mt-6 rounded-md bg-neutral-100 p-6">
+          <div className="flex items-start gap-6">
+            {/* Avatar */}
+            {avatarUrl ? (
               <img
-                src="/default-avatar.svg"
-                alt="Default avatar"
-                className="w-4/5 h-4/5 object-contain"
+                src={avatarUrl}
+                alt="Your avatar"
+                className="rounded-full object-cover size-16 sm:size-20 md:size-24"
               />
-            </div>
-          )}
-
-          {/* Star & Submit Button */}
-          <div className="py-2 flex-1 text-left">
-            <div className="font-medium text-neutral-700 mb-2">
-              {hasReviewed ? 'You rated this recipe (you can update it):' : 'Rate this recipe:'}
-            </div>
-            <div className="flex items-center gap-10">
-              <div className="flex items-center gap-2">
-                {Array.from({ length: 5 }).map((_, i) => {
-                  const index = i + 1;
-                  return (
-                    <button
-                      key={i}
-                      type="button"
-                      className="p-0"
-                      aria-label={`Rate ${index}`}
-                      onClick={() => setUserRating(index)}
-                      disabled={isSubmitting}
-                    >
-                      <Star
-                        className="size-12"
-                        fill={index <= userRating ? '#2E5834' : '#ADBBAE'}
-                        strokeWidth={0}
-                      />
-                    </button>
-                  );
-                })}
-              </div>
-              <Button
-                onClick={handleSubmit}
-                disabled={userRating === 0 || isSubmitting}
-                className="px-5 py-3 rounded-md bg-green-800 text-lg text-white font-medium hover:bg-green-700 disabled:bg-neutral-400"
+            ) : (
+              <span
+                aria-hidden
+                className='grid place-items-center w-4/5 h-4/5 rounded-full 
+                  bg-neutral-200 size-16 sm:size-20 md:size-24 
+                  text-neutral-700 text-4xl font-medium cursor-pointer'
+                onClick={() => navigate('/my-profile')}
               >
-                {isSubmitting ? 'Submitting...' : hasReviewed ? 'Update' : 'Submit'}
-              </Button>
+                {initials}
+              </span>
+            )}
+
+            {/* Star & Submit Button */}
+            <div className="py-2 flex-1 text-left">
+              <div className="font-medium text-neutral-700 mb-2">
+                {hasReviewed
+                  ? 'You rated this recipe (you can update it):'
+                  : 'Rate this recipe:'}
+              </div>
+              <div className="flex items-center gap-10">
+                <div className="flex items-center gap-2">
+                  {Array.from({ length: 5 }).map((_, i) => {
+                    const index = i + 1;
+                    return (
+                      <button
+                        key={i}
+                        type="button"
+                        className="p-0"
+                        aria-label={`Rate ${index}`}
+                        onClick={() => setCurrentRating(index)}
+                        disabled={isSubmitting}
+                      >
+                        <Star
+                          className="size-12"
+                          fill={index <= currentRating ? "#facc15" : "#FFECC0"}
+                          strokeWidth={0}
+                        />
+                      </button>
+                    );
+                  })}
+                </div>
+                <Button
+                  onClick={handleSubmit}
+                  disabled={currentRating === 0 || isSubmitting}
+                  className="px-5 py-3 rounded-md bg-neutral-700 text-lg text-white font-medium hover:bg-neutral-500 disabled:bg-neutral-300"
+                >
+                  {isSubmitting ? 'Submitting...' : hasReviewed ? 'Update' : 'Submit'}
+                </Button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }

@@ -9,7 +9,7 @@ import { ShowCase } from './components/ShowCase';
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import type { Recipe } from '@/types/TypeRecipe';
 import type { RecipeItemProps } from "@/features/list-recipes/components/RecipeItem";
-import { fetchAllRecipes } from '@/store/features/recipeAPISlice';
+import { fetchAllRecipes, fetchFavoriteRecipes } from '@/store/features/recipeAPISlice';
 
 export default function HomePage() {
 	const [searchValue, setSearchValue] = useState('');
@@ -21,6 +21,23 @@ export default function HomePage() {
 	useEffect(() => {
 		dispatch(fetchAllRecipes()); 
 	}, [dispatch]);
+
+	const isAuthenticated = useAppSelector(
+		(state) => state.loginSlice.isAuthenticated
+	);
+	const userProfile = useAppSelector((state) => state.userSlice.profile);
+  	const userId = userProfile.userId;
+	
+	useEffect(() => {
+		dispatch(fetchAllRecipes()); 
+		if (isAuthenticated && userId) {
+			dispatch(fetchFavoriteRecipes({userId})) // Tải danh sách favorite nếu đã đăng nhập
+			  .unwrap()
+			  .catch((error) => {
+				console.error('Failed to fetch favorites:', error);
+			  });
+		}
+	}, [dispatch, isAuthenticated, userId]);
 	
 	// Lấy list sub-category trong allRecipes
 	const categories = useMemo(
