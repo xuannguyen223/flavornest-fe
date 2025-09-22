@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-export type SortOption = 'relevance' | 'newest' | 'oldest' | 'most-positive' | 'least-positive';
+export type SortOption = 'newest' | 'oldest' | 'atoz' | 'ztoa' | 'rating';
 
 interface SortState {
 	currentSort: SortOption;
@@ -9,14 +9,11 @@ interface SortState {
 const loadSortFromStorage = (): SortOption => {
 	if (typeof window !== 'undefined') {
 		const saved = localStorage.getItem('recipe-sort-preference');
-		if (
-			saved &&
-			['relevance', 'newest', 'oldest', 'most-positive', 'least-positive'].includes(saved)
-		) {
+		if (saved && ['newest', 'oldest', 'atoz', 'ztoa', 'rating'].includes(saved)) {
 			return saved as SortOption;
 		}
 	}
-	return 'relevance';
+	return 'newest';
 };
 
 const initialState: SortState = {

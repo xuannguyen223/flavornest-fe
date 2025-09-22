@@ -57,10 +57,6 @@
   @apply w-[8%] min-w-[24px] max-w-[70px] cursor-pointer;
 }
 
-.custom-auth-bg {
-  @apply bg-amber-200;
-}
-
 /* ----------------------------------------------- AUTH FORM ----------------------------------------------- */
 
 .btn-show-password {
@@ -73,6 +69,15 @@
 
 .form-input {
   @apply w-full px-[3%] py-[2%] h-[10%] border rounded-md text-gray-700 mt-1 focus:ring-transparent text-[clamp(0.5rem,1vw,1rem)];
+}
+
+.social-login {
+  @apply flex gap-[3%] mb-[4%];
+}
+
+.button-google {
+  @apply flex items-center justify-center gap-2 w-full border text-gray-700 border-gray-400
+  rounded-md px-[3%] py-[2%] hover:bg-gray-50 text-[clamp(0.7rem,1.2vw,1.2rem)];
 }
 
 .form-input::placeholder {
@@ -99,6 +104,19 @@
   @apply ml-2 md:text-sm text-[12px] text-red-500;
 }
 
+/* Divider */
+
+.divider {
+  @apply flex items-center mb-[4%];
+}
+
+.divider div {
+  @apply flex-grow border-t border-gray-300;
+}
+
+.divider span {
+  @apply px-[2%] text-gray-500 text-[clamp(0.6rem,0.9vw,1rem)];
+}
 /* ------- */
 
 .register .input-error,
@@ -113,7 +131,7 @@
 
 .register .error-message,
 .login .error-message {
-  @apply ml-2 md:text-sm text-[12px] text-red-500;
+  @apply ml-2 text-[clamp(0.7rem,1vw,1.1rem)] text-red-500;
 }
 
 .register-form .form-input::placeholder,

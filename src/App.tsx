@@ -47,7 +47,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
         </Route>
       </Routes>
-      <ToastContainer position="top-right" autoClose={2000} />
+      <ToastContainer position="top-right" autoClose={1000} />
     </BrowserRouter>
   );
 }

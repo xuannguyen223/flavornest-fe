@@ -51,12 +51,16 @@ export function useRecipeList() {
 	}, [dispatch, isAuthenticated, userId]);
 
 	useEffect(() => {
-		console.log('[v0] useEffect triggered with:', {
-			searchValue,
-			categoryNames: memoizedCategoryNames,
-			categoryType,
-		});
+		const navigation = window.performance.getEntriesByType(
+			'navigation',
+		)[0] as PerformanceNavigationTiming;
 
+		if (navigation?.type === 'reload') {
+			navigate('/recipes', { replace: true });
+		}
+	}, [navigate]);
+
+	useEffect(() => {
 		if (searchValue && memoizedCategoryNames.length > 0) {
 			dispatch(fetchRecipesBySearch({ searchValue, categoryNames: memoizedCategoryNames }));
 		} else if (searchValue) {
@@ -108,6 +112,7 @@ export function useRecipeList() {
 				rating: r.avgRating,
 				reviewCount: r.ratingCount,
 				imageUrl: r.imageUrl ?? '/placeholder.svg',
+				createdAt: r.createdAt,
 			})),
 		[displayRecipes],
 	);
@@ -150,7 +155,6 @@ export function useRecipeList() {
 		});
 
 		const types = memoizedCategoryNames.map(id => categoryTypeMap.get(id)).filter(Boolean);
-		// Remove duplicates and return unique types
 		return [...new Set(types)];
 	}, [memoizedCategoryNames, filterData]);
 
