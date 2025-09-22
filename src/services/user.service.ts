@@ -8,3 +8,21 @@
 //     const response = await axiosInstance.get(`/users/${userId}`, { withCredentials: true });
 //     return response.data;
 // };
+
+import axiosInstance from './axiosInstance';
+import { UPDATE_USER_PROFILE_API } from '@/utils/constants';
+
+export interface UpdateUserProfileData {
+  name: string;
+  age?: number;
+  gender?: string;
+  bio?: string;
+  avatarUrl?: string;
+}
+
+export const updateUserProfile = async (userId: string, profileData: UpdateUserProfileData) => {
+  const response = await axiosInstance.put(`${UPDATE_USER_PROFILE_API}/${userId}`, profileData, {
+    withCredentials: true,
+  });
+  return response.data;
+};
