@@ -187,7 +187,7 @@ export const AddRecipeForm = ({ defaultValues, onSubmit }: AddRecipeFormProps) =
 				<Button
 					type="button"
 					variant="default"
-					onClick={() => dispach(addStep())}
+					onClick={() => dispatch(addStep())}
 					className="w-fit font-medium text-sm sm:text-base lg:text-lg xl:text-xl text-left cursor-pointer">
 					+ Add step
 				</Button>
