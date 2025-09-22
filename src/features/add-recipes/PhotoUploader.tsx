@@ -146,7 +146,7 @@ export const PhotoUploader = forwardRef<PhotoUploaderRef, PhotoUploaderProps>(
 								className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center transition-colors"
 								title="Remove image">
 								<img
-									src="public/add.svg"
+									src="/add.svg"
 									alt="Remove"
 									className="w-8 h-8 rotate-45"
 								/>
@@ -161,7 +161,7 @@ export const PhotoUploader = forwardRef<PhotoUploaderRef, PhotoUploaderProps>(
 									onClick={handleSelect}
 									className="font-medium text-sm sm:text-base lg:text-lg xl:text-[20px] text-white px-3 sm:px-4 lg:px-5 py-3 sm:py-4 lg:py-6 flex gap-2 sm:gap-3">
 									<img
-										src="public/add.svg"
+										src="/add.svg"
 										alt="Add photo icon"
 										className="w-6 sm:w-7 lg:w-8"
 									/>

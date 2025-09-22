@@ -33,7 +33,7 @@ export function ReduxInstruction({
 			<div
 				{...dragHandleProps}
 				className="cursor-grab flex-shrink-0 flex items-center">
-				<img src="public/re-order icon.svg" />
+				<img src="/re-order icon.svg" />
 			</div>
 
 			<div className="flex-1 min-w-0">
@@ -60,7 +60,7 @@ export function ReduxInstruction({
 					onClick={onRemove}
 					className="p-0 flex-shrink-0">
 					<img
-						src="public/remove-icon.svg"
+						src="/remove-icon.svg"
 						alt="Remove instruction step"
 					/>
 				</Button>
