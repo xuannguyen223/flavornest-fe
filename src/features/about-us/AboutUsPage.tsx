@@ -23,12 +23,14 @@ export default function AboutUsPage() {
 
       {/* Rows */}
       <AboutRow
+        linkRecipe= "/recipes?categoryType=MEAL_TYPE"
         title="Helping you plan meals with ease"
         content="We create weekly meal planners designed to save you time and reduce stress in the kitchen. Each plan comes with a clear theme, balanced nutrition, and easy-to-follow recipes. No more wondering what to cook — just simple, tasty, and organized meals every day."
         image="/about-us/img-1.svg"
       />
 
       <AboutRow
+        linkRecipe= "/recipes"
         title="Time-saving, convenient, fun"
         content="Our platform is not just about weekly plans — it’s also a community hub where everyone can share and discover recipes. Find inspiration from others, share your own creations, and make cooking more social and fun."
         image="/about-us/img-2.svg"
@@ -36,6 +38,7 @@ export default function AboutUsPage() {
       />
 
       <AboutRow
+        linkRecipe= "/recipes?categoryType=DIETARY"
         title="For busy people who want to eat better"
         content="No more wasting time thinking 'What should I eat today?'. Just browse the recipes, pick what you like, and start cooking. Each recipe is simple, clear, and ready to follow — so you can focus on enjoying the meal, not the planning."
         image="/about-us/img-3.svg"

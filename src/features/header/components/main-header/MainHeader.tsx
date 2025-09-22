@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { useState } from "react";
 import { USER_ID } from "@/utils/constants";
 import { handleLogOutFromBE } from "@/store/features/user/userAction";
+import { toast } from "react-toastify";
 
 export default function MainHeader() {
   const dispatch = useAppDispatch();
@@ -29,8 +30,14 @@ export default function MainHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogin = () => navigate("/login");
-  const handleAddRecipes = () =>
-    isLoggedIn ? navigate("/add-recipe") : navigate("/login");
+  const handleAddRecipes = () => {
+    if (isLoggedIn) {
+      navigate("/add-recipe");
+    } else {
+      toast.error("Login or SignUp to add a Recipe!");
+      navigate("/login");
+    }
+  };
   const handleLogout = () => {
     dispatch(handleLogOutFromBE());
     localStorage.removeItem(USER_ID);
@@ -73,8 +80,8 @@ export default function MainHeader() {
   );
 
   return (
-    <header className="w-full header-shadow">
-      <div className="header-container py-1 border-b-1 border-[var(--divide-color)]">
+    <header className="w-full header-shadow sticky top-0 z-50 bg-white ">
+      <div className="header-container border-b-2 border-[var(--divide-color)]">
         <div className="header-top flex items-center justify-between px-2 sm:px-4 lg:px-0">
           {/* Logo */}
           <div className="flex items-center">
@@ -121,7 +128,7 @@ export default function MainHeader() {
       </div>
 
       {/* Categories */}
-      <div className="hidden md:flex justify-center md:block border-t border-[var(--divide-color)] shadow-lg">
+      <div className="hidden md:flex justify-center md:block shadow-lg">
         <Categories itemsByType={categoriesByType} />
       </div>
     </header>

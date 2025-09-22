@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import type { Recipe } from '@/types/TypeRecipe';
 import type { RecipeItemProps } from "@/features/list-recipes/components/RecipeItem";
 import { fetchAllRecipes, fetchFavoriteRecipes } from '@/store/features/recipeAPISlice';
+import { formatTime } from '@/lib/utils';
 
 export default function HomePage() {
 	const [searchValue, setSearchValue] = useState('');
@@ -87,7 +88,7 @@ export default function HomePage() {
 			id: r.id,
 			title: r.title,
 			creator: r.author.profile.name,
-			totalTime: `${(r.cookTime || 0) + (r.prepTime || 0)} min`,
+			totalTime: formatTime(r.prepTime + r.cookTime),
 			rating: r.avgRating || 0,
 			reviewCount: r.ratingCount || 0,
 			imageUrl: r.imageUrl ?? "/placeholder.svg",
