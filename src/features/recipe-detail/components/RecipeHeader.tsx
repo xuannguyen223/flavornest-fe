@@ -56,7 +56,7 @@ export default function RecipeHeader({
       <div className="mt-3 flex items-center gap-4 text-base">
         <div className="flex items-center gap-2">
           <span className="text-neutral-800">By</span>
-          <span className="font-semibold text-yellow-400">{author}</span>
+          <span className="font-semibold text-amber-500">{author}</span>
         </div>
         <span className="h-6 w-px bg-neutral-300" />
         <span className="text-neutral-800">{dateLabel}</span>

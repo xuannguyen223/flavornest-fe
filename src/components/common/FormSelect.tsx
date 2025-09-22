@@ -37,7 +37,7 @@ export function FormSelect({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         style={{
-          backgroundImage: "url(src/assets/chevron.svg)",
+          backgroundImage: "url(public/chevron.svg)",
           backgroundRepeat: "no-repeat",
           backgroundPosition: "right 8px center",
         }}

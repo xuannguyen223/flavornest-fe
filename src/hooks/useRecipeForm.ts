@@ -19,15 +19,23 @@ export const useRecipeForm = (defaultValues?: Partial<RecipeFormData>, onSubmit?
   const error = useAppSelector(selectError);
   
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [photo, setPhoto] = useState<File | null>(null);
+  const [photo, setPhotoState] = useState<File | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const photoUploaderRef = useRef<any>(null);
 
   useEffect(() => {
     if (defaultValues?.photo) {
-      setPhoto(defaultValues.photo);
+      setPhotoState(defaultValues.photo);
     }
   }, [defaultValues?.photo]);
+
+  const setPhoto = (file: File | null) => {
+    setPhotoState(file);
+    if (file && validationErrors?.photo) {
+      const { photo: _removed, ...rest } = validationErrors;
+      dispatch(setValidationErrors(rest));
+    }
+  };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -163,6 +171,7 @@ export const useRecipeForm = (defaultValues?: Partial<RecipeFormData>, onSubmit?
 
   const scrollToFirstError = (validationErrors: Record<string, string>) => {
     const fieldOrder = [
+      'photo',
       'title',
       'description', 
       'servings',
