@@ -57,11 +57,11 @@ export function BlogPost({
 			</div>
 
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-				<div className="relative">
+				<div className="relative h-[300px] md:h-[400px]">
 					<img
 						src="/post-img.png"
 						alt="Healthy bowl with avocado and greens"
-						className="w-full h-[300px] md:h-[400px] object-cover shadow-sm rounded-lg"
+						className="w-full h-full object-cover shadow-sm rounded-lg"
 					/>
 				</div>
 
@@ -69,12 +69,12 @@ export function BlogPost({
 					{recipeHighlights.map(recipe => (
 						<div
 							key={recipe.id}
-							className="pb-4 border-b border-b-gray-300 cursor-pointer group transition-all duration-200 hover:bg-gray-50"
+							className="pb-6 border-b border-gray-300 cursor-pointer group transition-all duration-200 hover:bg-gray-50"
 							onClick={() => onRecipeClick?.(recipe.id)}>
-							<div className="text-xl md:text-2xl font-medium text-gray-900 mb-3 group-hover:text-gray-700 transition-colors">
+							<div className="text-xl md:text-2xl font-medium text-gray-900 group-hover:text-gray-700 transition-colors">
 								{recipe.title}
 							</div>
-							<div className="text-gray-600 leading-relaxed text-base md:text-lg">
+							<div className="text-gray-600 leading-relaxed text-base md:text-base">
 								{recipe.description}
 							</div>
 						</div>

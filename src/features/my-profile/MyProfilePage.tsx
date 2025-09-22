@@ -28,8 +28,8 @@ function MyProfilePage() {
 	}
 
 	return (
-		<div className="w-full grid grid-cols-1 gap-[20px] md:grid-cols-[auto_1fr] min-h-screen">
-			<aside className="h-full w-fit">
+		<div className="w-full flex flex-row items-stretch min-h-screen">
+			<div className="w-[25%]">
 				<nav className="h-full bg-(--second-color)">
 					<h2 className="p-[50px] py-5 font-semibold text-2xl text-white">My Profile</h2>
 					<ul className="space-y-1">
@@ -40,7 +40,7 @@ function MyProfilePage() {
 									<Link
 										to={item.path}
 										className={cn(
-											'flex items-center justify-between pl-4 sm:pl-6 md:pl-8 lg:pl-12 xl:pl-[50px] py-3 sm:py-4 md:py-5 text-sm sm:text-base md:text-base lg:text-base xl:text-lg text-white',
+											'flex items-center justify-between pl-4 sm:pl-6 md:pl-8 lg:pl-12 xl:pl-[50px] py-3 sm:py-4 md:py-5 text-xs sm:text-base md:text-base lg:text-base xl:text-lg text-white',
 											isActive
 												? 'bg-background font-medium bg-neutral-100 text-(--light-black-color)'
 												: 'hover:bg-accent',
@@ -52,7 +52,7 @@ function MyProfilePage() {
 						})}
 					</ul>
 				</nav>
-			</aside>
+			</div>
 			<div className="w-full px-8">
 				<Outlet />
 			</div>
