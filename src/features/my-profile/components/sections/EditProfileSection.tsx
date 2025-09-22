@@ -127,7 +127,7 @@ function EditProfileSection() {
 						<Button
 							type="submit"
 							disabled={isSubmitting || !canSubmit}
-							className="w-full sm:w-auto h-12 sm:h-14 lg:h-16 xl:h-[56px] font-medium text-base sm:text-lg lg:text-xl xl:text-[24px] text-white px-4 
+							className="w-full sm:w-auto h-8 sm:h-8 lg:h-10 xl:h-14 font-medium text-sm sm:text-base lg:text-lg xl:text-xl text-white px-4 
 								sm:px-5 py-3 sm:py-4 lg:py-5 xl:py-6 bg-(--primary-color) rounded-full">
 							Update Profile
 						</Button>

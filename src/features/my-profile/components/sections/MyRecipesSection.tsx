@@ -1,22 +1,52 @@
 import SearchBar from '@/components/common/search-bar/SearchBar';
 import { RecipeList } from '@/features/list-recipes/components/RecipeList';
 import { RecipeSort } from '@/features/list-recipes/components/RecipeSort';
-import { sampleRecipes } from '@/features/list-recipes/components/tempData';
 import Sections from '@/features/my-profile/components/sections/Sections';
+import { useAppSelector } from '@/hooks/redux';
 import { useSort } from '@/hooks/useSort';
-import { useMemo, useState } from 'react';
+import { formatTime } from '@/lib/utils';
+import { fetchUserRecipes } from '@/store/features/recipeAPISlice';
+import type { AppDispatch, RootState } from '@/store/store';
+import { useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 function MyRecipesSection() {
-	const { sortBy } = useSort();
+	const navigate = useNavigate();
 
+	const dispatch = useDispatch<AppDispatch>();
+	const { userRecipes, loading } = useSelector((state: RootState) => state.recipeAPI);
+
+	const userProfile = useAppSelector(state => state.userSlice.profile);
+	const userId = userProfile.userId;
+	const isAuthenticated = useAppSelector(state => state.loginSlice.isAuthenticated);
+
+	const { sortBy } = useSort();
 	const [searchQuery, setSearchQuery] = useState('');
 
-	const sortedRecipes = useMemo(() => {
-		if (!sampleRecipes || sampleRecipes.length === 0) return sampleRecipes;
+	useEffect(() => {
+		if (isAuthenticated && userId) {
+			dispatch(fetchUserRecipes({ userId }));
+		}
+	}, [dispatch, userId, isAuthenticated]);
 
-		let filteredRecipes = sampleRecipes;
+	const userRecipesForDisplay = userRecipes.map(recipe => ({
+		id: recipe.id,
+		title: recipe.title,
+		creator: recipe.author.profile.name,
+		totalTime: formatTime(recipe.cookTime + recipe.prepTime),
+		rating: recipe.avgRating,
+		reviewCount: recipe.ratingCount,
+		imageUrl: recipe.imageUrl,
+		createdAt: recipe.createdAt,
+	}));
+
+	const sortedRecipes = useMemo(() => {
+		if (!userRecipesForDisplay || userRecipesForDisplay.length === 0) return userRecipesForDisplay;
+
+		let filteredRecipes = userRecipesForDisplay;
 		if (searchQuery.trim()) {
-			filteredRecipes = sampleRecipes.filter(recipe => {
+			filteredRecipes = userRecipesForDisplay.filter(recipe => {
 				const query = searchQuery.toLowerCase();
 				return recipe.title?.toLowerCase().includes(query);
 			});
@@ -48,6 +78,22 @@ function MyRecipesSection() {
 		return sorted;
 	}, [sortBy, searchQuery]);
 
+	if (!isAuthenticated) {
+		return (
+			<Sections title="Favorite Recipes">
+				<div className="text-center py-8 text-gray-500">Please log in to view your recipes.</div>
+			</Sections>
+		);
+	}
+
+	if (loading) {
+		return (
+			<Sections title="Favorite Recipes">
+				<div className="text-center py-8 text-gray-500">Loading your recipes...</div>
+			</Sections>
+		);
+	}
+
 	return (
 		<Sections title="My Recipes">
 			<div className="w-full flex flex-row justify-between mb-4">
@@ -65,8 +111,15 @@ function MyRecipesSection() {
 					recipeList={sortedRecipes.slice(0, 10)}
 				/>
 			) : (
-				<div className="text-center text-gray-500 py-40">
-					You haven't added any favorite recipes yet.
+				<div className="text-center text-gray-500 py-20">
+					You haven’t created any recipes yet.
+					<br /> Get started by{' '}
+					<span
+						className="font-semibold cursor-pointer text-amber-500"
+						onClick={() => navigate('/add-recipe')}>
+						adding your first recipe
+					</span>{' '}
+					and share your creativity!
 				</div>
 			)}
 		</Sections>

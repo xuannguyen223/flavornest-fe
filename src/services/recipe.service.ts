@@ -64,6 +64,20 @@ export const updateRecipeRating = async (recipeId: string, rating: number) => {
 	}
 };
 
+// getuserRecipe by userId
+export const getUserRecipes = async (userId: string) => {
+	try {
+		const response = await axiosInstance.get(`/api/recipe/${userId}/recipes`, {
+			withCredentials: true,
+		});
+		console.log('User Recipes:', response.data);
+		return response.data.data.recipes as Recipe[];
+	} catch (err) {
+		console.error(err);
+		throw err;
+	}
+};
+
 // favorites
 // get Favorite Recipes
 export const getFavoriteRecipes = async (userId: string) => {
@@ -107,11 +121,16 @@ export const removeFavoriteRecipe = async (userId: string, recipeId: string) => 
 };
 
 // createRecipe
-export const createRecipe = async (recipeData: Pick<Recipe, 'title' | 'description' | 'cookTips' | 'prepTime' | 'cookTime' | 'servings' | 'imageUrl'> & {
-	ingredients: Pick<Ingredient, 'name' | 'quantity' | 'unit'>[];
-	instructions: Pick<Instruction, 'step' | 'description'>[];
-	categories: Pick<RecipeCategory, 'categoryId'>[];
-}) => {
+export const createRecipe = async (
+	recipeData: Pick<
+		Recipe,
+		'title' | 'description' | 'cookTips' | 'prepTime' | 'cookTime' | 'servings' | 'imageUrl'
+	> & {
+		ingredients: Pick<Ingredient, 'name' | 'quantity' | 'unit'>[];
+		instructions: Pick<Instruction, 'step' | 'description'>[];
+		categories: Pick<RecipeCategory, 'categoryId'>[];
+	},
+) => {
 	try {
 		const response = await axiosInstance.post('/api/recipe/create', recipeData, {
 			withCredentials: true,

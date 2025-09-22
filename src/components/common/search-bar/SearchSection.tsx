@@ -62,7 +62,10 @@ export default function SearchSection({
 			<div className="relative z-10 flex flex-col h-full px-4 sm:px-6 lg:px-8">
 				{showBreadcrumbs && (
 					<div className="px-20 pt-4 sm:pt-6 flex justify-start">
-						<Breadcrumbs title={breadcrumbTitle} />
+						<Breadcrumbs
+							title={breadcrumbTitle}
+							base={true}
+						/>
 					</div>
 				)}
 
