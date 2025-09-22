@@ -35,7 +35,7 @@ export function ReduxTime({
     }
 
     // Validation cho minutes: phải từ 0 đến 60
-    if (fieldName === 'mins' && value !== '' && (numValue < 0 || numValue > 60)) {
+    if (fieldName === 'mins' && value !== '' && typeof numValue === "number" && (numValue < 0 || numValue > 60)) {
       return;
     }
 
