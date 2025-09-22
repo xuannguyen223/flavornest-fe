@@ -3,6 +3,7 @@ import SaveButton from "./SaveButton";
 import Breadcrumbs from "@/components/common/BreadCrumbs";
 
 export interface RecipeHeaderProps {
+  id: string;
   title: string;
   image?: string;
   author: string;
@@ -12,7 +13,7 @@ export interface RecipeHeaderProps {
 }
 
 export default function RecipeHeader({
-  avgRating, ratingCount, title, image, author, createdAt, }: RecipeHeaderProps) {
+  avgRating, ratingCount, title, image, author, createdAt, id, }: RecipeHeaderProps) {
 
 
   const dateLabel = new Date(createdAt).toLocaleDateString(undefined, {
@@ -20,8 +21,6 @@ export default function RecipeHeader({
     month: "long",
     day: "numeric",
   });
-
-  // const filledStars = Math.floor(avgRating);
 
   return (
     <section className="w-full">
@@ -42,8 +41,8 @@ export default function RecipeHeader({
               <Star
               key={i}
               className="size-7"
-              fill={filled ? '#2E5834' : '#ADBBAE'}
-              color={filled ? '#2E5834' : '#ADBBAE'}
+              fill={filled ? "#facc15" : "#FFECC0"}
+              color={filled ? "#facc15" : "#FFECC0"}
               strokeWidth={0}
             />
             );
@@ -57,7 +56,7 @@ export default function RecipeHeader({
       <div className="mt-3 flex items-center gap-4 text-base">
         <div className="flex items-center gap-2">
           <span className="text-neutral-800">By</span>
-          <span className="text-[#C57D5D]">{author}</span>
+          <span className="font-semibold text-yellow-400">{author}</span>
         </div>
         <span className="h-6 w-px bg-neutral-300" />
         <span className="text-neutral-800">{dateLabel}</span>
@@ -74,7 +73,7 @@ export default function RecipeHeader({
 
       {/* Action buttons (Save) */}
       <div className="mt-6 flex items-center gap-3">
-        <SaveButton />
+        <SaveButton id = {id}/>
       </div>
     </section>
   );

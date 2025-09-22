@@ -3,7 +3,7 @@ import { updateField, selectCurrentRecipe, selectValidationErrors } from '@/stor
 import { FormInput } from '@/components/common/FormInput';
 
 type ReduxFieldProps = {
-  field: keyof import('@/store/features/recipeSlice').Recipe;
+  field: keyof import('@/store/features/recipeSlice').RecipeFormData;
   label?: string;
   placeholder?: string;
   required?: boolean;
@@ -33,16 +33,18 @@ export function ReduxInput({
   };
 
   return (
-    <FormInput
-      as={as}
-      label={label}
-      required={required}
-      value={value as string}
-      onChange={handleChange}
-      placeholder={placeholder}
-      error={error}
-      inputClassName={inputClassName}
-      rows={rows}
-    />
+    <div data-field={field}>
+      <FormInput
+        as={as}
+        label={label}
+        required={required}
+        value={value as string}
+        onChange={handleChange}
+        placeholder={placeholder}
+        error={error}
+        inputClassName={inputClassName}
+        rows={rows}
+      />
+    </div>
   );
 }

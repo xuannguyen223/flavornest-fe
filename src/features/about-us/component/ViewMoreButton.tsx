@@ -13,7 +13,7 @@ export default function ViewMoreButton({label = "View More", to,}: ViewMoreButto
         className="relative flex items-center justify-center 
                     px-4 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4
                     bg-neutral-700 text-white font-medium rounded-xl 
-                    overflow-hidden">
+                    overflow-hidden cursor-pointer">
         {label}
 
         {/* Decoration (2 circles) */}

@@ -31,6 +31,7 @@ export default function CategoryList({
         <li key={item.id} className="relative">
           {item.items && item.items.length > 0 ? (
             <CategoryItemDropdown
+              type = {item.id}
               label={item.label}
               items={item.items}
               isActive={activeId === item.id}

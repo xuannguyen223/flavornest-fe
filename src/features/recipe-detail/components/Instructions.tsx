@@ -8,7 +8,7 @@ export default function Instructions({ steps }: InstructionsProps) {
     <section className="mt-8">
       <h2 className="text-4xl font-semibold leading-tight text-neutral-700 text-left">Instructions</h2>
 
-      <div className="mt-6 space-y-5">
+      <div className="mt-6 space-y-3">
         {steps.map((step) => (
           <div key={step.id} className="rounded-md">
             <div className="flex items-start gap-4 px-1">

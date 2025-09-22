@@ -78,20 +78,21 @@ export function RecipeItem({
 		navigate(`/recipes/${encodeURIComponent(id)}`);
 	};
 
-	const renderStars = () => {
-		return Array.from({ length: 5 }, (_, index) => {
-			const filled = index < Math.round(rating);
-			return (
-				<Star
-					key={index}
-					className={cn('w-4 h-4')}
-					fill={filled ? '#2E5834' : '#ADBBAE'}
-					color={filled ? '#2E5834' : '#ADBBAE'}
-					strokeWidth={0}
-				/>
-			);
-		});
-	};
+
+  const renderStars = () => {
+    return Array.from({ length: 5 }, (_, index) => {
+      const filled = index < Math.round(rating);
+      return (
+        <Star
+          key={index}
+          className={cn("w-4 h-4")}
+          fill={filled ? "#facc15" : "#FFECC0"}
+          color={filled ? "#facc15" : "#FFECC0"}
+          strokeWidth={0}
+        />
+      );
+    });
+  };
 
 	return (
 		<Card
@@ -131,6 +132,7 @@ export function RecipeItem({
 						By
 						<div className="font-semibold text-green-700">{creator}</div>
 					</div>
+
 
 					<div className="flex items-center gap-2 text-lg">
 						<div>Total time: {totalTime}</div>

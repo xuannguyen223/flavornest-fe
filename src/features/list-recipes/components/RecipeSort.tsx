@@ -8,6 +8,7 @@ import {
 	SelectValue,
 } from '@/components/ui/select';
 import { useSort } from '@/hooks';
+import { cn } from '@/lib/utils';
 
 const defaultSortOptions = [
 	{ value: 'atoz', label: 'A - Z' },
@@ -31,21 +32,30 @@ export function RecipeSort({ sortOptions = defaultSortOptions, className = '' }:
 
 	return (
 		<div className={`flex items-center gap-2 p-4 ${className}`}>
-			<div className="text-lg text-gray-700">Sort by:</div>
+			<div className="text-lg font-medium text-neutral-700">Sort by:</div>
 			<Select
 				value={sortBy}
 				onValueChange={updateSort}>
-				<SelectTrigger className="w-[140px] border-none shadow-none bg-transparent p-0 h-auto">
-					<SelectValue>
-						<div className="text-lg font-medium text-gray-900">{getCurrentLabel()}</div>
-					</SelectValue>
+				<SelectTrigger 
+					className={cn(
+						'w-[140px] rounded-md border border-neutral-300 bg-white px-4 py-2 text-base font-medium text-neutral-700',
+						'hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-neutral-500 transition-colors duration-200'
+					)}>
+					<SelectValue>{getCurrentLabel()}</SelectValue>
 				</SelectTrigger>
-				<SelectContent className="w-fit border-0.5 border-grey-200 shadow-none bg-white p-0 h-auto">
+				<SelectContent 
+					className={cn(
+						'w-[140px] rounded-md border border-neutral-300 bg-white shadow-md',
+						'p-1 text-base text-neutral-900'
+					)}>
 					{sortOptions.map(option => (
 						<SelectItem
 							key={option.value}
 							value={option.value}
-							className="text-lg text-gray-900">
+							className={cn(
+								'rounded-sm px-4 py-2 cursor-pointer',
+								'hover:bg-neutral-100 hover:text-neutral-900 focus:bg-neutral-100 focus:text-neutral-800 transition-colors duration-150'
+							)}>
 							{option.label}
 						</SelectItem>
 					))}

@@ -1,15 +1,16 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import SearchBar from '@/components/common/search-bar/SearchBar';
-import { RecipeList } from '@/features/list-recipes/components/RecipeList';
-import { RecipeSort } from '@/features/list-recipes/components/RecipeSort';
-import Sections from './Sections';
-import type { RootState, AppDispatch } from '@/store/store';
-import { fetchFavoriteRecipes } from '@/store/features/recipeAPISlice';
+import { useSelector, useDispatch } from "react-redux";
+import SearchBar from "@/components/common/search-bar/SearchBar";
+import { RecipeList } from "@/features/list-recipes/components/RecipeList";
+import { RecipeSort } from "@/features/list-recipes/components/RecipeSort";
+import Sections from "./Sections";
+import type { RootState, AppDispatch } from "@/store/store";
+import { fetchFavoriteRecipes } from "@/store/features/recipeAPISlice";
 import { useAppSelector } from '@/hooks/redux';
 import { useSort } from '@/hooks';
+import { formatTime } from "@/lib/utils";
 
 function FavoriteRecipesSection() {
 	const dispatch = useDispatch<AppDispatch>();
@@ -75,6 +76,7 @@ function FavoriteRecipesSection() {
 
 		return sorted;
 	}, [favoriteRecipesForDisplay, searchQuery, sortBy]);
+
 
 	if (!isAuthenticated) {
 		return (

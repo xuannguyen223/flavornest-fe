@@ -22,7 +22,7 @@ export default function NavLinks({ links = DEFAULT_LINKS }: NavLinksProps) {
 					<li key={item.to}>
 						<Link
 							to={item.to}
-							className="font-semibold text-sm sm:text-base lg:text-lg xl:text-[22px] text-neutral-700">
+							className="font-semibold text-sm sm:text-base lg:text-base xl:text-[22px] text-neutral-700">
 							{item.label}
 						</Link>
 					</li>

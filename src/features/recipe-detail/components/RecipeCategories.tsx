@@ -15,14 +15,14 @@ export default function RecipeCategories({ categories }: RecipeCategoriesListPro
   };
 
   return (
-    <section className="text-left mt-8 w-full max-w-[1420px] mx-auto">
+    <section className="text-left mt-8">
       {/* Header */}
       <h2 className="text-4xl font-semibold leading-tight text-neutral-700">
         Tags
       </h2>
 
       {/* Category Item List */}
-      <div className="mt-6 flex flex-wrap gap-2">
+      <div className="mt-4 flex flex-wrap gap-2">
         {categories.map((cat) => (
           <button
             key={cat.id}

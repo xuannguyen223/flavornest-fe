@@ -8,9 +8,10 @@ import ReviewsRating from "./components/ReviewsRating";
 import RecipeCategories from "./components/RecipeCategories";
 import RecipeRecommend from "./components/RecipeRecommend";
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import type { Recipe } from "../../types/TypeRecipe";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { Link } from 'react-router-dom';
 
 import {
 	fetchRecipeById,
@@ -18,6 +19,7 @@ import {
 	submitRecipeRating,
 } from '@/store/features/recipeAPISlice';
 import { toast } from 'react-toastify';
+import { formatTime } from "@/lib/utils";
 
 export default function RecipeDetailPage() {
 	const { recipeId } = useParams<{ recipeId: string }>();
@@ -31,19 +33,34 @@ export default function RecipeDetailPage() {
 	const error = useAppSelector(state => state.recipeAPI.error);
 	const isAuthenticated = useAppSelector(state => state.loginSlice.isAuthenticated);
 
-  const navigate = useNavigate();
+	const user = useAppSelector((state) => state.userSlice.profile);
+	const avatarUrl = isAuthenticated && user?.avatarUrl ? user.avatarUrl : "";
 
-  const [hasReviewed, setHasReviewed] = useState(false);
+	const [hasReviewed, setHasReviewed] = useState(false);
+	const [userRating, setUserRating] = useState(0); // Lưu userRating từ localStorage
 
 	// Load recipe using dispatch()
 	// Load hasReviewed from localStorage
 	useEffect(() => {
 		if (recipeId) {
-			dispatch(fetchRecipeById(recipeId));
-			const stored = localStorage.getItem(`hasReviewed_${recipeId}`);
-			setHasReviewed(!!stored);
+		dispatch(fetchRecipeById(recipeId));
 		}
-	}, [recipeId, dispatch]);
+  	}, [recipeId, dispatch]);
+
+	useEffect(() => {
+		if (!recipeId) return;
+	
+		const storedRating = localStorage.getItem(`userRating_${user.userId}_${recipeId}`);
+		const storedHasReviewed = localStorage.getItem(`hasReviewed_${user.userId}_${recipeId}`);
+	
+		if (storedRating) {
+			setUserRating(parseInt(storedRating, 10));
+			setHasReviewed(!!storedHasReviewed);
+		} else {
+			setUserRating(0);
+			setHasReviewed(false);
+		}
+	}, [recipeId, user, isAuthenticated]);
 
 	// Get related recipes of each category for RecipeRecommend
 	useEffect(() => {
@@ -57,27 +74,28 @@ export default function RecipeDetailPage() {
 		}
 	}, [recipe, recipesByCategory, dispatch]);
 
-  const handleSubmitRating = async (newRating: number) => {
-    if (!isAuthenticated) {
-      toast.error("Login or SignUp to submit review!");
-      navigate("/login");
-      return;
-    }
-
-		if (!recipeId) return;
+	const handleSubmitRating = async (newRating: number) => {
+		if (!recipeId || !isAuthenticated) return;
 
 		try {
-			await dispatch(submitRecipeRating({ recipeId, rating: newRating })).unwrap();
+			await dispatch(
+				submitRecipeRating({ recipeId, rating: newRating })
+			).unwrap();
 			toast.success(
-				hasReviewed ? 'Rating updated successfully!' : 'Rating submitted successfully!',
+				hasReviewed
+				? "Rating updated successfully!"
+				: "Rating submitted successfully!"
 			);
 			setHasReviewed(true);
-			localStorage.setItem(`hasReviewed_${recipeId}`, 'true'); // Save hasReviewed
+			setUserRating(newRating);
+			localStorage.setItem(`hasReviewed_${user.userId}_${recipeId}`, "true");
+			localStorage.setItem(`userRating_${user.userId}_${recipeId}`, newRating.toString());
 		} catch (err: any) {
-			toast.error(err.message || 'Failed to submit rating');
+			toast.error(err.message || "Failed to submit rating");
 		}
 	};
 
+  	// RecipeRecommend: non-duplicate
 	const relatedRecipes: Recipe[] = [];
 	const seen = new Set<string>();
 	if (recipe?.categories) {
@@ -93,8 +111,39 @@ export default function RecipeDetailPage() {
 		});
 	}
 
-	if (loading && !recipe) return <div>Loading...</div>;
-	if (error || !recipe) return <div>{error || 'Recipe not found'}</div>;
+	if (loading && !recipe) {
+		return (
+		  <div className="flex-1 flex flex-col items-center justify-center py-16">
+			<p className="text-xl text-gray-700">Loading recipe details...</p>
+		  </div>
+		);
+	}
+	
+
+	if (error || !recipe) {
+		return (
+			<div className="flex-1 flex flex-col items-center justify-center py-16">
+			<div className="text-center">
+				<h3 className="text-2xl font-semibold text-gray-900 mb-2">
+					{error ? 'Error loading recipe' : 'Recipe not found'}
+				</h3>
+				<p className="text-gray-600 text-lg">
+					{error || 'We could not find the recipe you are looking for.'}
+				</p>
+				<p className="text-gray-500 text-sm mt-2">
+					Try searching with different keywords or browsing other recipes.
+				</p>
+				<Link
+					to="/"
+					className="mt-4 inline-block px-6 py-2 bg-neutral-700 text-white rounded hover:bg-neutral-300 transition"
+				>
+				Go to Homepage
+				</Link>
+			</div>
+			</div>
+		);
+	}
+
 
 	const createdDate = new Date(recipe.createdAt).toLocaleDateString('en-GB', {
 		day: '2-digit',
@@ -102,12 +151,16 @@ export default function RecipeDetailPage() {
 		year: 'numeric',
 	});
 
+	const totalMinutes = recipe.cookTime + recipe.prepTime;
+  	const totalTime = formatTime(totalMinutes);
+
 	return (
-		<div className="px-6 py-8">
+		<div className="px-12 mt-8">
 			<RecipeHeader
+				id = {recipe.id}
 				title={recipe.title}
 				image={recipe.imageUrl}
-				author={recipe.author.email}
+				author={recipe.author.profile.name}
 				createdAt={createdDate}
 				avgRating={recipe.avgRating}
 				ratingCount={recipe.ratingCount}
@@ -117,7 +170,7 @@ export default function RecipeDetailPage() {
 			<RecipeInfo
 				prepTime={recipe.prepTime}
 				cookTime={recipe.cookTime}
-				totalTime={recipe.prepTime + recipe.cookTime}
+				totalTime={totalTime}
 				servings={recipe.servings}
 			/>
 			<Ingredients ingredients={recipe.ingredients} />
@@ -128,10 +181,12 @@ export default function RecipeDetailPage() {
 			<ReviewsRating
 				rating={recipe.avgRating}
 				ratingCount={recipe.ratingCount}
+				avatarUrl= {avatarUrl}
 				onSubmitRating={handleSubmitRating}
 				hasReviewed={hasReviewed}
-				recipeId={recipeId || ''} // Truyền recipeId
-			/>
+				recipeId={recipeId || ""} 
+				userRating={userRating} 
+      		/>
 			{relatedRecipes.length > 0 && <RecipeRecommend recipes={relatedRecipes} />}
 		</div>
 	);

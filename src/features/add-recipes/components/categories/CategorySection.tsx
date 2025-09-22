@@ -2,45 +2,32 @@ import { Label } from "@radix-ui/react-label";
 import { useEffect, useState } from "react";
 import { CategoryItem } from "./CategoryItem";
 import { getAllCategories } from "@/services/category.service";
-import type { Category } from "@/types/TypeRecipe";
-
-type CategoryListProps = {
-  cuisine?: string;
-  mealType?: string;
-  dietary?: string[];
-  method?: string;
-  main?: string;
-};
+import type { Category, RecipeCategory } from "@/types/TypeRecipe";
 
 type CategorySectionProps = {
-  value: CategoryListProps;
-  onChange: (updates: Partial<CategoryListProps>) => void;
-  errors?: Partial<CategoryListProps>;
+  value: RecipeCategory[];
+  onChange: (updates: RecipeCategory[]) => void;
+  errors?: any;
 };
 
 const CATEGORY_FIELDS = [
   {
-    key: "cuisine" as keyof CategoryListProps,
     type: "CUISINE",
     placeholder: "Cuisine",
   },
   {
-    key: "mealType" as keyof CategoryListProps,
     type: "MEAL_TYPE",
     placeholder: "Meal Type",
   },
   {
-    key: "dietary" as keyof CategoryListProps,
     type: "DIETARY",
     placeholder: "Dietary",
   },
   {
-    key: "method" as keyof CategoryListProps,
     type: "COOKING_METHOD",
     placeholder: "Method",
   },
   {
-    key: "main" as keyof CategoryListProps,
     type: "MAIN_INGREDIENT",
     placeholder: "Main Ingredient",
   },
@@ -68,26 +55,28 @@ export function CategorySection({ value, onChange, errors }: CategorySectionProp
       .map(category => category.name);
   };
 
-  const handleTagChange = (key: keyof CategoryListProps, newValue: string) => {
-    if (key === "dietary") {
-      onChange({ dietary: newValue ? [newValue] : [] });
-    } else {
-      onChange({ [key]: newValue });
+  const handleTagChange = (type: string, newValue: string) => {
+    const updatedCategories = value.filter(cat => cat.category.type !== type);
+    if (newValue) {
+      const selectedCategory = categories.find(cat => cat.name === newValue && cat.type === type);
+      if (selectedCategory) {
+        updatedCategories.push({
+          recipeId: "",
+          categoryId: selectedCategory.id,
+          category: selectedCategory
+        });
+      }
     }
+    onChange(updatedCategories);
   };
 
-  const getTagValue = (key: keyof CategoryListProps) => {
-    if (key === "dietary") {
-      return value.dietary?.[0] || "";
-    }
-    return value[key] || "";
+  const getTagValue = (type: string) => {
+    const category = value.find(cat => cat.category.type === type);
+    return category?.category.name || "";
   };
 
-  const getTagError = (key: keyof CategoryListProps) => {
-    if (key === "dietary") {
-      return errors?.dietary?.[0];
-    }
-    return errors?.[key];
+  const getTagError = (type: string) => {
+    return errors?.[type];
   };
 
   return (
@@ -99,12 +88,12 @@ export function CategorySection({ value, onChange, errors }: CategorySectionProp
       <div>
         {CATEGORY_FIELDS.map((config) => (
           <CategoryItem
-            key={config.key}
-            value={getTagValue(config.key)}
-            onChange={(newValue) => handleTagChange(config.key, newValue)}
+            key={config.type}
+            value={getTagValue(config.type)}
+            onChange={(newValue) => handleTagChange(config.type, newValue)}
             options={getCategoriesByType(config.type)}
             placeholder={config.placeholder}
-            error={getTagError(config.key)}
+            error={getTagError(config.type)}
           />
         ))}
       </div>
