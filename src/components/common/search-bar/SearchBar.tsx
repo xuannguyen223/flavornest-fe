@@ -20,8 +20,8 @@ export default function SearchBar({
 }: SearchBarProps) {
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		if (onSearch && value) {
-			onSearch(value);
+		if (onSearch) {
+			onSearch(value ?? "");
 		}
 	};
 
