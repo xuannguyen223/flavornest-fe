@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "@/store/store";
 import { useEffect } from "react";
 import { checkLogin } from "@/store/features/login/loginAction";
+import { handleNavigateUtil } from "@/utils/navigation";
 
 const AuthLayout = () => {
   const navigate = useNavigate();
@@ -26,11 +27,7 @@ const AuthLayout = () => {
   }
 
   const handleClose = () => {
-    if (window.history.state && window.history.state.idx > 0) {
-      navigate(-1);
-    } else {
-      navigate("/");
-    }
+    handleNavigateUtil(navigate);
   };
 
   return (

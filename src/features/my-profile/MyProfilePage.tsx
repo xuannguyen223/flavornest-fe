@@ -1,20 +1,29 @@
 import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { MY_PROFILE_NAV } from "./components/sidebar/SidebarList";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/store/store";
 
 function MyProfilePage() {
   const location = useLocation();
   const isBasePath = location.pathname === "/my-profile";
+  const { isAuthenticated } = useSelector(
+    (state: RootState) => state.loginSlice
+  );
+
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
 
   if (isBasePath) {
     return <Navigate to="/my-profile/edit-profile" replace />;
   }
 
   return (
-    <div className="w-full grid grid-cols-1 gap-4 sm:gap-6 md:gap-8 lg:gap-12 xl:gap-[60px] md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] xl:grid-cols-[400px_1fr] min-h-screen">
+    <div className="w-full grid grid-cols-1 gap-[60px] md:grid-cols-[400px_1fr] min-h-screen">
       <aside className="h-full">
         <nav className="h-full bg-(--second-color)">
-          <h2 className="p-4 sm:p-6 md:p-8 lg:p-12 xl:p-[50px] py-3 sm:py-4 md:py-5 font-semibold text-xl sm:text-2xl md:text-3xl lg:text-[32px] text-white">
+          <h2 className="p-[50px] py-5 font-semibold text-[32px] text-white">
             My Profile
           </h2>
           <ul className="space-y-1">

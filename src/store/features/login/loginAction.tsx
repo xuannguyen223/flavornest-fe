@@ -1,6 +1,8 @@
 import axiosInstance from "@/services/axiosInstance";
 import { handleIsLogin, handleLoading } from "./loginSlice";
 import {
+  GOOGLE_AUTH_URL_API,
+  GOOGLE_USER_PROFILE_API,
   LOGIN_API,
   REFRESH_TOKEN_API,
   USER_ID,
@@ -30,8 +32,6 @@ export const handleLoginAction = (data: LoginFormValues) => {
 
     try {
       const response = await axiosInstance.post(LOGIN_API, payload);
-      console.log("response id: ", response.data.data.id);
-      console.log("response ", response);
       if (response.status === 200) {
         const userID = response.data.data.id;
         localStorage.setItem(USER_ID, userID);
@@ -58,19 +58,34 @@ export const checkLogin = (authMode: boolean = false) => {
         dispatch(handleIsLogin(true));
         if (!authMode) {
           const userID = localStorage.getItem(USER_ID);
-          const profileResponse = await axiosInstance.get(
-            `${USER_PROFILE_API}/${userID}`
-          );
+          const finalUrl = userID
+            ? `${USER_PROFILE_API}/${userID}`
+            : GOOGLE_USER_PROFILE_API;
+          const profileResponse = await axiosInstance.get(finalUrl);
           if (profileResponse.status === 200) {
+            if (!userID) {
+              localStorage.setItem(USER_ID, profileResponse.data.data.userId);
+            }
             dispatch(setUserProfile(profileResponse.data.data));
-          } else {
-            console.warn("No userID found in localStorage");
           }
         }
       }
-    } catch (error) {
-      console.log("error: ", error);
+    } catch {
       dispatch(handleIsLogin(false));
+    }
+  };
+};
+
+// Dùng cho continue with Google hẹ hẹ
+export const handleLoginGoogleAction = () => {
+  return async () => {
+    try {
+      const response = await axiosInstance.get(GOOGLE_AUTH_URL_API);
+      if (response.status === 200) {
+        window.location.href = response.data.data;
+      }
+    } catch (error: any) {
+      console.log("error: ", error.message);
     }
   };
 };
