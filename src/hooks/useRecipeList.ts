@@ -50,6 +50,7 @@ export function useRecipeList() {
 		}
 	}, [dispatch, isAuthenticated, userId]);
 
+	// Xử lý reload: Set flag trước khi unload
 	useEffect(() => {
 		if (searchValue && memoizedCategoryNames.length > 0) {
 			dispatch(fetchRecipesBySearch({ searchValue, categoryNames: memoizedCategoryNames }));

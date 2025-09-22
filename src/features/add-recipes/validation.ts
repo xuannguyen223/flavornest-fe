@@ -76,6 +76,14 @@ const recipeSchema = yup.object().shape({
             return categories.some(category => 
                 category.categoryId && category.categoryId.trim() !== ''
             );
+        }),
+
+    // Require a cover photo to be uploaded
+    photo: yup
+        .mixed()
+        .required('Cover photo is required')
+        .test('is-file', 'Cover photo is required', (value) => {
+            return value instanceof File;
         })
 });
 
