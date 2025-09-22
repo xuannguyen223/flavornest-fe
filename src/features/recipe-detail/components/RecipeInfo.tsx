@@ -21,7 +21,7 @@ function InfoItem({ title, value, iconSrc }: { title: string; value: string; ico
 
 export default function RecipeInfo({ prepTime, cookTime, totalTime, servings }: RecipeInfoProps) {
   return (
-    <section className="mt-8 rounded-2xl bg-neutral-100">
+    <section className="mt-4 rounded-2xl bg-neutral-100">
       <div className="grid grid-cols-1 divide-neutral-200 md:grid-cols-4 md:divide-x ">
         <InfoItem title="Prep Time" value={`${prepTime} min`} iconSrc="/recipe-detail/prep-time.svg" />
         <InfoItem title="Cook Time" value={`${cookTime} min`} iconSrc="/recipe-detail/cooking-time.svg" />

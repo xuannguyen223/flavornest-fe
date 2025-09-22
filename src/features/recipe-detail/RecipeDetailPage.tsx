@@ -155,7 +155,7 @@ export default function RecipeDetailPage() {
   	const totalTime = formatTime(totalMinutes);
 
 	return (
-		<div className="px-6 py-8">
+		<div className="px-12 mt-8">
 			<RecipeHeader
 				id = {recipe.id}
 				title={recipe.title}

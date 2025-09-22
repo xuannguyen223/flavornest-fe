@@ -22,7 +22,7 @@ export default function RecipeCategories({ categories }: RecipeCategoriesListPro
       </h2>
 
       {/* Category Item List */}
-      <div className="mt-6 flex flex-wrap gap-2">
+      <div className="mt-4 flex flex-wrap gap-2">
         {categories.map((cat) => (
           <button
             key={cat.id}
