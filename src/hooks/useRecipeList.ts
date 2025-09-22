@@ -13,7 +13,7 @@ import {
 import type { Recipe } from '@/types/TypeRecipe';
 import type { RecipeItemProps } from '@/features/list-recipes/components/RecipeItem';
 import type { Filter } from '@/components/common/filter-recipe/FilterGroup';
-import { formatCategoryType } from '@/lib/utils';
+import { formatCategoryType, formatTime } from '@/lib/utils';
 import type { FilterOption } from '@/components/common/filter-recipe/FilterGroup';
 
 export function useRecipeList() {
@@ -90,7 +90,7 @@ export function useRecipeList() {
 				id: r.id,
 				title: r.title,
 				creator: r.author.profile.name,
-				totalTime: `${r.cookTime + r.prepTime} min`,
+				totalTime: formatTime(r.cookTime + r.prepTime),
 				rating: r.avgRating,
 				reviewCount: r.ratingCount,
 				imageUrl: r.imageUrl ?? '/placeholder.svg',
