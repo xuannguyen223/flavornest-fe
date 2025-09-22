@@ -9,7 +9,7 @@ function Sections({ title, children }: SectionsProps) {
 	return (
 		<div className="w-full space-y-6 mt-8">
 			<header>
-				<h1 className="text-[36px] font-semibold">{title}</h1>
+				<h1 className="text-2xl font-semibold">{title}</h1>
 
 				<hr className="text-(--divide-color) border-1 my-2" />
 
