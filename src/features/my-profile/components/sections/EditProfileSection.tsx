@@ -87,7 +87,7 @@ function EditProfileSection() {
 			<form
 				onSubmit={handleFormSubmit}
 				className="min-h-screen flex flex-row justify-between pl-10 gap-30 mb-4">
-				<section>
+				<section className="w-[15%]">
 					<PhotoUpload
 						ref={profilePhotoUploaderRef}
 						value={profilePhoto}
@@ -127,8 +127,8 @@ function EditProfileSection() {
 						<Button
 							type="submit"
 							disabled={isSubmitting || !canSubmit}
-							className='w-full sm:w-auto h-12 sm:h-14 lg:h-16 xl:h-[56px] font-medium text-base sm:text-lg lg:text-xl xl:text-[24px] text-white px-4 
-								sm:px-5 py-3 sm:py-4 lg:py-5 xl:py-6 bg-(--primary-color) rounded-full'>
+							className="w-full sm:w-auto h-12 sm:h-14 lg:h-16 xl:h-[56px] font-medium text-base sm:text-lg lg:text-xl xl:text-[24px] text-white px-4 
+								sm:px-5 py-3 sm:py-4 lg:py-5 xl:py-6 bg-(--primary-color) rounded-full">
 							Update Profile
 						</Button>
 					</div>
