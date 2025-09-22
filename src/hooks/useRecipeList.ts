@@ -9,6 +9,7 @@ import {
 	fetchRecipesByCategoryType,
 	fetchRecipesBySearch,
 	selectSearchResults,
+	fetchFavoriteRecipes,
 } from '@/store/features/recipeAPISlice';
 import type { Recipe } from '@/types/TypeRecipe';
 import type { RecipeItemProps } from '@/features/list-recipes/components/RecipeItem';
@@ -33,8 +34,21 @@ export function useRecipeList() {
 	);
 	const searchResults = useAppSelector(selectSearchResults);
 	const categoriesByType = useAppSelector(state => state.category.categoriesByType);
+	const isAuthenticated = useAppSelector((state) => state.loginSlice.isAuthenticated);
+	const userId = useAppSelector((state) => state.userSlice.profile.userId);
 
 	const memoizedCategoryNames = useMemo(() => categoryNames, [categoryNames.join(',')]);
+
+	// Tải danh sách favorite khi đăng nhập
+	useEffect(() => {
+		if (isAuthenticated && userId) {
+			dispatch(fetchFavoriteRecipes({userId}))
+				.unwrap()
+				.catch((error) => {
+					console.error('Failed to fetch favorites:', error);
+				});
+		}
+	}, [dispatch, isAuthenticated, userId]);
 
 	useEffect(() => {
 		console.log('[v0] useEffect triggered with:', {

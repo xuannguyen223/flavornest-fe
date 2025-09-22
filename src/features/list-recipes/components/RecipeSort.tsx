@@ -15,6 +15,7 @@ const defaultSortOptions = [
 	{ value: 'oldest', label: 'Oldest' },
 	{ value: 'a-z', label: 'A-Z' },
 	{ value: 'z-a', label: 'Z-A' },
+	{ value: 'rating', label: 'Most rating' },
 ];
 
 interface RecipeSortProps {

@@ -118,7 +118,6 @@ export default function HomePage() {
 				<SearchSection
 					title="Fuel your body & soul - find recipes that taste amazing!"
 					backgroundImage="/home.png"
-					searchPlaceholder="Search by dish, ingredient, ......"
 					searchValue={searchValue}
 					onSearchChange={setSearchValue}
 					onSearch={handleSearch}

@@ -5,10 +5,12 @@ import SearchSection from '@/components/common/search-bar/SearchSection';
 import { RecipeSort } from './components/RecipeSort';
 import FilterGroup from '@/components/common/filter-recipe/FilterGroup';
 import { RecipeList } from './components/RecipeList';
+import { formatCategoryType } from '@/lib/utils';
 
 export default function RecipeListPage() {
 	const {
 		categoryNames,
+		categoryType,
 		description,
 		searchInput,
 		setSearchInput,
@@ -26,7 +28,6 @@ export default function RecipeListPage() {
 		<div>
 			<SearchSection
 				backgroundColor="bg-neutral-300"
-				searchPlaceholder="Search by dish, ingredient, ......"
 				searchValue={searchInput}
 				onSearchChange={setSearchInput}
 				onSearch={handleSearch}
@@ -65,7 +66,7 @@ export default function RecipeListPage() {
 							<div className="text-center">
 								<h3 className="text-2xl font-semibold text-gray-900 mb-2">No Results Found</h3>
 								<p className="text-gray-600 text-lg">
-									There are no results from "{searchValue || categoryNames.join(', ')}"
+									There are no results from "{searchValue || categoryNames.join(', ') || formatCategoryType(categoryType)}"
 								</p>
 								<p className="text-gray-500 text-sm mt-2">
 									Try searching with different keywords or browse all recipes
