@@ -36,17 +36,17 @@ export function RecipeSort({ sortOptions = defaultSortOptions, className = '' }:
 			<Select
 				value={sortBy}
 				onValueChange={updateSort}>
-				<SelectTrigger 
+				<SelectTrigger
 					className={cn(
-						'w-[140px] rounded-md border border-neutral-300 bg-white px-4 py-2 text-base font-medium text-neutral-700',
-						'hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-neutral-500 transition-colors duration-200'
+						'w-[160px] rounded-md border border-neutral-300 bg-white px-4 py-2 text-base font-medium text-neutral-700',
+						'hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-neutral-500 transition-colors duration-200',
 					)}>
 					<SelectValue>{getCurrentLabel()}</SelectValue>
 				</SelectTrigger>
-				<SelectContent 
+				<SelectContent
 					className={cn(
-						'w-[140px] rounded-md border border-neutral-300 bg-white shadow-md',
-						'p-1 text-base text-neutral-900'
+						'w-[160px] rounded-md border border-neutral-300 bg-white shadow-md',
+						'text-base text-neutral-900',
 					)}>
 					{sortOptions.map(option => (
 						<SelectItem
@@ -54,7 +54,7 @@ export function RecipeSort({ sortOptions = defaultSortOptions, className = '' }:
 							value={option.value}
 							className={cn(
 								'rounded-sm px-4 py-2 cursor-pointer',
-								'hover:bg-neutral-100 hover:text-neutral-900 focus:bg-neutral-100 focus:text-neutral-800 transition-colors duration-150'
+								'hover:bg-neutral-100 hover:text-neutral-900 focus:bg-neutral-100 focus:text-neutral-800 transition-colors duration-150',
 							)}>
 							{option.label}
 						</SelectItem>
