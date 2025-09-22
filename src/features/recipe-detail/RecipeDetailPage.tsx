@@ -8,7 +8,7 @@ import ReviewsRating from "./components/ReviewsRating";
 import RecipeCategories from "./components/RecipeCategories";
 import RecipeRecommend from "./components/RecipeRecommend";
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import type { Recipe } from "../../types/TypeRecipe";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 
@@ -18,6 +18,7 @@ import {
 	submitRecipeRating,
 } from '@/store/features/recipeAPISlice';
 import { toast } from 'react-toastify';
+import { formatTime } from "@/lib/utils";
 
 export default function RecipeDetailPage() {
 	const { recipeId } = useParams<{ recipeId: string }>();
@@ -31,19 +32,36 @@ export default function RecipeDetailPage() {
 	const error = useAppSelector(state => state.recipeAPI.error);
 	const isAuthenticated = useAppSelector(state => state.loginSlice.isAuthenticated);
 
-  const navigate = useNavigate();
+  const user = useAppSelector((state) => state.userSlice.profile);
+  const avatarUrl = isAuthenticated && user?.avatarUrl ? user.avatarUrl : "";
+
+  // const navigate = useNavigate();
 
   const [hasReviewed, setHasReviewed] = useState(false);
+  const [userRating, setUserRating] = useState(0); // Lưu userRating từ localStorage
 
 	// Load recipe using dispatch()
 	// Load hasReviewed from localStorage
 	useEffect(() => {
-		if (recipeId) {
-			dispatch(fetchRecipeById(recipeId));
-			const stored = localStorage.getItem(`hasReviewed_${recipeId}`);
-			setHasReviewed(!!stored);
-		}
-	}, [recipeId, dispatch]);
+    if (recipeId) {
+      dispatch(fetchRecipeById(recipeId));
+    }
+  }, [recipeId, dispatch]);
+
+  useEffect(() => {
+    if (!recipeId) return;
+  
+    const storedRating = localStorage.getItem(`userRating_${user.userId}_${recipeId}`);
+    const storedHasReviewed = localStorage.getItem(`hasReviewed_${user.userId}_${recipeId}`);
+  
+    if (storedRating) {
+      setUserRating(parseInt(storedRating, 10));
+      setHasReviewed(!!storedHasReviewed);
+    } else {
+      setUserRating(0);
+      setHasReviewed(false);
+    }
+  }, [recipeId, user, isAuthenticated]);
 
 	// Get related recipes of each category for RecipeRecommend
 	useEffect(() => {
@@ -58,26 +76,27 @@ export default function RecipeDetailPage() {
 	}, [recipe, recipesByCategory, dispatch]);
 
   const handleSubmitRating = async (newRating: number) => {
-    if (!isAuthenticated) {
-      toast.error("Login or SignUp to submit review!");
-      navigate("/login");
-      return;
+    if (!recipeId || !isAuthenticated) return;
+
+    try {
+      await dispatch(
+        submitRecipeRating({ recipeId, rating: newRating })
+      ).unwrap();
+      toast.success(
+        hasReviewed
+          ? "Rating updated successfully!"
+          : "Rating submitted successfully!"
+      );
+      setHasReviewed(true);
+      setUserRating(newRating);
+      localStorage.setItem(`hasReviewed_${user.userId}_${recipeId}`, "true");
+      localStorage.setItem(`userRating_${user.userId}_${recipeId}`, newRating.toString());
+    } catch (err: any) {
+      toast.error(err.message || "Failed to submit rating");
     }
+  };
 
-		if (!recipeId) return;
-
-		try {
-			await dispatch(submitRecipeRating({ recipeId, rating: newRating })).unwrap();
-			toast.success(
-				hasReviewed ? 'Rating updated successfully!' : 'Rating submitted successfully!',
-			);
-			setHasReviewed(true);
-			localStorage.setItem(`hasReviewed_${recipeId}`, 'true'); // Save hasReviewed
-		} catch (err: any) {
-			toast.error(err.message || 'Failed to submit rating');
-		}
-	};
-
+  // RecipeRecommend: non-duplicate
 	const relatedRecipes: Recipe[] = [];
 	const seen = new Set<string>();
 	if (recipe?.categories) {
@@ -102,22 +121,26 @@ export default function RecipeDetailPage() {
 		year: 'numeric',
 	});
 
+  const totalMinutes = recipe.cookTime + recipe.prepTime;
+  const totalTime = formatTime(totalMinutes);
+
 	return (
 		<div className="px-6 py-8">
 			<RecipeHeader
-				title={recipe.title}
-				image={recipe.imageUrl}
-				author={recipe.author.email}
-				createdAt={createdDate}
-				avgRating={recipe.avgRating}
-				ratingCount={recipe.ratingCount}
+				id = {recipe.id}
+        title={recipe.title}
+        image={recipe.imageUrl}
+        author={recipe.author.profile.name}
+        createdAt={createdDate}
+        avgRating={recipe.avgRating}
+        ratingCount={recipe.ratingCount}
 			/>
 			<Overview text={recipe.description} />
 			{recipe.cookTips && recipe.cookTips.length > 0 ? <CookTips tips={recipe.cookTips} /> : null}
 			<RecipeInfo
 				prepTime={recipe.prepTime}
 				cookTime={recipe.cookTime}
-				totalTime={recipe.prepTime + recipe.cookTime}
+				totalTime={totalTime}
 				servings={recipe.servings}
 			/>
 			<Ingredients ingredients={recipe.ingredients} />
@@ -126,12 +149,14 @@ export default function RecipeDetailPage() {
 				<RecipeCategories categories={recipe.categories.map(c => c.category)} />
 			) : null}
 			<ReviewsRating
-				rating={recipe.avgRating}
-				ratingCount={recipe.ratingCount}
-				onSubmitRating={handleSubmitRating}
-				hasReviewed={hasReviewed}
-				recipeId={recipeId || ''} // Truyền recipeId
-			/>
+        rating={recipe.avgRating}
+        ratingCount={recipe.ratingCount}
+        avatarUrl= {avatarUrl}
+        onSubmitRating={handleSubmitRating}
+        hasReviewed={hasReviewed}
+        recipeId={recipeId || ""} 
+        userRating={userRating} 
+      />
 			{relatedRecipes.length > 0 && <RecipeRecommend recipes={relatedRecipes} />}
 		</div>
 	);
