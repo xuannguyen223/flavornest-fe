@@ -5,7 +5,7 @@ import { ChevronRight } from 'lucide-react';
 import { RecipeItem, type RecipeItemProps } from './RecipeItem';
 import { cn } from '@/lib/utils';
 
-export type RecipeListLayout = 'default' | '2-rows-4' | '1-row-4';
+export type RecipeListLayout = 'default' | '2-rows-4' | '1-row-4' | 'list-rows-3';
 
 export interface RecipeListProps {
 	recipeList: RecipeItemProps[];
@@ -17,7 +17,6 @@ export interface RecipeListProps {
 		text?: string;
 		onClick?: (categoryName: string, description: string) => void; // click then navigate to recipe list page with that category selected
 	};
-	onSaveToggle?: (id: string) => void;
 	onRecipeClick?: (id: string) => void;
 	className?: string;
 }
@@ -28,7 +27,6 @@ export function RecipeList({
 	categoryName,
 	description,
 	viewAll,
-	onSaveToggle,
 	onRecipeClick,
 	className,
 }: RecipeListProps) {
@@ -38,6 +36,8 @@ export function RecipeList({
 				return 4;
 			case '2-rows-4':
 				return 8;
+			case 'list-rows-3':
+				return recipeList.length;
 			case 'default':
 			default:
 				return recipeList.length;
@@ -47,12 +47,14 @@ export function RecipeList({
 	const getGridClasses = () => {
 		switch (layout) {
 			case '1-row-4':
-				return 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6';
+				return 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-8';
 			case '2-rows-4':
-				return 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6';
+				return 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-8';
+			case 'list-rows-3':
+				return 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6';
 			case 'default':
 			default:
-				return 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6';
+				return 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-8';
 		}
 	};
 
@@ -90,12 +92,11 @@ export function RecipeList({
 				</div>
 			)}
 
-			<div className={`px-8 ${getGridClasses()}`}>
+			<div className={`${getGridClasses()}`}>
 				{displayedRecipes.map(recipe => (
 					<RecipeItem
 						key={recipe.id}
 						{...recipe}
-						onSaveToggle={onSaveToggle}
 						onClick={onRecipeClick}
 						className="h-full"
 					/>

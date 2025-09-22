@@ -5,10 +5,10 @@ import { RecipeSort } from './components/RecipeSort';
 import SearchSection from '@/components/common/search-bar/SearchSection';
 import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { mockFilter } from './components/filterData';
 import type { Recipe } from '@/types/TypeRecipe';
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { fetchAllRecipes, fetchRecipesByCategory } from "@/store/features/recipeAPISlice";
+import type { Filter } from './components/filterData';
 
 export default function RecipeListPage() {
 	const [params] = useSearchParams();
@@ -21,10 +21,11 @@ export default function RecipeListPage() {
 	const dispatch = useAppDispatch();
 	const allRecipes = useAppSelector(state => state.recipeAPI.allRecipes);
 	const recipesByCategory = useAppSelector(state => state.recipeAPI.recipesByCategory);
+	const categoriesByType = useAppSelector((state) => state.category.categoriesByType);
 
 	const [displayRecipes, setDisplayRecipes] = useState<Recipe[]>([]);
 
-	// Fetch when component mounts or category changes
+	// Fetch call API when component mounts or category changes
 	useEffect(() => {
 		if (categoryName) {
 			if (!recipesByCategory[categoryName]) 
@@ -37,13 +38,15 @@ export default function RecipeListPage() {
 
 	// Update local state for rendering
 	useEffect(() => {
+		// click View All in Homepage => render category's list recipe
 		if (categoryName) 
 			setDisplayRecipes(recipesByCategory[categoryName] ?? []);
+		// click Recipe in Header => show all recipe
 		else 
 			setDisplayRecipes(allRecipes);
 	}, [categoryName, recipesByCategory, allRecipes]);
 
-	// map from Recipe -> RecipeItemProps to coordinate with params in RecipeList
+	// map from Recipe -> RecipeItemProps to coordinate with params in RecipeList Component
 	const mappedRecipes: RecipeItemProps[] = useMemo(
         () =>
           displayRecipes.map((r) => ({
@@ -58,14 +61,18 @@ export default function RecipeListPage() {
         [displayRecipes]
     );
 
-	const filter = mockFilter;
+	const filterData: Filter[] = Object.entries(categoriesByType).map(([type, items]) => ({
+		id: type,
+		title: type, 
+		options: items.map(item => ({
+		  id: item.id,
+		  label: item.name, // 'Thai', 'Italian'
+		  value: item.id
+		}))
+	  }));
 
 	const handleSearch = (value: string) => {
 		console.log('Searching for:', value);
-	};
-
-	const handleSaveToggle = (id: string) => {
-		console.log('Save toggled for recipe:', id);
 	};
 
 	const handleRecipeClick = (id: string) => {
@@ -103,11 +110,10 @@ export default function RecipeListPage() {
 				</div>
 
 				<div className="flex flex-row gap-8">
-					<FilterGroup filterData={filter} />
+					<FilterGroup filterData={filterData} />
 					<RecipeList
 						recipeList={mappedRecipes}
 						layout="default"
-						onSaveToggle={handleSaveToggle}
 						onRecipeClick={handleRecipeClick}
 					/>
 				</div>

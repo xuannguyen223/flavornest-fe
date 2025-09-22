@@ -1,28 +1,11 @@
-export interface Filter {
-	id: number;
-	title: string;
-	options: string[];
+export interface FilterOption {
+    id: string;
+    label: string;
+    value: string;
 }
-
-export const mockFilter: Filter[] = [
-	{
-		id: 1,
-		title: 'Diet Preference',
-		options: ['Vegetarian', 'Vegan', 'Gluten-Free', 'Keto', 'Paleo'],
-	},
-	{
-		id: 2,
-		title: 'Cuisine Type',
-		options: ['Italian', 'Chinese', 'Indian', 'Mexican', 'Japanese'],
-	},
-	{
-		id: 3,
-		title: 'Meal Type',
-		options: ['Breakfast', 'Lunch', 'Dinner', 'Snack'],
-	},
-	{
-		id: 4,
-		title: 'Ingredients',
-		options: ['Chicken', 'Beef', 'Fish', 'Vegetables', 'Rice'],
-	},
-];
+  
+export interface Filter {
+	id: string;
+	title: string;          // tên category, ví dụ "Cuisine"
+	options: FilterOption[]; // các item trong category
+}

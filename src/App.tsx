@@ -16,12 +16,55 @@ import MyRecipesSection from "./features/my-profile/components/sections/MyRecipe
 import { useEffect } from "react";
 import { useAppDispatch } from "./store/hooks";
 import { loginThunk } from "./store/features/authSlice";
+import FavoriteRecipesSection from "./features/my-profile/components/sections/FavoriteRecipesSection";
+import { useEffect } from "react";
+import { useAppDispatch } from "./store/hooks";
+import { loginThunk } from "./store/features/authSlice";
 import NotFoundPage from "./features/not-found/NotFoundPage";
 
 function App() {
   // auto Login use for testing use submit review
   const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    dispatch(
+      loginThunk({
+        email: "johncole10@example.com",
+        password: "@StrongPass8888",
+      })
+    )
+      .unwrap()
+      .then(() => console.log("✅ Auto login success"))
+      .catch((err) => console.error("❌ Auto login failed", err));
+  }, [dispatch]);
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/recipes" element={<RecipeListPage />} />
+          <Route path="/recipes/:recipeId" element={<RecipeDetailPage />} />
+          <Route path="/recipes/:category" element={<RecipeDetailPage />} />
+          <Route path="/add-recipe" element={<AddRecipesPage />} />
+          <Route path="/about" element={<AboutUsPage />} />
+          <Route path="/my-profile" element={<MyProfilePage />}>
+            <Route path="edit-profile" element={<EditProfileSection />} />
+            <Route
+              path="account-settings"
+              element={<AccountSettingsSection />}
+            />
+            <Route path="my-recipes" element={<MyRecipesSection />} />
+            <Route
+              path="favorite-recipes"
+              element={<FavoriteRecipesSection />}
+            />
+          </Route>
+        </Route>
+      </Routes>
+      <ToastContainer position="top-right" autoClose={2000} />
+    </BrowserRouter>
+  );
   useEffect(() => {
     dispatch(
       loginThunk({
