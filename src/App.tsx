@@ -2,44 +2,42 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import { ToastContainer } from "react-toastify";
-
 import MainLayout from "./components/common/MainLayout";
-import HomePage from "./features/home/HomePage";
-import AboutUsPage from "./features/about-us/AboutUsPage";
-import RecipeListPage from "./features/list-recipes/RecipeListPage";
-import RecipeDetailPage from "./features/recipe-detail/RecipeDetailPage";
-import AddRecipesPage from "./features/add-recipes/AddRecipesPage";
-import MyProfilePage from "./features/my-profile/MyProfilePage";
-import EditProfileSection from "./features/my-profile/components/sections/EditProfileSection";
-import AccountSettingsSection from "./features/my-profile/components/sections/AccountSettingsSection";
-import MyRecipesSection from "./features/my-profile/components/sections/MyRecipesSection";
 import AuthLayout from "./components/common/auth/AuthLayout";
 import SignupPage from "./features/signup/SignupPage";
 import LoginPage from "./features/login/LoginPage";
-import FavoriteRecipesSection from "./features/my-profile/components/sections/FavoriteRecipesSection";
+import { myProfileRoutes, routes } from "./routes/routes";
+import { lazy } from "react";
+import SuspenseWrapper from "./features/not-found/components/SuspenseWrapper";
+const MyProfile = lazy(() => import("./features/my-profile/MyProfilePage"));
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<MainLayout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/recipes" element={<RecipeListPage />} />
-          <Route path="/recipes/:recipeId" element={<RecipeDetailPage />} />
-          <Route path="/recipes/:category" element={<RecipeDetailPage />} />
-          <Route path="/add-recipe" element={<AddRecipesPage />} />
-          <Route path="/about" element={<AboutUsPage />} />
-          <Route path="/my-profile" element={<MyProfilePage />}>
-            <Route path="edit-profile" element={<EditProfileSection />} />
+          {routes.map((route) => (
             <Route
-              path="account-settings"
-              element={<AccountSettingsSection />}
+              key={["main-route", route.path].join("-")}
+              path={route.path}
+              element={route.element}
             />
-            <Route path="my-recipes" element={<MyRecipesSection />} />
-            <Route
-              path="favorite-recipes"
-              element={<FavoriteRecipesSection />}
-            />
+          ))}
+          <Route
+            path="/my-profile"
+            element={
+              <SuspenseWrapper>
+                <MyProfile />
+              </SuspenseWrapper>
+            }
+          >
+            {myProfileRoutes.map((route) => (
+              <Route
+                key={["my-profile-route", route.path].join("-")}
+                path={route.path}
+                element={route.element}
+              />
+            ))}
           </Route>
         </Route>
         <Route element={<AuthLayout />}>
