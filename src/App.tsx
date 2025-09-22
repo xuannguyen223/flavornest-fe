@@ -17,6 +17,7 @@ import AuthLayout from "./components/common/auth/AuthLayout";
 import SignupPage from "./features/signup/SignupPage";
 import LoginPage from "./features/login/LoginPage";
 import FavoriteRecipesSection from "./features/my-profile/components/sections/FavoriteRecipesSection";
+import NotFoundPage from "./features/not-found/NotFoundPage";
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
         </Route>
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <ToastContainer position="top-right" autoClose={1000} />
     </BrowserRouter>
