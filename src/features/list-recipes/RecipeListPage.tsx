@@ -59,7 +59,7 @@ export default function RecipeListPage() {
 		<div>
 			<SearchSection
 				backgroundColor="bg-neutral-300"
-				searchPlaceholder="Search by dish, ingredient, ......"
+				searchPlaceholder="Search recipe by title ......"
 				searchValue={searchInput}
 				onSearchChange={setSearchInput}
 				onSearch={handleSearch}
