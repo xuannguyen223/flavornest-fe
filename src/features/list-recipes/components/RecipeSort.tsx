@@ -11,10 +11,11 @@ import { useSort } from '@/hooks';
 import { cn } from '@/lib/utils';
 
 const defaultSortOptions = [
+	{ value: 'atoz', label: 'A - Z' },
+	{ value: 'ztoa', label: 'Z - A' },
 	{ value: 'newest', label: 'Newest' },
 	{ value: 'oldest', label: 'Oldest' },
-	{ value: 'a-z', label: 'A-Z' },
-	{ value: 'z-a', label: 'Z-A' },
+	{ value: 'rating', label: 'Most rating' },
 ];
 
 interface RecipeSortProps {
