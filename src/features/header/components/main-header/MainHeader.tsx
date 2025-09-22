@@ -8,7 +8,6 @@ import { Categories } from "../categories";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { useState } from "react";
-import { USER_ID } from "@/utils/constants";
 import { handleLogOutFromBE } from "@/store/features/user/userAction";
 import { toast } from "react-toastify";
 
@@ -39,10 +38,7 @@ export default function MainHeader() {
     }
   };
   const handleLogout = () => {
-    dispatch(handleLogOutFromBE());
-    localStorage.removeItem(USER_ID);
-    navigate("/");
-    window.location.reload();
+    dispatch(handleLogOutFromBE(navigate));
   };
 
   // SVG Hamburger

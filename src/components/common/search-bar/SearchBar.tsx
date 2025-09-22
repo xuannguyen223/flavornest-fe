@@ -12,7 +12,7 @@ interface SearchBarProps {
 }
 
 export default function SearchBar({
-	placeholder = 'Search by title',
+	placeholder = 'Search recipe by title.......',
 	onSearch,
 	value,
 	onChange,

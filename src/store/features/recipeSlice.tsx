@@ -1,161 +1,92 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-
-// Types
-export interface Ingredient {
-  id: string;
-  qty: string;
-  unit: string;
-  name: string;
-  note?: string;
-}
-
-export interface InstructionStep {
-  id: string;
-  text: string;
-  order: number;
-}
+import type { Ingredient, Instruction, RecipeCategory } from '@/types/TypeRecipe';
 
 export interface TimeValue {
   hrs: number | '';
   mins: number | '';
 }
 
-export interface Tags {
-  cuisine?: string;
-  mealType?: string;
-  dietary?: string[];
-  method?: string;
-  main?: string;
-}
-
-export interface RecipeRating {
-  avgRating: number;
-  ratingCount: number;
-}
-
-export interface Recipe {
+export interface RecipeFormData {
   id?: string;
   title: string;
   description: string;
   servings: number | '';
-  prep: TimeValue;
-  cook: TimeValue;
+  prepTime: TimeValue;
+  cookTime: TimeValue;
   ingredients: Ingredient[];
-  steps: InstructionStep[];
-  tips: string;
-  tags: Tags;
+  instructions: Instruction[];
+  cookTips: string;
+  categories: RecipeCategory[];
   photo: File | null;
   photoUrl?: string;
   createdAt?: string;
   updatedAt?: string;
-  rating: RecipeRating;
+  avgRating: number;
+  ratingCount: number;
 }
 
 export interface RecipeFormState {
-  currentRecipe: Recipe;
-  recipes: Recipe[];
-  isLoading: boolean;
+  currentRecipe: RecipeFormData;
   error: string | null;
   validationErrors: Record<string, string>;
   isDirty: boolean;
-  isSubmitting: boolean;
 }
-
-
 
 // Initial state
 const createEmptyIngredient = (): Ingredient => ({
-  id: Math.random().toString(36).substr(2, 9),
-  qty: '',
+  id: Math.floor(Math.random() * 1000000),
+  quantity: '' as any,
   unit: '',
   name: '',
-  note: '',
 });
 
-const createEmptyStep = (): InstructionStep => ({
-  id: Math.random().toString(36).substr(2, 9),
-  text: '',
-  order: 0,
+const createEmptyInstruction = (): Instruction => ({
+  id: Math.floor(Math.random() * 1000000),
+  step: 0,
+  description: '',
+  imageUrl: null,
 });
 
-const initialRecipe: Recipe = {
+const initialRecipe: RecipeFormData = {
   title: '',
   description: '',
   servings: '' as number | '',
-  prep: { hrs: '' as number | '', mins: '' as number | '' },
-  cook: { hrs: '' as number | '', mins: '' as number | '' },
+  prepTime: { hrs: '' as number | '', mins: '' as number | '' },
+  cookTime: { hrs: '' as number | '', mins: '' as number | '' },
   ingredients: [
     createEmptyIngredient(),
     createEmptyIngredient(),
     createEmptyIngredient(),
     createEmptyIngredient(),
   ],
-  steps: [
-    { ...createEmptyStep(), order: 1 },
-    { ...createEmptyStep(), order: 2 },
+  instructions: [
+    { ...createEmptyInstruction(), step: 1 },
+    { ...createEmptyInstruction(), step: 2 },
   ],
-  tips: '',
-  tags: {},
+  cookTips: '',
+  categories: [],
   photo: null,
-  rating: { avgRating: 0, ratingCount: 0 },
+  avgRating: 0,
+  ratingCount: 0,
 };
 
 const initialState: RecipeFormState = {
   currentRecipe: initialRecipe,
-  recipes: [],
-  isLoading: false,
   error: null,
   validationErrors: {},
   isDirty: false,
-  isSubmitting: false,
 };
-
-// Async thunks
-export const saveRecipe = createAsyncThunk(
-  'recipe/saveRecipe',
-  async (recipe: Recipe, { rejectWithValue }) => {
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const savedRecipe = {
-        ...recipe,
-        id: recipe.id || Math.random().toString(36).substr(2, 9),
-        createdAt: recipe.createdAt || new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      
-      return savedRecipe;
-    } catch (error) {
-      return rejectWithValue('Failed to save recipe');
-    }
-  }
-);
-
-export const loadRecipes = createAsyncThunk(
-  'recipe/loadRecipes',
-  async (_, { rejectWithValue }) => {
-    try {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      return [];
-    } catch (error) {
-      return rejectWithValue('Failed to load recipes');
-    }
-  }
-);
 
 // Recipe slice
 export const recipeSlice = createSlice({
   name: 'recipe',
   initialState,
   reducers: {
-    // Form field updates
-    updateField: (state, action: PayloadAction<{ field: keyof Recipe; value: any }>) => {
+    updateField: (state, action: PayloadAction<{ field: keyof RecipeFormData; value: RecipeFormData[keyof RecipeFormData] }>) => {
       const { field, value } = action.payload;
-      state.currentRecipe[field] = value;
+      (state.currentRecipe as any)[field] = value;
       state.isDirty = true;
-      // Clear validation error for this field
       if (state.validationErrors[field]) {
         delete state.validationErrors[field];
       }
@@ -169,10 +100,10 @@ export const recipeSlice = createSlice({
     },
 
     removeIngredient: (state, action: PayloadAction<string>) => {
-      const ingredientId = action.payload;
+      const ingredientId = parseInt(action.payload);
       if (state.currentRecipe.ingredients.length > 1) {
         state.currentRecipe.ingredients = state.currentRecipe.ingredients.filter(
-          ing => ing.id !== ingredientId
+          ingredient => ingredient.id !== ingredientId
         );
         state.isDirty = true;
       }
@@ -180,7 +111,8 @@ export const recipeSlice = createSlice({
 
     updateIngredient: (state, action: PayloadAction<{ id: string; updates: Partial<Ingredient> }>) => {
       const { id, updates } = action.payload;
-      const index = state.currentRecipe.ingredients.findIndex(ing => ing.id === id);
+      const ingredientId = parseInt(id);
+      const index = state.currentRecipe.ingredients.findIndex(ingredient => ingredient.id === ingredientId);
       if (index !== -1) {
         state.currentRecipe.ingredients[index] = {
           ...state.currentRecipe.ingredients[index],
@@ -192,21 +124,21 @@ export const recipeSlice = createSlice({
 
     // Instruction management
     addStep: (state) => {
-      const newStep = createEmptyStep();
-      newStep.order = state.currentRecipe.steps.length + 1;
-      state.currentRecipe.steps.push(newStep);
+      const newStep = createEmptyInstruction();
+      newStep.step = state.currentRecipe.instructions.length + 1;
+      state.currentRecipe.instructions.push(newStep);
       state.isDirty = true;
     },
 
     removeStep: (state, action: PayloadAction<string>) => {
-      const stepId = action.payload;
-      if (state.currentRecipe.steps.length > 1) {
-        state.currentRecipe.steps = state.currentRecipe.steps.filter(
+      const stepId = parseInt(action.payload);
+      if (state.currentRecipe.instructions.length > 1) {
+        state.currentRecipe.instructions = state.currentRecipe.instructions.filter(
           step => step.id !== stepId
         );
-        // Reorder remaining steps
-        state.currentRecipe.steps.forEach((step, index) => {
-          step.order = index + 1;
+        
+        state.currentRecipe.instructions.forEach((step, index) => {
+          step.step = index + 1;
         });
         state.isDirty = true;
       }
@@ -214,34 +146,18 @@ export const recipeSlice = createSlice({
 
     updateStep: (state, action: PayloadAction<{ id: string; text: string }>) => {
       const { id, text } = action.payload;
-      const index = state.currentRecipe.steps.findIndex(step => step.id === id);
+      const stepId = parseInt(id);
+      const index = state.currentRecipe.instructions.findIndex(step => step.id === stepId);
       if (index !== -1) {
-        state.currentRecipe.steps[index].text = text;
+        state.currentRecipe.instructions[index].description = text;
         state.isDirty = true;
       }
     },
 
-    reorderSteps: (state, action: PayloadAction<{ fromIndex: number; toIndex: number }>) => {
-      const { fromIndex, toIndex } = action.payload;
-      const steps = [...state.currentRecipe.steps];
-      const [movedStep] = steps.splice(fromIndex, 1);
-      steps.splice(toIndex, 0, movedStep);
-      
-      // Update order numbers
-      steps.forEach((step, index) => {
-        step.order = index + 1;
-      });
-      
-      state.currentRecipe.steps = steps;
-      state.isDirty = true;
-    },
 
-    // Tags management
-    updateTags: (state, action: PayloadAction<Partial<Tags>>) => {
-      state.currentRecipe.tags = {
-        ...state.currentRecipe.tags,
-        ...action.payload,
-      };
+    // Categories management
+    updateCategories: (state, action: PayloadAction<RecipeCategory[]>) => {
+      state.currentRecipe.categories = action.payload;
       state.isDirty = true;
     },
 
@@ -261,76 +177,9 @@ export const recipeSlice = createSlice({
       state.isDirty = false;
       state.error = null;
     },
-
-    loadRecipe: (state, action: PayloadAction<Recipe>) => {
-      state.currentRecipe = action.payload;
-      state.validationErrors = {};
-      state.isDirty = false;
-      state.error = null;
-    },
-
-    setDirty: (state, action: PayloadAction<boolean>) => {
-      state.isDirty = action.payload;
-    },
-
-    // Rating system
-    addRating: (state, action: PayloadAction<number>) => {
-      const userRating = action.payload;
-      if (!state.currentRecipe.rating) {
-        state.currentRecipe.rating = { avgRating: 0, ratingCount: 0 };
-      }
-    
-      const rating = state.currentRecipe.rating;
-    
-      rating.avgRating = (rating.avgRating * rating.ratingCount + userRating) / (rating.ratingCount + 1);
-      rating.ratingCount += 1;
-    }
-    
-  },
-  extraReducers: (builder) => {
-    builder
-      // Save recipe
-      .addCase(saveRecipe.pending, (state) => {
-        state.isSubmitting = true;
-        state.error = null;
-      })
-      .addCase(saveRecipe.fulfilled, (state, action) => {
-        state.isSubmitting = false;
-        state.currentRecipe = action.payload;
-        state.isDirty = false;
-        state.error = null;
-        
-        // Add to recipes list if it's new
-        const existingIndex = state.recipes.findIndex(r => r.id === action.payload.id);
-        if (existingIndex === -1) {
-          state.recipes.push(action.payload);
-        } else {
-          state.recipes[existingIndex] = action.payload;
-        }
-      })
-      .addCase(saveRecipe.rejected, (state, action) => {
-        state.isSubmitting = false;
-        state.error = action.payload as string;
-      })
-      
-      // Load recipes
-      .addCase(loadRecipes.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(loadRecipes.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.recipes = action.payload;
-        state.error = null;
-      })
-      .addCase(loadRecipes.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
-      });
   },
 });
 
-// Export actions
 export const {
   updateField,
   addIngredient,
@@ -339,24 +188,14 @@ export const {
   addStep,
   removeStep,
   updateStep,
-  reorderSteps,
-  updateTags,
+  updateCategories,
   setValidationErrors,
   clearValidationErrors,
   resetForm,
-  loadRecipe,
-  setDirty,
-  addRating,
 } = recipeSlice.actions;
 
-// Selectors
 export const selectCurrentRecipe = (state: { recipe: RecipeFormState }) => state.recipe.currentRecipe;
-export const selectRecipes = (state: { recipe: RecipeFormState }) => state.recipe.recipes;
-export const selectIsLoading = (state: { recipe: RecipeFormState }) => state.recipe.isLoading;
 export const selectError = (state: { recipe: RecipeFormState }) => state.recipe.error;
 export const selectValidationErrors = (state: { recipe: RecipeFormState }) => state.recipe.validationErrors;
-export const selectIsDirty = (state: { recipe: RecipeFormState }) => state.recipe.isDirty;
-export const selectIsSubmitting = (state: { recipe: RecipeFormState }) => state.recipe.isSubmitting;
-export const SelectRating = (state: { recipe: RecipeFormState }) => state.recipe.currentRecipe.rating;
 
 export default recipeSlice.reducer;

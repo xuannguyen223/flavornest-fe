@@ -8,7 +8,7 @@ import { FormNumberInput } from "@/components/common/FormNumberInput";
 import { Label } from "@/components/ui/label";
 
 type ReduxNumberFieldProps = {
-  field: keyof import("@/store/features/recipeSlice").Recipe;
+  field: keyof import("@/store/features/recipeSlice").RecipeFormData;
   label?: string;
   placeholder?: string;
   required?: boolean;
@@ -36,6 +36,10 @@ export function ReduxServings({
   const error = validationErrors[field];
 
   const handleChange = (newValue: number | "") => {
+    // Validation: chỉ cho phép số nguyên dương
+    if (newValue !== "" && (isNaN(newValue) || newValue <= 0 || !Number.isInteger(newValue))) {
+      return;
+    }
     dispatch(updateField({ field, value: newValue }));
   };
 
@@ -55,7 +59,7 @@ export function ReduxServings({
   }
 
   return (
-    <div className="space-y-2">
+    <div data-field={field} className="space-y-2">
       <div className="flex items-center gap-4">
         <Label className="w-[200px] font-medium text-lg sm:text-xl lg:text-2xl xl:text-[24px] flex-shrink-0">
           {label}

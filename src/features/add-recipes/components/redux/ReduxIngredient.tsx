@@ -3,7 +3,7 @@ import { updateIngredient } from "@/store/features/recipeSlice";
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/common/FormInput";
 import { FormSelect } from "@/components/common/FormSelect";
-import type { Ingredient } from "@/store/features/recipeSlice";
+import type { Ingredient } from "@/types/TypeRecipe";
 
 type ReduxIngredientRowProps = {
   ingredient: Ingredient;
@@ -39,10 +39,10 @@ export function ReduxIngredient({
 }: ReduxIngredientRowProps) {
   const dispatch = useAppDispatch();
 
-  const handleChange = (fieldName: keyof Ingredient, value: string) => {
+  const handleChange = (fieldName: keyof Ingredient, value: string | number) => {
     dispatch(
       updateIngredient({
-        id: ingredient.id,
+        id: ingredient.id.toString(),
         updates: { [fieldName]: value },
       })
     );
@@ -51,40 +51,14 @@ export function ReduxIngredient({
   return (
     <div className="flex items-center gap-2 sm:gap-3 p-2 min-w-0">
       <div {...dragHandleProps} className="cursor-grab flex-shrink-0">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="26"
-          height="18"
-          viewBox="0 0 26 18"
-          fill="none"
-          className="w-6 sm:w-8 block mx-auto"
-        >
-          <path
-            d="M1 1H25"
-            stroke="#1D1D1D"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-          <path
-            d="M1 9H25"
-            stroke="#1D1D1D"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-          <path
-            d="M1 17H25"
-            stroke="#1D1D1D"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-        </svg>
+        <img src="src/assets/re-order icon.svg"/>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 flex-1 min-w-0">
         <FormInput
           as="input"
-          value={ingredient.qty}
-          onChange={(v) => handleChange("qty", v)}
+          value={ingredient.quantity}
+          onChange={(v) => handleChange("quantity", Number(v))}
           placeholder="Qty"
           className="flex-shrink-0"
           inputClassName="w-20 lg:w-24 xl:w-[134px] h-12 sm:h-14 lg:h-16 xl:h-[68px] placeholder:text-(--light-gray-color) text-(--primary-color) text-base sm:text-lg lg:text-xl xl:text-[20px] border-1 border-solid border-(--border-color) rounded-[10px]"
