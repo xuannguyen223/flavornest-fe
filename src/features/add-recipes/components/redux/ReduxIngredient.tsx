@@ -51,7 +51,7 @@ export function ReduxIngredient({
   return (
     <div className="flex items-center gap-2 sm:gap-3 p-2 min-w-0">
       <div {...dragHandleProps} className="cursor-grab flex-shrink-0">
-        <img src="src/assets/re-order icon.svg"/>
+        <img src="public/re-order icon.svg"/>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 flex-1 min-w-0">
@@ -90,7 +90,7 @@ export function ReduxIngredient({
         onClick={onRemove}
         className="h-8 w-8 p-0 flex-shrink-0 flex items-center justify-center"
       >
-        <img src="src\assets\remove-icon.svg" alt="Remove ingredient" />
+        <img src="public/remove-icon.svg" alt="Remove ingredient" />
       </Button>
     </div>
   );

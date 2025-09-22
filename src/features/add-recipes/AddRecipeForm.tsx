@@ -50,12 +50,17 @@ export const AddRecipeForm = ({ defaultValues, onSubmit }: AddRecipeFormProps) =
       <hr className="text-(--divide-color) my-8 sm:my-12 lg:my-16 xl:my-[60px]" />
 
       {/* Photo Upload */}
-      <PhotoUploader
-        ref={photoUploaderRef}
-        value={photo}
-        onChange={setPhoto}
-        onImageUploaded={handleImageUploaded}
-      />
+      <div data-field="photo" className="space-y-2">
+        <PhotoUploader
+          ref={photoUploaderRef}
+          value={photo}
+          onChange={setPhoto}
+          onImageUploaded={handleImageUploaded}
+        />
+        {validationErrors.photo && (
+          <p className="text-sm text-red-500">{validationErrors.photo}</p>
+        )}
+      </div>
 
       {/* Recipe Details */}
       <div className="space-y-6">
