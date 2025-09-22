@@ -18,7 +18,6 @@ export default function RecipeListPage() {
 		setSearchInput,
 		handleSearch,
 		mappedRecipes,
-		loading,
 		hasNoResults,
 		searchValue,
 		filterData,
@@ -93,14 +92,13 @@ export default function RecipeListPage() {
 						onFilterChange={handleFilterChange}
 						initialSelected={categoryNames}
 					/>
-					{loading ? (
-						<p>Loading recipes...</p>
-					) : hasNoResults ? (
-						<div className="flex-1 flex flex-col items-center justify-center">
+					{hasNoResults ? (
+						<div className="h-[200px] w-full mx-auto flex flex-col items-center justify-center">
 							<div className="text-center">
 								<h3 className="text-2xl font-semibold text-gray-900 mb-2">No Results Found</h3>
 								<p className="text-gray-600 text-lg">
-									There are no results from "{searchValue || categoryNames.join(', ') || formatCategoryType(categoryType)}"
+									There are no results from "
+									{searchValue || categoryNames.join(', ') || formatCategoryType(categoryType)}"
 								</p>
 								<p className="text-gray-500 text-sm mt-2">
 									Try searching with different keywords or browse all recipes

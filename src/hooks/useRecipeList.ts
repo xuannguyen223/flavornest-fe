@@ -34,31 +34,21 @@ export function useRecipeList() {
 	);
 	const searchResults = useAppSelector(selectSearchResults);
 	const categoriesByType = useAppSelector(state => state.category.categoriesByType);
-	const isAuthenticated = useAppSelector((state) => state.loginSlice.isAuthenticated);
-	const userId = useAppSelector((state) => state.userSlice.profile.userId);
+	const isAuthenticated = useAppSelector(state => state.loginSlice.isAuthenticated);
+	const userId = useAppSelector(state => state.userSlice.profile.userId);
 
 	const memoizedCategoryNames = useMemo(() => categoryNames, [categoryNames.join(',')]);
 
 	// Tải danh sách favorite khi đăng nhập
 	useEffect(() => {
 		if (isAuthenticated && userId) {
-			dispatch(fetchFavoriteRecipes({userId}))
+			dispatch(fetchFavoriteRecipes({ userId }))
 				.unwrap()
-				.catch((error) => {
+				.catch(error => {
 					console.error('Failed to fetch favorites:', error);
 				});
 		}
 	}, [dispatch, isAuthenticated, userId]);
-
-	useEffect(() => {
-		const navigation = window.performance.getEntriesByType(
-			'navigation',
-		)[0] as PerformanceNavigationTiming;
-
-		if (navigation?.type === 'reload') {
-			navigate('/recipes', { replace: true });
-		}
-	}, [navigate]);
 
 	useEffect(() => {
 		if (searchValue && memoizedCategoryNames.length > 0) {
@@ -186,12 +176,11 @@ export function useRecipeList() {
 		currentParams.set('category', categoryName);
 
 		const queryString = currentParams.toString();
-		navigate(`?${queryString}`);
+		navigate(queryString ? `?${queryString}` : '/recipes');
 	};
 
 	const handleRecipeClick = (id: string) => {
 		console.log('Recipe clicked:', id);
-		// Add navigation logic here if needed
 	};
 
 	const handleFilterChange = (selectedCategories: string[]) => {

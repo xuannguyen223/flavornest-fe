@@ -41,7 +41,7 @@ export function FormInput(props: FormInputProps) {
   return (
     <div className={cn("space-y-2", className)}>
       {label ? (
-        <Label className="font-medium text-lg sm:text-xl lg:text-2xl xl:text-[24px]">
+        <Label className="font-medium text-base sm:text-lg lg:text-xl xl:text-[24px]">
           {label}
           {required ? <span className="text-(--required-color)">*</span> : null}
         </Label>

@@ -38,10 +38,10 @@ export function RecipeSort({ sortOptions = defaultSortOptions, className = '' }:
 				onValueChange={updateSort}>
 				<SelectTrigger
 					className={cn(
-						'w-[160px] rounded-md border border-neutral-300 bg-white px-4 py-2 text-base font-medium text-neutral-700',
+						'w-[160px] rounded-md border border-neutral-300 bg-white px-4 py-2 text-base font-medium text-neutral-700 cursor-pointer',
 						'hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-neutral-500 transition-colors duration-200',
 					)}>
-					<SelectValue>{getCurrentLabel()}</SelectValue>
+					<SelectValue className="cursor-pointer">{getCurrentLabel()}</SelectValue>
 				</SelectTrigger>
 				<SelectContent
 					className={cn(
