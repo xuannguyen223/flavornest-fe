@@ -77,7 +77,9 @@ export default function HomePage() {
 	}));
 	
 	const handleSearch = (value: string) => {
-		navigate(`/recipes?search=${encodeURIComponent(value)}`);
+		if (value.trim()) {
+			navigate(`/recipes?search=${encodeURIComponent(value.trim())}`);
+		}
 	};
 	const handleViewAll = (categoryName: string, description: string) => {
 		navigate(
