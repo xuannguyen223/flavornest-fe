@@ -6,7 +6,7 @@ import { ToastContainer } from "react-toastify";
 import MainLayout from "./components/common/MainLayout";
 import AuthLayout from "./components/common/auth/AuthLayout";
 import { lazy } from "react";
-import SuspenseWrapper from "./features/not-found/SuspenseWrapper";
+import SuspenseWrapper from "./features/loading/SuspenseWrapper";
 
 const Home = lazy(() => import("./features/home/HomePage"));
 const AboutUs = lazy(() => import("./features/about-us/AboutUsPage"));
