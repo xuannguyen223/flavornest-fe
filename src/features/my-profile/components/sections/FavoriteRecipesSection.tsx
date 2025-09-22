@@ -32,7 +32,7 @@ function FavoriteRecipesSection() {
 		id: recipe.id,
 		title: recipe.title,
 		creator: recipe.author.profile.name, // Using authorId as creator for now
-		totalTime: `${recipe.prepTime + recipe.cookTime} min`,
+		totalTime: formatTime(recipe.cookTime + recipe.prepTime),
 		rating: recipe.avgRating, // Default rating since it's not in the API response
 		reviewCount: recipe.ratingCount, // Default review count since it's not in the API response
 		imageUrl: recipe.imageUrl,

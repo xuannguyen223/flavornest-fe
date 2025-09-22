@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { Link } from 'react-router-dom';
 
 import {
+	fetchFavoriteRecipes,
 	fetchRecipeById,
 	fetchRecipesByCategoryNames,
 	submitRecipeRating,
@@ -35,9 +36,21 @@ export default function RecipeDetailPage() {
 
 	const user = useAppSelector((state) => state.userSlice.profile);
 	const avatarUrl = isAuthenticated && user?.avatarUrl ? user.avatarUrl : "";
+	const userId = useAppSelector((state) => state.userSlice.profile.userId);
 
 	const [hasReviewed, setHasReviewed] = useState(false);
 	const [userRating, setUserRating] = useState(0); // Lưu userRating từ localStorage
+
+	// Tải danh sách favorite khi trang mount
+	useEffect(() => {
+		if (isAuthenticated && userId && recipeId) {
+			dispatch(fetchFavoriteRecipes({userId}))
+				.unwrap()
+				.catch((error) => {
+					console.error('Failed to fetch favorites:', error);
+				});
+		}
+	}, [dispatch, isAuthenticated, userId, recipeId]);
 
 	// Load recipe using dispatch()
 	// Load hasReviewed from localStorage
@@ -50,8 +63,8 @@ export default function RecipeDetailPage() {
 	useEffect(() => {
 		if (!recipeId) return;
 	
-		const storedRating = localStorage.getItem(`userRating_${user.userId}_${recipeId}`);
-		const storedHasReviewed = localStorage.getItem(`hasReviewed_${user.userId}_${recipeId}`);
+		const storedRating = localStorage.getItem(`userRating_${userId}_${recipeId}`);
+		const storedHasReviewed = localStorage.getItem(`hasReviewed_${userId}_${recipeId}`);
 	
 		if (storedRating) {
 			setUserRating(parseInt(storedRating, 10));
@@ -88,8 +101,8 @@ export default function RecipeDetailPage() {
 			);
 			setHasReviewed(true);
 			setUserRating(newRating);
-			localStorage.setItem(`hasReviewed_${user.userId}_${recipeId}`, "true");
-			localStorage.setItem(`userRating_${user.userId}_${recipeId}`, newRating.toString());
+			localStorage.setItem(`hasReviewed_${userId}_${recipeId}`, "true");
+			localStorage.setItem(`userRating_${userId}_${recipeId}`, newRating.toString());
 		} catch (err: any) {
 			toast.error(err.message || "Failed to submit rating");
 		}

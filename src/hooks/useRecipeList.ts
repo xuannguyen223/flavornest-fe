@@ -9,17 +9,22 @@ import {
 	fetchRecipesByCategoryType,
 	fetchRecipesBySearch,
 	selectSearchResults,
+	fetchFavoriteRecipes,
 } from '@/store/features/recipeAPISlice';
 import type { Recipe } from '@/types/TypeRecipe';
 import type { RecipeItemProps } from '@/features/list-recipes/components/RecipeItem';
 import type { Filter } from '@/components/common/filter-recipe/FilterGroup';
 import { formatCategoryType, formatTime } from '@/lib/utils';
 import type { FilterOption } from '@/components/common/filter-recipe/FilterGroup';
+import { useLocation } from "react-router-dom";
+import { useRef } from 'react';
 
 export function useRecipeList() {
+	const location = useLocation();
 	const [params] = useSearchParams();
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
+	const isInitialMount = useRef(true);
 
 	const categoryNames = params.getAll('category');
 	const categoryType = params.get('categoryType');
@@ -33,18 +38,46 @@ export function useRecipeList() {
 	);
 	const searchResults = useAppSelector(selectSearchResults);
 	const categoriesByType = useAppSelector(state => state.category.categoriesByType);
+	const isAuthenticated = useAppSelector((state) => state.loginSlice.isAuthenticated);
+	const userId = useAppSelector((state) => state.userSlice.profile.userId);
 
 	const memoizedCategoryNames = useMemo(() => categoryNames, [categoryNames.join(',')]);
 
+	// Tải danh sách favorite khi đăng nhập
 	useEffect(() => {
-		const navigation = window.performance.getEntriesByType(
-			'navigation',
-		)[0] as PerformanceNavigationTiming;
-
-		if (navigation?.type === 'reload') {
-			navigate('/recipes', { replace: true });
+		if (isAuthenticated && userId) {
+			dispatch(fetchFavoriteRecipes({userId}))
+				.unwrap()
+				.catch((error) => {
+					console.error('Failed to fetch favorites:', error);
+				});
 		}
-	}, [navigate]);
+	}, [dispatch, isAuthenticated, userId]);
+
+	// Xử lý reload: Set flag trước khi unload
+	useEffect(() => {
+		const handleBeforeUnload = () => {
+			if (location.pathname === '/recipes' && params.toString()) {
+				sessionStorage.setItem('recipeListReload', 'true');
+			}
+		};
+		window.addEventListener('beforeunload', handleBeforeUnload);
+		return () => {
+			window.removeEventListener('beforeunload', handleBeforeUnload);
+		};
+	}, [location.pathname, params]);
+
+	// Kiểm tra reload khi mount: Reset URL nếu cần
+	useEffect(() => {
+		if (isInitialMount.current && location.pathname === '/recipes') {
+			const wasReload = sessionStorage.getItem('recipeListReload');
+			if (wasReload === 'true' && params.toString()) {
+				navigate('/recipes', { replace: true }); 
+				sessionStorage.removeItem('recipeListReload'); 
+			}
+			isInitialMount.current = false;
+		}
+	}, [navigate, dispatch, params, location.pathname]);
 
 	useEffect(() => {
 		if (searchValue && memoizedCategoryNames.length > 0) {

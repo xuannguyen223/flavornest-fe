@@ -6,7 +6,8 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 // Format lại chữ CUISINE => Cuisine, MEAL_TYPE => Meal Type
-export const formatCategoryType = (type: string) => {
+export const formatCategoryType = (type: string | null) => {
+  if (!type) return "";
   return type
     .toLowerCase()              
     .split('_')                 

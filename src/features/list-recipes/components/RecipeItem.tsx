@@ -128,19 +128,19 @@ export function RecipeItem({
 				<div className="mt-2 font-poppins flex flex-col gap-2 text-black text-left">
 					<div className="font-semibold text-gray-900 text-2xl line-clamp-2">{title}</div>
 
-					<div className="flex items-center gap-2 text-lg">
+					<div className="flex items-center gap-2 text-base">
 						By
-						<div className="font-semibold text-green-700">{creator}</div>
+						<div className="font-semibold text-amber-500">{creator}</div>
 					</div>
 
 
-					<div className="flex items-center gap-2 text-lg">
+					<div className="flex items-center gap-2 text-sm">
 						<div>Total time: {totalTime}</div>
 					</div>
 
 					<div className="flex items-center gap-2">
 						<div className="flex items-center gap-1">{renderStars()}</div>
-						<div className="text-lg">({reviewCount})</div>
+						<div className="text-sm">({reviewCount})</div>
 					</div>
 				</div>
 			</CardContent>

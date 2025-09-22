@@ -121,56 +121,51 @@ export default function HomePage() {
 				<div>No recipes found</div>
 			) : (
 				<>
-					<SearchSection
-						title="Fuel your body & soul - find recipes that taste amazing!"
-						backgroundImage="/home.png"
-						searchPlaceholder="Search recipe by title ......"
-						searchValue={searchValue}
-						onSearchChange={setSearchValue}
-						onSearch={handleSearch}
-						showBreadcrumbs={false}
-						height="h-120"
-						overlayOpacity={0.3}
-					/>
+				<SearchSection
+					title="Fuel your body & soul - find recipes that taste amazing!"
+					backgroundImage="/home.png"
+					searchValue={searchValue}
+					onSearchChange={setSearchValue}
+					onSearch={handleSearch}
+					showBreadcrumbs={false}
+					height="h-120"
+					overlayOpacity={0.3}
+				/>
 
-					{group1 && (
-						<RecipeList
-							key={group1.name}
-							recipeList={mapToRecipeItemProps(group1.recipes)}
-							layout="1-row-4"
-							categoryName={group1.name}
-							description={group1.description}
-							viewAll={{ show: true, onClick: handleViewAll }}
-							className="my-8 mt-10"
-						/>
-					)}
+				{group1 && (
+					<RecipeList
+						key={group1.name}
+						recipeList={mapToRecipeItemProps(group1.recipes)}
+						layout="1-row-4"
+						categoryName={group1.name}
+						description={group1.description}
+						viewAll={{ show: true, onClick: handleViewAll }}
+						className="my-8 mt-10" /> )}
+				
+				<BlogPost
+					categoryName="Healthy Eating Inspiration"
+					onViewAllClick={() => {}}
+					onRecipeClick={() => {}}
+				/>
 
-					<BlogPost
-						categoryName="Healthy Eating Inspiration"
-						onViewAllClick={() => {}}
-						onRecipeClick={() => {}}
-					/>
-
-					{group2 && (
-						<RecipeList
-							key={group2.name}
-							recipeList={mapToRecipeItemProps(group2.recipes)}
-							layout="1-row-4"
-							categoryName={group2.name}
-							description={group2.description}
-							viewAll={{ show: true, onClick: handleViewAll }}
-							className="my-8 mt-10"
-						/>
-					)}
-
-					<Preferences
-						steps={preferencesData}
-						onComplete={handleComplete}
-					/>
-					<ShowCase
-						onViewAll={() => {}}
-						onCardClick={() => {}}
-					/>
+				{group2 && (
+					<RecipeList
+					key={group2.name}
+					recipeList={mapToRecipeItemProps(group2.recipes)}
+					layout="1-row-4"
+					categoryName={group2.name}
+					description={group2.description}
+					viewAll={{ show: true, onClick: handleViewAll }}
+					className="my-8 mt-10" /> )}
+				
+				<Preferences
+					steps={preferencesData}
+					onComplete={handleComplete}
+				/>
+				<ShowCase
+					onViewAll={() => {}}
+					onCardClick={() => {}}
+				/>
 				</>
 			)}
 		</div>
