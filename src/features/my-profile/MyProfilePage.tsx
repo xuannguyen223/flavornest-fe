@@ -41,7 +41,7 @@ function MyProfilePage() {
 					</ul>
 				</nav>
 			</aside>
-			<div className="w-full pr-[60px]">
+			<div className="w-full pr-[60px] py-6">
 				<Outlet />
 			</div>
 		</div>

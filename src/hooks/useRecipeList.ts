@@ -98,6 +98,7 @@ export function useRecipeList() {
 				rating: r.avgRating,
 				reviewCount: r.ratingCount,
 				imageUrl: r.imageUrl ?? '/placeholder.svg',
+				createdAt: r.createdAt,
 			})),
 		[displayRecipes],
 	);

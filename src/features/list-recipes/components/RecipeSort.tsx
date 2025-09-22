@@ -10,11 +10,11 @@ import {
 import { useSort } from '@/hooks';
 
 const defaultSortOptions = [
-	{ value: 'relevance', label: 'Relevance' },
+	{ value: 'atoz', label: 'A - Z' },
+	{ value: 'ztoa', label: 'Z - A' },
 	{ value: 'newest', label: 'Newest' },
 	{ value: 'oldest', label: 'Oldest' },
-	{ value: 'most-positive', label: 'Most positive' },
-	{ value: 'least-positive', label: 'Least positive' },
+	{ value: 'rating', label: 'Most rating' },
 ];
 
 interface RecipeSortProps {
@@ -26,7 +26,7 @@ export function RecipeSort({ sortOptions = defaultSortOptions, className = '' }:
 	const { sortBy, updateSort } = useSort();
 
 	const getCurrentLabel = () => {
-		return sortOptions.find(option => option.value === sortBy)?.label || 'Relevance';
+		return sortOptions.find(option => option.value === sortBy)?.label || 'Newest';
 	};
 
 	return (

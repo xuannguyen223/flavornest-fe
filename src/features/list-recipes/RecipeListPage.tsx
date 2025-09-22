@@ -5,6 +5,8 @@ import SearchSection from '@/components/common/search-bar/SearchSection';
 import { RecipeSort } from './components/RecipeSort';
 import FilterGroup from '@/components/common/filter-recipe/FilterGroup';
 import { RecipeList } from './components/RecipeList';
+import { useSort } from '@/hooks/useSort';
+import { useMemo } from 'react';
 
 export default function RecipeListPage() {
 	const {
@@ -21,6 +23,37 @@ export default function RecipeListPage() {
 		handleRecipeClick,
 		handleFilterChange,
 	} = useRecipeList();
+
+	const { sortBy } = useSort();
+
+	const sortedRecipes = useMemo(() => {
+		if (!mappedRecipes || mappedRecipes.length === 0) return mappedRecipes;
+
+		const sorted = [...mappedRecipes].sort((a, b) => {
+			switch (sortBy) {
+				case 'newest': {
+					const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+					const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+					return dateB - dateA;
+				}
+				case 'oldest': {
+					const oldDateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+					const oldDateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+					return oldDateA - oldDateB;
+				}
+				case 'atoz':
+					return (a.title || '').localeCompare(b.title || '');
+				case 'ztoa':
+					return (b.title || '').localeCompare(a.title || '');
+				case 'rating':
+					return (b.rating || 0) - (a.rating || 0);
+				default:
+					return 0;
+			}
+		});
+
+		return sorted;
+	}, [mappedRecipes, sortBy]);
 
 	return (
 		<div>
@@ -74,7 +107,7 @@ export default function RecipeListPage() {
 						</div>
 					) : (
 						<RecipeList
-							recipeList={mappedRecipes}
+							recipeList={sortedRecipes}
 							layout="default"
 							onRecipeClick={handleRecipeClick}
 						/>
