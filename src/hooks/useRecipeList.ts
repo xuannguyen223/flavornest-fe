@@ -16,11 +16,15 @@ import type { RecipeItemProps } from '@/features/list-recipes/components/RecipeI
 import type { Filter } from '@/components/common/filter-recipe/FilterGroup';
 import { formatCategoryType, formatTime } from '@/lib/utils';
 import type { FilterOption } from '@/components/common/filter-recipe/FilterGroup';
+import { useLocation } from "react-router-dom";
+import { useRef } from 'react';
 
 export function useRecipeList() {
+	const location = useLocation();
 	const [params] = useSearchParams();
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
+	const isInitialMount = useRef(true);
 
 	const categoryNames = params.getAll('category');
 	const categoryType = params.get('categoryType');
@@ -50,15 +54,30 @@ export function useRecipeList() {
 		}
 	}, [dispatch, isAuthenticated, userId]);
 
+	// Xử lý reload: Set flag trước khi unload
 	useEffect(() => {
-		const navigation = window.performance.getEntriesByType(
-			'navigation',
-		)[0] as PerformanceNavigationTiming;
+		const handleBeforeUnload = () => {
+			if (location.pathname === '/recipes' && params.toString()) {
+				sessionStorage.setItem('recipeListReload', 'true');
+			}
+		};
+		window.addEventListener('beforeunload', handleBeforeUnload);
+		return () => {
+			window.removeEventListener('beforeunload', handleBeforeUnload);
+		};
+	}, [location.pathname, params]);
 
-		if (navigation?.type === 'reload') {
-			navigate('/recipes', { replace: true });
+	// Kiểm tra reload khi mount: Reset URL nếu cần
+	useEffect(() => {
+		if (isInitialMount.current && location.pathname === '/recipes') {
+			const wasReload = sessionStorage.getItem('recipeListReload');
+			if (wasReload === 'true' && params.toString()) {
+				navigate('/recipes', { replace: true }); 
+				sessionStorage.removeItem('recipeListReload'); 
+			}
+			isInitialMount.current = false;
 		}
-	}, [navigate]);
+	}, [navigate, dispatch, params, location.pathname]);
 
 	useEffect(() => {
 		if (searchValue && memoizedCategoryNames.length > 0) {
