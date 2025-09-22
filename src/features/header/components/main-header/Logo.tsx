@@ -6,7 +6,8 @@ const Logo = () => {
 			<Link
 				to={'/'}
 				aria-label="Go to homepage">
-				<img src = "/logo-full.svg" alt = "Logo + Name" className="w-16 md:w-40 sm:w-12 lg:w-40"/>
+				<img src = "/logo-full.svg" alt = "Logo + Name" 
+					className="w-16 sm:w-12 md:w-[120px] lg:w-[120px]"/>
 			</Link>
 		</div>
 	);

@@ -8,7 +8,7 @@ export default function Overview({ text }: OverviewProps) {
       <h2 className="text-4xl font-semibold 
         leading-tight text-neutral-700"
         >Overview</h2>
-      <p className="mt-6 text-lg leading-8 text-neutral-600 whitespace-pre-line">
+      <p className="mt-4 text-lg leading-8 text-neutral-600 whitespace-pre-line">
         {text}
       </p>
     </section>

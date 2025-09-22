@@ -34,7 +34,7 @@ function MyProfilePage() {
                   <Link
                     to={item.path}
                     className={cn(
-                      "flex items-center justify-between pl-[50px] py-[20px] text-[20px] text-white",
+                      "flex items-center justify-between pl-4 sm:pl-6 md:pl-8 lg:pl-12 xl:pl-[50px] py-3 sm:py-4 md:py-5 text-sm sm:text-base md:text-lg lg:text-xl xl:text-[20px] text-white",
                       isActive
                         ? "bg-background font-medium bg-white text-(--light-black-color)"
                         : "hover:bg-accent"
@@ -48,7 +48,7 @@ function MyProfilePage() {
           </ul>
         </nav>
       </aside>
-      <div className="w-full pr-[60px]">
+      <div className="w-full pr-4 sm:pr-6 md:pr-8 lg:pr-12 xl:pr-[60px]">
         <Outlet />
       </div>
     </div>

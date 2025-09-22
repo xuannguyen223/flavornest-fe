@@ -26,7 +26,7 @@ export default function Ingredients({ ingredients }: IngredientsProps) {
 
       <ul
         className={cn(
-          "text-lg mt-6 grid gap-3 text-left",
+          "text-lg mt-4 grid gap-3 text-left",
           ingredients.length > 6 ? "md:grid-cols-2" : "grid-cols-1"
         )}
       >

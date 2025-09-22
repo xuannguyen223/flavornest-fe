@@ -33,14 +33,14 @@ export default function UserMenu({
           >
             {initials}
           </span>
-          <span className="hidden sm:block text-(--light-black-color) text-sm sm:text-base lg:text-lg xl:text-[20px]">
+          <span className="hidden sm:block text-(--light-black-color) text-sm sm:text-base lg:text-base xl:text-[20px]">
             {displayName}
           </span>
           <span aria-hidden className="ml-1">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="38"
-              height="38"
+              width="30"
+              height="30"
               viewBox="0 0 38 38"
               fill="none"
             >

@@ -85,8 +85,8 @@ export function RecipeItem({
         <Star
           key={index}
           className={cn("w-4 h-4")}
-          fill={filled ? "#2E5834" : "#ADBBAE"}
-          color={filled ? "#2E5834" : "#ADBBAE"}
+          fill={filled ? "#facc15" : "#FFECC0"}
+          color={filled ? "#facc15" : "#FFECC0"}
           strokeWidth={0}
         />
       );
@@ -135,7 +135,7 @@ export function RecipeItem({
 
           <div className="flex items-center gap-2 text-sm">
             By
-            <div className="font-semibold text-green-700">
+            <div className="font-semibold text-yellow-400">
               {creator}
             </div>
           </div>

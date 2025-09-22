@@ -9,8 +9,8 @@ export default function FeatureSection() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <FeatureItem
           icon="/about-us/personalized.svg"
-          title="Personalized meal"
-          description="Users choose weekly themes or build their own plan to fit lifestyle, taste, and goals."
+          title="Explore by Cuisine"
+          description="Discover authentic flavors from around the world, organized by cuisine."
         />
         <FeatureItem
           icon="/about-us/trusted.svg"
@@ -20,7 +20,7 @@ export default function FeatureSection() {
         <FeatureItem
           icon="/about-us/stress-free.svg"
           title="Stress-free cooking"
-          description="No more 'What should I eat today?' — just pick a recipe, follow the steps, and enjoy."
+          description="No more 'What should I eat today?' — just follow a recipe and enjoy."
         />
       </div>
     </div>

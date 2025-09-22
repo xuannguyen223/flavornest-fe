@@ -9,6 +9,7 @@ import Sections from "./Sections";
 import type { RootState, AppDispatch } from "@/store/store";
 import { fetchFavoriteRecipes } from "@/store/features/recipeAPISlice";
 import { useAppSelector } from "@/hooks/redux";
+import { formatTime } from "@/lib/utils";
 
 const favoriteSortOptions = [
   { value: "relevance", label: "Relevance" },
@@ -37,10 +38,10 @@ function FavoriteRecipesSection() {
   const favoriteRecipesForDisplay = favoriteRecipesList.map((recipe) => ({
     id: recipe.id,
     title: recipe.title,
-    creator: recipe.author.profile.name, // Using authorId as creator for now
-    totalTime: `${recipe.prepTime + recipe.cookTime} min`,
-    rating: recipe.avgRating, // Default rating since it's not in the API response
-    reviewCount: recipe.ratingCount, // Default review count since it's not in the API response
+    creator: recipe.author.profile.name, 
+    totalTime: formatTime(recipe.prepTime + recipe.cookTime),
+    rating: recipe.avgRating, 
+    reviewCount: recipe.ratingCount, 
     imageUrl: recipe.imageUrl,
   }));
 

@@ -6,3 +6,5 @@ export const USER_ID = "USER_ID";
 export const LOGOUT_API = "/api/auth/logout";
 export const GOOGLE_AUTH_URL_API = "/api/auth/google/oauth/authorize";
 export const GOOGLE_USER_PROFILE_API = "/api/user/profile/get";
+export const CREATE_IMG_URL_API = "/api/cdn/get-upload-url";
+export const UPDATE_USER_PROFILE_API = "/api/user/profile";

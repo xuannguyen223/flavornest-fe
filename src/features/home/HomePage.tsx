@@ -9,7 +9,8 @@ import { ShowCase } from './components/ShowCase';
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import type { Recipe } from '@/types/TypeRecipe';
 import type { RecipeItemProps } from "@/features/list-recipes/components/RecipeItem";
-import { fetchAllRecipes } from '@/store/features/recipeAPISlice';
+import { fetchAllRecipes, fetchFavoriteRecipes } from '@/store/features/recipeAPISlice';
+import { formatTime } from '@/lib/utils';
 
 export default function HomePage() {
 	const [searchValue, setSearchValue] = useState('');
@@ -21,6 +22,23 @@ export default function HomePage() {
 	useEffect(() => {
 		dispatch(fetchAllRecipes()); 
 	}, [dispatch]);
+
+	const isAuthenticated = useAppSelector(
+		(state) => state.loginSlice.isAuthenticated
+	);
+	const userProfile = useAppSelector((state) => state.userSlice.profile);
+  	const userId = userProfile.userId;
+	
+	useEffect(() => {
+		dispatch(fetchAllRecipes()); 
+		if (isAuthenticated && userId) {
+			dispatch(fetchFavoriteRecipes({userId})) // Tải danh sách favorite nếu đã đăng nhập
+			  .unwrap()
+			  .catch((error) => {
+				console.error('Failed to fetch favorites:', error);
+			  });
+		}
+	}, [dispatch, isAuthenticated, userId]);
 	
 	// Lấy list sub-category trong allRecipes
 	const categories = useMemo(
@@ -70,14 +88,16 @@ export default function HomePage() {
 			id: r.id,
 			title: r.title,
 			creator: r.author.profile.name,
-			totalTime: `${(r.cookTime || 0) + (r.prepTime || 0)} min`,
+			totalTime: formatTime(r.prepTime + r.cookTime),
 			rating: r.avgRating || 0,
 			reviewCount: r.ratingCount || 0,
 			imageUrl: r.imageUrl ?? "/placeholder.svg",
 	}));
 	
 	const handleSearch = (value: string) => {
-		navigate(`/recipes?search=${encodeURIComponent(value)}`);
+		if (value.trim()) {
+			navigate(`/recipes?search=${encodeURIComponent(value.trim())}`);
+		}
 	};
 	const handleViewAll = (categoryName: string, description: string) => {
 		navigate(
