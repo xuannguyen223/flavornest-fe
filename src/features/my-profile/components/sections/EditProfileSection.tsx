@@ -24,6 +24,7 @@ function EditProfileSection() {
   const [aboutMe, setAboutMe] = useState(userProfile.bio || "");
   const [profilePhoto, setProfilePhoto] = useState<File | null>(null);
   const [profilePhotoUrl, setProfilePhotoUrl] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const profilePhotoUploaderRef = useRef<PhotoUploadRef>(null);
   const canSubmit = fullName.trim().length > 0;
 
@@ -46,6 +47,7 @@ function EditProfileSection() {
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    setIsSubmitting(true);
     try {
       // Upload image to CDN first if photo exists
       let uploadedImageUrl = profilePhotoUrl;
@@ -77,6 +79,8 @@ function EditProfileSection() {
       }));
     } catch (error) {
       console.error("Error updating profile:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -123,7 +127,7 @@ function EditProfileSection() {
           <div>
             <Button
               type="submit"
-              disabled={!canSubmit}
+              disabled={isSubmitting || !canSubmit}
               className="w-full sm:w-auto h-12 sm:h-14 lg:h-16 xl:h-[56px] font-medium text-base sm:text-lg lg:text-xl xl:text-[24px] text-white px-4 sm:px-5 py-3 sm:py-4 lg:py-5 xl:py-6 bg-(--primary-color) rounded-full"
             >
               Update Profile
