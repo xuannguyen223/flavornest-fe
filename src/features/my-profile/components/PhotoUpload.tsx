@@ -96,7 +96,7 @@ export const PhotoUpload = forwardRef<PhotoUploadRef, PhotoUploadProps>(({
 
   return (
     <div className="space-y-4">
-      <h2 className="text-[32px] font-medium">Profile Photo</h2>
+      {/* <h2 className="text-[32px] font-medium">Profile Photo</h2> */}
       <Button
         type="button"
         variant="default"
