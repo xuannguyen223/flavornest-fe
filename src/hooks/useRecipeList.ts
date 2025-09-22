@@ -108,19 +108,31 @@ export function useRecipeList() {
 		[displayRecipes],
 	);
 
-	const filterData: Filter[] = useMemo(
-		() =>
-			Object.entries(categoriesByType).map(([type, items]) => ({
-				id: type,
-				title: formatCategoryType(type),
-				options: items.map(item => ({
-					id: item.id,
-					label: item.name,
-					value: item.id,
-				})),
+	const filterData: Filter[] = useMemo(() => {
+		if (categoryType && categoriesByType[categoryType]) {
+			return [
+				{
+					id: categoryType,
+					title: formatCategoryType(categoryType),
+					options: categoriesByType[categoryType].map(item => ({
+						id: item.id,
+						label: item.name,
+						value: item.id,
+					})),
+				},
+			];
+		}
+
+		return Object.entries(categoriesByType).map(([type, items]) => ({
+			id: type,
+			title: formatCategoryType(type),
+			options: items.map(item => ({
+				id: item.id,
+				label: item.name,
+				value: item.id,
 			})),
-		[categoriesByType],
-	);
+		}));
+	}, [categoriesByType, categoryType]);
 
 	const displayCategoryNames = useMemo(() => {
 		if (memoizedCategoryNames.length === 0) return [];

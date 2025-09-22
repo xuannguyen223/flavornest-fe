@@ -93,6 +93,7 @@ export default function RecipeListPage() {
 						onFilterChange={handleFilterChange}
 						initialSelected={categoryNames}
 					/>
+
 					{hasNoResults ? (
 						<div className="h-[200px] w-full mx-auto flex flex-col items-center justify-center">
 							<div className="text-center">
