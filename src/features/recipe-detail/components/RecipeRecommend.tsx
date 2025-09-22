@@ -2,6 +2,7 @@ import { RecipeList } from '@/features/list-recipes/components/RecipeList';
 import { useMemo } from 'react';
 import type { RecipeItemProps } from '@/features/list-recipes/components/RecipeItem';
 import type { Recipe } from '../../../types/TypeRecipe';
+import { formatTime } from '@/lib/utils';
 
 export interface RecipeRecommendProps {
 	recipes: Recipe[];
@@ -13,8 +14,8 @@ export default function RecipeRecommend({ recipes }: RecipeRecommendProps) {
 			recipes.map(r => ({
 				id: r.id,
 				title: r.title,
-				creator: r.author.email.split('@')[0],
-				totalTime: `${r.cookTime + r.prepTime} min`,
+				creator: r.author.profile.name,
+				totalTime: formatTime(r.cookTime + r.prepTime),
 				rating: r.avgRating,
 				reviewCount: r.ratingCount,
 				imageUrl: r.imageUrl ?? '/placeholder.svg',
