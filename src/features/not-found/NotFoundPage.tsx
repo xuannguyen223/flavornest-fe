@@ -18,14 +18,6 @@ export default function NotFoundPage() {
               Go back to homepage
             </Button>
           </a>
-          <a href="#">
-            <Button
-              variant={"outline"}
-              className="hover:bg-(--primary-color)/10"
-            >
-              Contact Us
-            </Button>
-          </a>
         </div>
       </div>
     </div>
