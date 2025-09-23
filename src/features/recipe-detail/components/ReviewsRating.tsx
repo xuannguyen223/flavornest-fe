@@ -58,7 +58,7 @@ export default function ReviewsRating({
   };
 
   return (
-    <section className="mt-4">
+    <section className="mt-8">
       {/* Rating Overview */}
       <div>
         <h2 className="text-sm sm:text-base lg:text-lg xl:text-xl font-semibold leading-tight text-neutral-700 text-left">
@@ -86,7 +86,7 @@ export default function ReviewsRating({
       </div>
       {/* Submit rating, check auth */}
       {!isAuthenticated ? (
-        <div className="w-fit mt-4 flex justify-center items-center bg-neutral-100 rounded-md p-6">
+        <div className="w-fit mt-4 flex justify-center items-center bg-neutral-100 rounded-md p-6 mb-8">
           <p className="text-center text-neutral-700 text-lg">
             <span
               className="font-semibold underline cursor-pointer"
@@ -102,7 +102,7 @@ export default function ReviewsRating({
         </div>
       ) : (
         // Nếu đã login → hiện khung rating bình thường
-        <div className="w-fit mt-4 rounded-md bg-neutral-100 p-4">
+        <div className="w-fit mt-4 rounded-md bg-neutral-100 p-4 mb-10">
           <div className="flex items-start gap-6">
             {/* Avatar */}
             {avatarUrl ? (

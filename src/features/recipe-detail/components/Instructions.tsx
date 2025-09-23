@@ -5,7 +5,7 @@ export interface InstructionsProps {
 
 export default function Instructions({ steps }: InstructionsProps) {
   return (
-    <section className="mt-4">
+    <section className="mt-8">
       <h2 className="text-sm sm:text-base lg:text-lg xl:text-xl font-semibold leading-tight text-neutral-700 text-left">Instructions</h2>
 
       <div className="mt-2 space-y-3">
