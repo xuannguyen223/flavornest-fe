@@ -53,17 +53,19 @@ export default function RecipeDetailPage() {
 		}
 	}, [dispatch, isAuthenticated, userId, recipeId]);
 
-	// Track first loading lần đầu
+	// Track first loading
 	const [initialLoading, setInitialLoading] = useState(true);
 
 	useEffect(() => {
-	if (recipeId) {
-		setInitialLoading(true); // reset trước khi fetch
-		dispatch(fetchRecipeById(recipeId))
-		.unwrap()
-		.catch(() => {})
-		.finally(() => setInitialLoading(false));
-	}
+		if (recipeId) {
+			window.scrollTo({ top: 0, behavior: "smooth" });
+
+			setInitialLoading(true); // reset trước khi fetch
+			dispatch(fetchRecipeById(recipeId))
+			.unwrap()
+			.catch(() => {})
+			.finally(() => setInitialLoading(false));
+		}
 	}, [recipeId, dispatch]);
 
 	useEffect(() => {
@@ -149,7 +151,7 @@ export default function RecipeDetailPage() {
   	const totalTime = formatTime(totalMinutes);
 
 	return (
-		<div className="px-12 mt-8 py-8">
+		<div className="px-12 mt-8 py-4">
 			<RecipeHeader
 				id = {recipe.id}
 				title={recipe.title}

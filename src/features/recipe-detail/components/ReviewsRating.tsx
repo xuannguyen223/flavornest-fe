@@ -58,13 +58,13 @@ export default function ReviewsRating({
   };
 
   return (
-    <section className="mt-8">
+    <section className="mt-4">
       {/* Rating Overview */}
       <div>
-        <h2 className="text-4xl font-semibold leading-tight text-neutral-700 text-left">
+        <h2 className="text-sm sm:text-base lg:text-lg xl:text-xl font-semibold leading-tight text-neutral-700 text-left">
           Ratings ({ratingCount})
         </h2>
-        <div className="mt-4 flex items-center gap-3">
+        <div className="mt-2 flex items-center gap-3">
           <div className="flex items-center gap-1">
             {Array.from({ length: 5 }).map((_, i) => {
               const filled = i < Math.round(rating);
@@ -79,14 +79,14 @@ export default function ReviewsRating({
               );
             })}
           </div>
-          <span className="text-xl font-medium text-neutral-700">
+          <span className="text-sm sm:text-base lg:text-lg xl:text-xl font-medium text-neutral-700">
             {rating.toFixed(1)}
           </span>
         </div>
       </div>
       {/* Submit rating, check auth */}
       {!isAuthenticated ? (
-        <div className="w-fit mt-6 flex justify-center items-center bg-neutral-100 rounded-md p-6">
+        <div className="w-fit mt-4 flex justify-center items-center bg-neutral-100 rounded-md p-6">
           <p className="text-center text-neutral-700 text-lg">
             <span
               className="font-semibold underline cursor-pointer"
@@ -102,7 +102,7 @@ export default function ReviewsRating({
         </div>
       ) : (
         // Nếu đã login → hiện khung rating bình thường
-        <div className="w-fit mt-6 rounded-md bg-neutral-100 p-6">
+        <div className="w-fit mt-4 rounded-md bg-neutral-100 p-4">
           <div className="flex items-start gap-6">
             {/* Avatar */}
             {avatarUrl ? (
