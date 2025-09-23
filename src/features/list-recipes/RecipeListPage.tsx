@@ -7,7 +7,7 @@ import FilterGroup from '@/components/common/filter-recipe/FilterGroup';
 import { RecipeList } from './components/RecipeList';
 import { formatCategoryType } from '@/lib/utils';
 import { useSort } from '@/hooks/useSort';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useAppSelector } from '@/hooks/redux';
 
 export default function RecipeListPage() {
@@ -28,6 +28,10 @@ export default function RecipeListPage() {
 	const loading = useAppSelector(state => state.recipeAPI.loading);
 
 	const { sortBy } = useSort();
+
+	useEffect(() => {
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	}, [categoryType, categoryNames, filterData]);
 
 	const sortedRecipes = useMemo(() => {
 		if (!mappedRecipes || mappedRecipes.length === 0) return mappedRecipes;
@@ -62,7 +66,7 @@ export default function RecipeListPage() {
 		<div>
 			<SearchSection
 				backgroundColor="bg-neutral-300"
-				searchPlaceholder="Search recipe by title ......"
+				searchPlaceholder="Search recipes by name..."
 				backgroundImage="/home.png"
 				searchValue={searchInput}
 				onSearchChange={setSearchInput}

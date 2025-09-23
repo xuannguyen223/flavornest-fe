@@ -70,8 +70,10 @@ export const checkLogin = (authMode: boolean = false) => {
           }
         }
       }
+      return true;
     } catch {
       dispatch(handleIsLogin(false));
+      return false;
     }
   };
 };
