@@ -20,13 +20,13 @@ function CheckItem({ label }: { label: string }) {
 export default function Ingredients({ ingredients }: IngredientsProps) {
   return (
     <section className="mt-8">
-      <h2 className="text-4xl font-semibold leading-tight text-neutral-700 text-left">
+      <h2 className="text-sm sm:text-base lg:text-lg xl:text-xl font-semibold leading-tight text-neutral-700 text-left">
         Ingredients
       </h2>
 
       <ul
         className={cn(
-          "text-lg mt-4 grid gap-3 text-left",
+          "mt-2 text-xs sm:text-sm lg:text-base xl:text-lg mt-4 grid gap-3 text-left",
           ingredients.length > 6 ? "md:grid-cols-2" : "grid-cols-1"
         )}
       >

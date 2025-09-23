@@ -33,7 +33,7 @@ const initialState: RecipeState = {
 	userRecipes: [],
 	searchRecipes: [],
 	favoriteRecipesList: [],
-	loading: false,
+	loading: true,
 	error: null,
 };
 

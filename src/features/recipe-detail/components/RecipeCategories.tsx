@@ -17,7 +17,7 @@ export default function RecipeCategories({ categories }: RecipeCategoriesListPro
   return (
     <section className="text-left mt-8">
       {/* Header */}
-      <h2 className="text-4xl font-semibold leading-tight text-neutral-700">
+      <h2 className="text-sm sm:text-base lg:text-lg xl:text-xl font-semibold leading-tight text-neutral-700">
         Tags
       </h2>
 
@@ -29,7 +29,8 @@ export default function RecipeCategories({ categories }: RecipeCategoriesListPro
             onClick={() => handleClick(cat.name, cat.description)}
             className="px-6 py-2 rounded-full border 
                        border-neutral-400/30 bg-white text-neutral-600 
-                       shadow-sm hover:bg-neutral-700 hover:text-white transition text-lg"
+                       shadow-sm hover:bg-neutral-700 hover:text-white transition
+                       text-xs sm:text-sm lg:text-base xl:text-lg "
           >
             {cat.name}
           </button>

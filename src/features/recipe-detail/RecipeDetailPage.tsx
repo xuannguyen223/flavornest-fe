@@ -11,8 +11,6 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import type { Recipe } from "../../types/TypeRecipe";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { Link } from 'react-router-dom';
-
 import {
 	fetchFavoriteRecipes,
 	fetchRecipeById,
@@ -21,12 +19,15 @@ import {
 } from '@/store/features/recipeAPISlice';
 import { toast } from 'react-toastify';
 import { formatTime } from "@/lib/utils";
+import LoadingPage from "../loading/LoadingPage";
+import NotFoundPage from "../not-found/NotFoundPage";
 
 export default function RecipeDetailPage() {
 	const { recipeId } = useParams<{ recipeId: string }>();
 	const dispatch = useAppDispatch();
 
-	const recipe = useAppSelector(state =>
+	// const recipe = useAppSelector(state => state.recipeAPI.recipesById[recipeId!]);
+	const recipeData = useAppSelector(state =>
 		recipeId ? state.recipeAPI.recipesById[recipeId] : undefined,
 	);
 	const recipesByCategory = useAppSelector(state => state.recipeAPI.recipesByCategory);
@@ -52,13 +53,20 @@ export default function RecipeDetailPage() {
 		}
 	}, [dispatch, isAuthenticated, userId, recipeId]);
 
-	// Load recipe using dispatch()
-	// Load hasReviewed from localStorage
+	// Track first loading
+	const [initialLoading, setInitialLoading] = useState(true);
+
 	useEffect(() => {
 		if (recipeId) {
-		dispatch(fetchRecipeById(recipeId));
+			window.scrollTo({ top: 0, behavior: "smooth" });
+
+			setInitialLoading(true); // reset trước khi fetch
+			dispatch(fetchRecipeById(recipeId))
+			.unwrap()
+			.catch(() => {})
+			.finally(() => setInitialLoading(false));
 		}
-  	}, [recipeId, dispatch]);
+	}, [recipeId, dispatch]);
 
 	useEffect(() => {
 		if (!recipeId) return;
@@ -77,15 +85,15 @@ export default function RecipeDetailPage() {
 
 	// Get related recipes of each category for RecipeRecommend
 	useEffect(() => {
-		if (recipe?.categories?.length) {
-			recipe.categories.forEach(c => {
+		if (recipeData?.categories?.length) {
+			recipeData.categories.forEach(c => {
 				const name = c.category.name;
 				if (!recipesByCategory[name]) {
 					dispatch(fetchRecipesByCategoryNames({ categoryNames: [name] }));
 				}
 			});
 		}
-	}, [recipe, recipesByCategory, dispatch]);
+	}, [recipeData, recipesByCategory, dispatch]);
 
 	const handleSubmitRating = async (newRating: number) => {
 		if (!recipeId || !isAuthenticated) return;
@@ -111,8 +119,8 @@ export default function RecipeDetailPage() {
   	// RecipeRecommend: non-duplicate
 	const relatedRecipes: Recipe[] = [];
 	const seen = new Set<string>();
-	if (recipe?.categories) {
-		recipe.categories.forEach(c => {
+	if (recipeData?.categories) {
+		recipeData.categories.forEach(c => {
 			const name = c.category.name;
 			const list = recipesByCategory[name] ?? [];
 			list.forEach(r => {
@@ -124,37 +132,15 @@ export default function RecipeDetailPage() {
 		});
 	}
 
-	if (loading) {
-		return (
-		  <div className="flex-1 flex flex-col items-center justify-center py-16">
-			<p className="text-xl text-gray-700">Loading recipe details...</p>
-		  </div>
-		);
-	  }
-	  
-	if (error) {
-		return (
-			<div className="flex-1 flex flex-col items-center justify-center py-16">
-			<h3 className="text-2xl font-semibold text-gray-900 mb-2">Error loading recipe</h3>
-			<p className="text-gray-600 text-lg">{error}</p>
-			</div>
-		);
+	if (initialLoading) {
+		return <LoadingPage />;
 	}
-	  
-	if (!recipe) {
-		return (
-		  <div className="flex-1 flex flex-col items-center justify-center py-16">
-			<h3 className="text-2xl font-semibold text-gray-900 mb-2">Recipe not found</h3>
-			<p className="text-gray-600 text-lg">
-			  We could not find the recipe you are looking for.
-			</p>
-			<Link to="/" className="mt-4 px-6 py-2 bg-neutral-700 text-white rounded">
-			  Go to Homepage
-			</Link>
-		  </div>
-		);
+	
+	if (error || !recipeData) {
+		return <NotFoundPage />;
 	}
 
+	const recipe = recipeData as Recipe;
 	const createdDate = new Date(recipe.createdAt).toLocaleDateString('en-GB', {
 		day: '2-digit',
 		month: 'short',
@@ -165,7 +151,7 @@ export default function RecipeDetailPage() {
   	const totalTime = formatTime(totalMinutes);
 
 	return (
-		<div className="px-12 mt-8">
+		<div className="px-12 mt-8 py-4">
 			<RecipeHeader
 				id = {recipe.id}
 				title={recipe.title}

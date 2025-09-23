@@ -25,10 +25,10 @@ export default function RecipeRecommend({ recipes }: RecipeRecommendProps) {
 	);
 
 	return (
-		<section className="text-left mt-8">
+		<section className="text-left mb-8">
 			{/* Header */}
 			<h2
-				className="text-4xl font-semibold 
+				className="text-sm sm:text-base lg:text-lg xl:text-xl font-semibold 
             leading-tight text-neutral-700">
 				Recipes You'll Love
 			</h2>
@@ -36,7 +36,7 @@ export default function RecipeRecommend({ recipes }: RecipeRecommendProps) {
 				recipeList={mappedRecipes}
 				layout="2-rows-4"
 				viewAll={{ show: false }}
-				className="my-8"
+				className="mt-1"
 			/>
 		</section>
 	);
