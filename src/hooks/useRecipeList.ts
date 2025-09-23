@@ -29,9 +29,15 @@ export function useRecipeList() {
 
 	const [searchInput, setSearchInput] = useState(searchValue);
 
-	const { allRecipes, recipesByCategory, recipesByCategoryType, loading } = useAppSelector(
-		state => state.recipeAPI,
-	);
+	const {
+		allRecipes,
+		recipesByCategory,
+		recipesByCategoryType,
+		loading,
+		fetchedCategories,
+		fetchedCategoryTypes,
+		allRecipesFetched,
+	} = useAppSelector(state => state.recipeAPI);
 	const searchResults = useAppSelector(selectSearchResults);
 	const categoriesByType = useAppSelector(state => state.category.categoriesByType);
 	const isAuthenticated = useAppSelector(state => state.loginSlice.isAuthenticated);
@@ -52,18 +58,29 @@ export function useRecipeList() {
 
 	// Xử lý reload: Set flag trước khi unload
 	useEffect(() => {
-		if (searchValue && memoizedCategoryNames.length > 0) {
-			dispatch(fetchRecipesBySearch({ searchValue, categoryNames: memoizedCategoryNames }));
-		} else if (searchValue) {
-			// Search only - pass just search value
-			dispatch(fetchRecipesBySearch({ searchValue }));
-		} else if (memoizedCategoryNames.length) {
-			dispatch(fetchRecipesByCategoryNames({ categoryNames: memoizedCategoryNames }));
-		} else if (categoryType) {
-			dispatch(fetchRecipesByCategoryType({ categoryType: categoryType }));
-		} else {
-			dispatch(fetchAllRecipes());
-		}
+		const fetchData = async () => {
+			try {
+				if (searchValue && memoizedCategoryNames.length > 0) {
+					await dispatch(
+						fetchRecipesBySearch({ searchValue, categoryNames: memoizedCategoryNames }),
+					).unwrap();
+				} else if (searchValue) {
+					await dispatch(fetchRecipesBySearch({ searchValue })).unwrap();
+				} else if (memoizedCategoryNames.length) {
+					await dispatch(
+						fetchRecipesByCategoryNames({ categoryNames: memoizedCategoryNames }),
+					).unwrap();
+				} else if (categoryType) {
+					await dispatch(fetchRecipesByCategoryType({ categoryType })).unwrap();
+				} else {
+					await dispatch(fetchAllRecipes()).unwrap();
+				}
+			} catch (err) {
+				console.error(err);
+			}
+		};
+
+		fetchData();
 	}, [memoizedCategoryNames, categoryType, searchValue, dispatch]);
 
 	useEffect(() => {
@@ -96,7 +113,7 @@ export function useRecipeList() {
 	const mappedRecipes: RecipeItemProps[] = useMemo(
 		() =>
 			displayRecipes.map(r => ({
-				authorId: r.authorId, 
+				authorId: r.authorId,
 				id: r.id,
 				title: r.title,
 				creator: r.author.profile.name,
@@ -163,12 +180,36 @@ export function useRecipeList() {
 	}, [memoizedCategoryNames, filterData]);
 
 	const hasNoResults = useMemo(() => {
-		return (
-			(searchValue || memoizedCategoryNames.length > 0 || categoryType) &&
-			displayRecipes.length === 0 &&
-			!loading
-		);
-	}, [searchValue, memoizedCategoryNames.length, categoryType, displayRecipes.length, loading]);
+		if (loading) return false;
+
+		const hasQueryParams = searchValue || memoizedCategoryNames.length > 0 || categoryType;
+		if (!hasQueryParams) return false;
+
+		let dataFetched = false;
+
+		if (searchValue) {
+			dataFetched = true;
+		} else if (memoizedCategoryNames.length === 1) {
+			dataFetched = fetchedCategories[memoizedCategoryNames[0]] || false;
+		} else if (memoizedCategoryNames.length > 1) {
+			dataFetched = memoizedCategoryNames.every(name => fetchedCategories[name]);
+		} else if (categoryType) {
+			dataFetched = fetchedCategoryTypes[categoryType] || false;
+		} else {
+			dataFetched = allRecipesFetched;
+		}
+
+		return dataFetched && displayRecipes.length === 0;
+	}, [
+		loading,
+		searchValue,
+		memoizedCategoryNames,
+		categoryType,
+		displayRecipes.length,
+		fetchedCategories,
+		fetchedCategoryTypes,
+		allRecipesFetched,
+	]);
 
 	const handleSearch = (value: string) => {
 		setSearchInput(value);

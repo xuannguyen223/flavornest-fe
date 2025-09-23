@@ -21,6 +21,7 @@ export default function RecipeListPage() {
 		mappedRecipes,
 		searchValue,
 		filterData,
+		hasNoResults,
 		handleRecipeClick,
 		handleFilterChange,
 	} = useRecipeList();
@@ -109,8 +110,6 @@ export default function RecipeListPage() {
 									</div>
 								</div>
 							);
-
-							
 						}
 
 						if (sortedRecipes && sortedRecipes.length > 0) {
@@ -123,7 +122,7 @@ export default function RecipeListPage() {
 							);
 						}
 
-						if (!sortedRecipes) {
+						if (!loading && hasNoResults) {
 							return (
 								<div className="h-[200px] w-full mx-auto flex flex-col items-center justify-center">
 									<div className="text-center">
@@ -139,6 +138,8 @@ export default function RecipeListPage() {
 								</div>
 							);
 						}
+
+						return null;
 					})()}
 				</div>
 			</div>

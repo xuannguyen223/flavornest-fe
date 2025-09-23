@@ -23,6 +23,10 @@ export interface RecipeState {
 	favoriteRecipesList: Recipe[];
 	loading: boolean;
 	error: string | null;
+	fetchedCategories: Record<string, boolean>;
+	fetchedCategoryTypes: Record<string, boolean>;
+	fetchedSearch: Record<string, boolean>;
+	allRecipesFetched: boolean;
 }
 
 const initialState: RecipeState = {
@@ -35,6 +39,10 @@ const initialState: RecipeState = {
 	favoriteRecipesList: [],
 	loading: true,
 	error: null,
+	fetchedCategories: {},
+	fetchedCategoryTypes: {},
+	fetchedSearch: {},
+	allRecipesFetched: false,
 };
 
 // Thunks
@@ -107,7 +115,7 @@ export const fetchRecipesByCategoryType = createAsyncThunk(
 );
 
 export const submitRecipeRating = createAsyncThunk<
-	any,
+	{ recipeId: string; rating: number },
 	{ recipeId: string; rating: number },
 	{ state: RootState }
 >('recipes/submitRating', async ({ recipeId, rating }, { dispatch }) => {
@@ -238,6 +246,7 @@ const recipeAPISlice = createSlice({
 					state.loading = false;
 					state.error = null;
 					state.recipesByCategoryType[action.payload.categoryType] = action.payload.data;
+					state.fetchedCategoryTypes[action.payload.categoryType] = true;
 				},
 			)
 			.addCase(fetchRecipesByCategoryType.rejected, (state, action) => {
@@ -258,7 +267,11 @@ const recipeAPISlice = createSlice({
 					// Also store individual categories for single category access
 					if (action.payload.categoryNames.length === 1) {
 						state.recipesByCategory[action.payload.categoryNames[0]] = action.payload.data;
+						state.fetchedCategories[action.payload.categoryNames[0]] = true;
 					}
+					action.payload.categoryNames.forEach(categoryName => {
+						state.fetchedCategories[categoryName] = true;
+					});
 				},
 			)
 			.addCase(fetchRecipesByCategoryNames.rejected, (state, action) => {
@@ -273,6 +286,7 @@ const recipeAPISlice = createSlice({
 			.addCase(fetchAllRecipes.fulfilled, (state, action: PayloadAction<Recipe[]>) => {
 				state.loading = false;
 				state.allRecipes = action.payload;
+				state.allRecipesFetched = true;
 			})
 			.addCase(fetchAllRecipes.rejected, (state, action) => {
 				state.loading = false;
