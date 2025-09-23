@@ -11,7 +11,6 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import type { Recipe } from "../../types/TypeRecipe";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import { Link } from 'react-router-dom';
 import {
 	fetchFavoriteRecipes,
 	fetchRecipeById,
@@ -42,7 +41,6 @@ export default function RecipeDetailPage() {
 
 	const [hasReviewed, setHasReviewed] = useState(false);
 	const [userRating, setUserRating] = useState(0); // Lưu userRating từ localStorage
-	const [isDataFetched, setIsDataFetched] = useState(false);
 
 	// Tải danh sách favorite khi trang mount
 	useEffect(() => {
@@ -55,9 +53,7 @@ export default function RecipeDetailPage() {
 		}
 	}, [dispatch, isAuthenticated, userId, recipeId]);
 
-	// Load recipe using dispatch()
-	// Load hasReviewed from localStorage
-	// Track loading lần đầu
+	// Track first loading lần đầu
 	const [initialLoading, setInitialLoading] = useState(true);
 
 	useEffect(() => {
@@ -133,12 +129,6 @@ export default function RecipeDetailPage() {
 		});
 	}
 
-	// if (loading) return <LoadingPage />;
-	  
-	// if (error) return <NotFoundPage />;
-	// if (!loading && !recipeData) return <NotFoundPage />;
-
-	// ----- RENDER CHECK -----
 	if (initialLoading) {
 		return <LoadingPage />;
 	}
@@ -158,7 +148,7 @@ export default function RecipeDetailPage() {
   	const totalTime = formatTime(totalMinutes);
 
 	return (
-		<div className="px-12 mt-8">
+		<div className="px-12 mt-8 py-8">
 			<RecipeHeader
 				id = {recipe.id}
 				title={recipe.title}
