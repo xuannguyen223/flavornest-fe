@@ -42,6 +42,7 @@ export default function RecipeDetailPage() {
 
 	const [hasReviewed, setHasReviewed] = useState(false);
 	const [userRating, setUserRating] = useState(0); // Lưu userRating từ localStorage
+	const [isDataFetched, setIsDataFetched] = useState(false);
 
 	// Tải danh sách favorite khi trang mount
 	useEffect(() => {
@@ -56,11 +57,17 @@ export default function RecipeDetailPage() {
 
 	// Load recipe using dispatch()
 	// Load hasReviewed from localStorage
+	// Track loading lần đầu
+	const [initialLoading, setInitialLoading] = useState(true);
+
 	useEffect(() => {
-		if (recipeId) {
-		dispatch(fetchRecipeById(recipeId));
-		}
-  	}, [recipeId, dispatch]);
+	if (recipeId) {
+		dispatch(fetchRecipeById(recipeId))
+		.unwrap()
+		.catch(() => {})
+		.finally(() => setInitialLoading(false));
+	}
+	}, [recipeId, dispatch]);
 
 	useEffect(() => {
 		if (!recipeId) return;
@@ -126,12 +133,19 @@ export default function RecipeDetailPage() {
 		});
 	}
 
-	if (loading) {
+	// if (loading) return <LoadingPage />;
+	  
+	// if (error) return <NotFoundPage />;
+	// if (!loading && !recipeData) return <NotFoundPage />;
+
+	// ----- RENDER CHECK -----
+	if (initialLoading) {
 		return <LoadingPage />;
 	}
-	  
-	if (error) return <NotFoundPage />;
-	if (!recipeData) return <NotFoundPage />;
+	
+	if (error || !recipeData) {
+		return <NotFoundPage />;
+	}
 
 	const recipe = recipeData as Recipe;
 	const createdDate = new Date(recipe.createdAt).toLocaleDateString('en-GB', {
