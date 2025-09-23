@@ -1,21 +1,24 @@
 import { Star } from "lucide-react";
 import SaveButton from "./SaveButton";
 import Breadcrumbs from "@/components/common/BreadCrumbs";
+import { useAppSelector } from "@/store/hooks";
 
 export interface RecipeHeaderProps {
   id: string;
   title: string;
   image?: string;
   author: string;
+  authorId: string;
   createdAt: string; // ISO date
   avgRating: number; // average
   ratingCount: number;
 }
 
 export default function RecipeHeader({
-  avgRating, ratingCount, title, image, author, createdAt, id, }: RecipeHeaderProps) {
-
-
+  avgRating, ratingCount, title, image, author, authorId, createdAt, id, }: RecipeHeaderProps) {
+  
+  const userProfile = useAppSelector((state) => state.userSlice.profile);
+  const userId = userProfile.userId;
   const dateLabel = new Date(createdAt).toLocaleDateString(undefined, {
     year: "numeric",
     month: "long",
@@ -72,9 +75,11 @@ export default function RecipeHeader({
       </div>
 
       {/* Action buttons (Save) */}
-      <div className="mt-6 flex items-center gap-3">
-        <SaveButton id = {id}/>
-      </div>
+      {authorId !== userId && (
+        <div className="mt-6 flex items-center gap-3">
+          <SaveButton id={id} />
+        </div>
+      )}
     </section>
   );
 }

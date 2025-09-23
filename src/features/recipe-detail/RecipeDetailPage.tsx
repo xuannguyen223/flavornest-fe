@@ -152,6 +152,7 @@ export default function RecipeDetailPage() {
 				title={recipe.title}
 				image={recipe.imageUrl}
 				author={recipe.author.profile.name}
+				authorId={recipe.authorId}
 				createdAt={createdDate}
 				avgRating={recipe.avgRating}
 				ratingCount={recipe.ratingCount}
