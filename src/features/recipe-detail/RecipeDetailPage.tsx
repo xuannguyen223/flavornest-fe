@@ -58,6 +58,7 @@ export default function RecipeDetailPage() {
 
 	useEffect(() => {
 	if (recipeId) {
+		setInitialLoading(true); // reset trước khi fetch
 		dispatch(fetchRecipeById(recipeId))
 		.unwrap()
 		.catch(() => {})
