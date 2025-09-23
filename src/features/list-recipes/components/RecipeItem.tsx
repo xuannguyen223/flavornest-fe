@@ -15,6 +15,7 @@ import {
 import { toast } from 'react-toastify';
 
 export interface RecipeItemProps {
+	authorId: string;
 	id: string;
 	title: string;
 	creator: string;
@@ -29,6 +30,7 @@ export interface RecipeItemProps {
 }
 
 export function RecipeItem({
+	authorId,
 	id,
 	title,
 	creator,
@@ -113,17 +115,19 @@ export function RecipeItem({
 						<div className="absolute inset-0 bg-gray-200 animate-pulse rounded-lg" />
 					)}
 
+					{authorId !== userId && (
 					<Bookmark
 						strokeWidth={0.5}
 						className={cn(
-							'absolute top-2 right-2 w-10 h-10 cursor-pointer',
-							isFavorite
-								? 'fill-yellow-400 drop-shadow-sm'
-								: 'fill-white text-gray-800 drop-shadow-sm hover:fill-gray-100',
+						'absolute top-2 right-2 w-10 h-10 cursor-pointer',
+						isFavorite
+							? 'fill-yellow-400 drop-shadow-sm'
+							: 'fill-white text-gray-800 drop-shadow-sm hover:fill-gray-100'
 						)}
 						onClick={handleFavoriteClick}
 						fill={isFavorite ? '#facc15' : '#fff'}
 					/>
+					)}
 				</div>
 				<div className="mt-2 font-poppins flex flex-col gap-2 text-black text-left">
 					<div className="font-semibold text-gray-900 text-2xl line-clamp-2">{title}</div>

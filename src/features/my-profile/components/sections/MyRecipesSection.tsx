@@ -20,9 +20,6 @@ function MyRecipesSection() {
 	const storedUserId = localStorage.getItem('USER_ID');
 	const userId = storedUserId;
 	const isAuthenticated = useAppSelector(state => state.loginSlice.isAuthenticated);
-	// const userRecipesFetched = useAppSelector(
-	// 	state => state.recipeAPI.userRecipesFetched
-	// );
 
 	const { sortBy } = useSort();
 	const [searchQuery, setSearchQuery] = useState('');
@@ -40,6 +37,7 @@ function MyRecipesSection() {
 
 
 	const userRecipesForDisplay = userRecipes.map(recipe => ({
+		authorId: recipe.authorId,
 		id: recipe.id,
 		title: recipe.title,
 		creator: recipe.author.profile.name,
