@@ -21,6 +21,13 @@ export default function HomePage() {
   const dispatch = useAppDispatch();
   const { allRecipes, loading } = useAppSelector((state) => state.recipeAPI);
 
+  const recipeOfTheWeek = useMemo(() => {
+		if (allRecipes.length > 0) {
+			const randomIndex = Math.floor(Math.random() * allRecipes.length);
+			return allRecipes[randomIndex];
+		}
+	}, [allRecipes]);
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
