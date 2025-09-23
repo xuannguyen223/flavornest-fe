@@ -18,6 +18,7 @@ function FavoriteRecipesSection() {
 
 	const dispatch = useDispatch<AppDispatch>();
 	const { favoriteRecipesList, loading } = useSelector((state: RootState) => state.recipeAPI);
+
 	const userProfile = useAppSelector(state => state.userSlice.profile);
 	const userId = userProfile.userId;
 	const isAuthenticated = useAppSelector(state => state.loginSlice.isAuthenticated);
@@ -27,17 +28,22 @@ function FavoriteRecipesSection() {
 
 	useEffect(() => {
 		if (isAuthenticated && userId) {
-			dispatch(fetchFavoriteRecipes({ userId }));
+			if (!favoriteRecipesList?.length) {
+				dispatch(fetchFavoriteRecipes({ userId }));
+			} else {
+				dispatch(fetchFavoriteRecipes({ userId }));
+			}
 		}
-	}, [dispatch, userId, isAuthenticated]);
+	}, [dispatch, isAuthenticated]);
 
 	const favoriteRecipesForDisplay = favoriteRecipesList.map(recipe => ({
 		id: recipe.id,
 		title: recipe.title,
-		creator: recipe.author.profile.name, // Using authorId as creator for now
+		authorId: recipe.authorId,
+		creator: recipe.author.profile.name, 
 		totalTime: formatTime(recipe.cookTime + recipe.prepTime),
-		rating: recipe.avgRating, // Default rating since it's not in the API response
-		reviewCount: recipe.ratingCount, // Default review count since it's not in the API response
+		rating: recipe.avgRating, 
+		reviewCount: recipe.ratingCount,
 		imageUrl: recipe.imageUrl,
 		createdAt: recipe.createdAt,
 	}));
@@ -109,7 +115,7 @@ function FavoriteRecipesSection() {
 				/>
 				<RecipeSort className="p-0" />
 			</div>
-			{favoriteRecipesList.length > 0 ? (
+			{sortedRecipes.length > 0 ? (
 				<RecipeList
 					layout="list-rows-3"
 					recipeList={sortedRecipes}
