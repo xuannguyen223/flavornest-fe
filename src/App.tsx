@@ -5,156 +5,49 @@ import { ToastContainer } from "react-toastify";
 
 import MainLayout from "./components/common/MainLayout";
 import AuthLayout from "./components/common/auth/AuthLayout";
-import { lazy } from "react";
-import SuspenseWrapper from "./features/loading/SuspenseWrapper";
-
-const Home = lazy(() => import("./features/home/HomePage"));
-const AboutUs = lazy(() => import("./features/about-us/AboutUsPage"));
-const RecipeList = lazy(() => import("./features/list-recipes/RecipeListPage"));
-const RecipeDetail = lazy(
-  () => import("./features/recipe-detail/RecipeDetailPage")
-);
-const AddRecipes = lazy(() => import("./features/add-recipes/AddRecipesPage"));
-const MyProfile = lazy(() => import("./features/my-profile/MyProfilePage"));
-const EditProfile = lazy(
-  () => import("./features/my-profile/components/sections/EditProfileSection")
-);
-const AccountSettings = lazy(
-  () =>
-    import("./features/my-profile/components/sections/AccountSettingsSection")
-);
-const MyRecipes = lazy(
-  () => import("./features/my-profile/components/sections/MyRecipesSection")
-);
-const FavoriteRecipes = lazy(
-  () =>
-    import("./features/my-profile/components/sections/FavoriteRecipesSection")
-);
-const NotFound = lazy(() => import("./features/not-found/NotFoundPage"));
-const Signup = lazy(() => import("./features/signup/SignupPage"));
-const Login = lazy(() => import("./features/login/LoginPage"));
+import HomePage from "./features/home/HomePage";
+import RecipeListPage from "./features/list-recipes/RecipeListPage";
+import RecipeDetailPage from "./features/recipe-detail/RecipeDetailPage";
+import AddRecipesPage from "./features/add-recipes/AddRecipesPage";
+import AboutUsPage from "./features/about-us/AboutUsPage";
+import MyProfilePage from "./features/my-profile/MyProfilePage";
+import EditProfileSection from "./features/my-profile/components/sections/EditProfileSection";
+import AccountSettingsSection from "./features/my-profile/components/sections/AccountSettingsSection";
+import MyRecipesSection from "./features/my-profile/components/sections/MyRecipesSection";
+import FavoriteRecipesSection from "./features/my-profile/components/sections/FavoriteRecipesSection";
+import SignupPage from "./features/signup/SignupPage";
+import NotFoundPage from "./features/not-found/NotFoundPage";
+import LoginPage from "./features/login/LoginPage";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<MainLayout />}>
-          <Route
-            path="/"
-            element={
-              <SuspenseWrapper>
-                <Home />
-              </SuspenseWrapper>
-            }
-          />
-          <Route
-            path="/recipes"
-            element={
-              <SuspenseWrapper>
-                <RecipeList />
-              </SuspenseWrapper>
-            }
-          />
-          <Route
-            path="/recipes/:recipeId"
-            element={
-              <SuspenseWrapper>
-                <RecipeDetail />
-              </SuspenseWrapper>
-            }
-          />
-          <Route
-            path="/recipes/:category"
-            element={
-              <SuspenseWrapper>
-                <RecipeDetail />
-              </SuspenseWrapper>
-            }
-          />
-          <Route
-            path="/add-recipe"
-            element={
-              <SuspenseWrapper>
-                <AddRecipes />
-              </SuspenseWrapper>
-            }
-          />
-          <Route
-            path="/about"
-            element={
-              <SuspenseWrapper>
-                <AboutUs />
-              </SuspenseWrapper>
-            }
-          />
-          <Route
-            path="/my-profile"
-            element={
-              <SuspenseWrapper>
-                <MyProfile />
-              </SuspenseWrapper>
-            }
-          >
-            <Route
-              path="edit-profile"
-              element={
-                <SuspenseWrapper>
-                  <EditProfile />
-                </SuspenseWrapper>
-              }
-            />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/recipes" element={<RecipeListPage />} />
+          <Route path="/recipes/:recipeId" element={<RecipeDetailPage />} />
+          <Route path="/recipes/:category" element={<RecipeDetailPage />} />
+          <Route path="/add-recipe" element={<AddRecipesPage />} />
+          <Route path="/about" element={<AboutUsPage />} />
+          <Route path="/my-profile" element={<MyProfilePage />}>
+            <Route path="edit-profile" element={<EditProfileSection />} />
             <Route
               path="account-settings"
-              element={
-                <SuspenseWrapper>
-                  <AccountSettings />
-                </SuspenseWrapper>
-              }
+              element={<AccountSettingsSection />}
             />
-            <Route
-              path="my-recipes"
-              element={
-                <SuspenseWrapper>
-                  <MyRecipes />
-                </SuspenseWrapper>
-              }
-            />
+            <Route path="my-recipes" element={<MyRecipesSection />} />
             <Route
               path="favorite-recipes"
-              element={
-                <SuspenseWrapper>
-                  <FavoriteRecipes />
-                </SuspenseWrapper>
-              }
+              element={<FavoriteRecipesSection />}
             />
           </Route>
         </Route>
         <Route element={<AuthLayout />}>
-          <Route
-            path="/signup"
-            element={
-              <SuspenseWrapper>
-                <Signup />
-              </SuspenseWrapper>
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              <SuspenseWrapper>
-                <Login />
-              </SuspenseWrapper>
-            }
-          />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/login" element={<LoginPage />} />
         </Route>
-        <Route
-          path="*"
-          element={
-            <SuspenseWrapper>
-              <NotFound />
-            </SuspenseWrapper>
-          }
-        />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <ToastContainer position="top-right" autoClose={1000} />
     </BrowserRouter>
