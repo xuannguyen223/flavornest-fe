@@ -4,19 +4,20 @@ import "./App.css";
 import { ToastContainer } from "react-toastify";
 
 import MainLayout from "./components/common/MainLayout";
+import AuthLayout from "./components/common/auth/AuthLayout";
 import HomePage from "./features/home/HomePage";
-import AboutUsPage from "./features/about-us/AboutUsPage";
 import RecipeListPage from "./features/list-recipes/RecipeListPage";
 import RecipeDetailPage from "./features/recipe-detail/RecipeDetailPage";
 import AddRecipesPage from "./features/add-recipes/AddRecipesPage";
+import AboutUsPage from "./features/about-us/AboutUsPage";
 import MyProfilePage from "./features/my-profile/MyProfilePage";
 import EditProfileSection from "./features/my-profile/components/sections/EditProfileSection";
 import AccountSettingsSection from "./features/my-profile/components/sections/AccountSettingsSection";
 import MyRecipesSection from "./features/my-profile/components/sections/MyRecipesSection";
-import AuthLayout from "./components/common/auth/AuthLayout";
-import SignupPage from "./features/signup/SignupPage";
-import LoginPage from "./features/login/LoginPage";
 import FavoriteRecipesSection from "./features/my-profile/components/sections/FavoriteRecipesSection";
+import SignupPage from "./features/signup/SignupPage";
+import NotFoundPage from "./features/not-found/NotFoundPage";
+import LoginPage from "./features/login/LoginPage";
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
         </Route>
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <ToastContainer position="top-right" autoClose={1000} />
     </BrowserRouter>
