@@ -7,7 +7,7 @@ import FilterGroup from '@/components/common/filter-recipe/FilterGroup';
 import { RecipeList } from './components/RecipeList';
 import { formatCategoryType } from '@/lib/utils';
 import { useSort } from '@/hooks/useSort';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 export default function RecipeListPage() {
 	const {
@@ -26,6 +26,10 @@ export default function RecipeListPage() {
 	} = useRecipeList();
 
 	const { sortBy } = useSort();
+
+	useEffect(() => {
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	}, [categoryType, categoryNames, filterData]);
 
 	const sortedRecipes = useMemo(() => {
 		if (!mappedRecipes || mappedRecipes.length === 0) return mappedRecipes;

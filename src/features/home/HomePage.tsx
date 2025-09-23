@@ -11,6 +11,7 @@ import type { Recipe } from '@/types/TypeRecipe';
 import type { RecipeItemProps } from '@/features/list-recipes/components/RecipeItem';
 import { fetchAllRecipes, fetchFavoriteRecipes } from '@/store/features/recipeAPISlice';
 import { formatTime } from '@/lib/utils';
+import LoadingPage from '../loading/LoadingPage';
 
 export default function HomePage() {
 	const [searchValue, setSearchValue] = useState('');
@@ -117,56 +118,58 @@ export default function HomePage() {
 	return (
 		<div className="min-h-screen">
 			{loading ? (
-				<div>Loading...</div>
-			) : !allRecipes.length ? (
-				<div>No recipes found</div>
+				<LoadingPage />
 			) : (
 				<>
-				<SearchSection
-					title="Fuel your body & soul - find recipes that taste amazing!"
-					backgroundImage="/home.png"
-					searchValue={searchValue}
-					onSearchChange={setSearchValue}
-					onSearch={handleSearch}
-					showBreadcrumbs={false}
-					height="h-120"
-					overlayOpacity={0.3}
-				/>
+					<SearchSection
+						title="Fuel your body & soul - find recipes that taste amazing!"
+						backgroundImage="/home.png"
+						searchValue={searchValue}
+						onSearchChange={setSearchValue}
+						onSearch={handleSearch}
+						showBreadcrumbs={false}
+						height="h-120"
+						overlayOpacity={0.3}
+					/>
 
-				{group1 && (
-					<RecipeList
-						key={group1.name}
-						recipeList={mapToRecipeItemProps(group1.recipes)}
-						layout="1-row-4"
-						categoryName={group1.name}
-						description={group1.description}
-						viewAll={{ show: true, onClick: handleViewAll }}
-						className="my-8 mt-10" /> )}
-				
-				<BlogPost
-					categoryName="Healthy Eating Inspiration"
-					onViewAllClick={() => {}}
-					onRecipeClick={() => {}}
-				/>
+					{group1 && (
+						<RecipeList
+							key={group1.name}
+							recipeList={mapToRecipeItemProps(group1.recipes)}
+							layout="1-row-4"
+							categoryName={group1.name}
+							description={group1.description}
+							viewAll={{ show: true, onClick: handleViewAll }}
+							className="my-8 mt-10"
+						/>
+					)}
 
-				{group2 && (
-					<RecipeList
-					key={group2.name}
-					recipeList={mapToRecipeItemProps(group2.recipes)}
-					layout="1-row-4"
-					categoryName={group2.name}
-					description={group2.description}
-					viewAll={{ show: true, onClick: handleViewAll }}
-					className="my-8 mt-10" /> )}
-				
-				<Preferences
-					steps={preferencesData}
-					onComplete={handleComplete}
-				/>
-				<ShowCase
-					onViewAll={() => {}}
-					onCardClick={() => {}}
-				/>
+					<BlogPost
+						categoryName="Healthy Eating Inspiration"
+						onViewAllClick={() => {}}
+						onRecipeClick={() => {}}
+					/>
+
+					{group2 && (
+						<RecipeList
+							key={group2.name}
+							recipeList={mapToRecipeItemProps(group2.recipes)}
+							layout="1-row-4"
+							categoryName={group2.name}
+							description={group2.description}
+							viewAll={{ show: true, onClick: handleViewAll }}
+							className="my-8 mt-10"
+						/>
+					)}
+
+					<Preferences
+						steps={preferencesData}
+						onComplete={handleComplete}
+					/>
+					<ShowCase
+						onViewAll={() => {}}
+						onCardClick={() => {}}
+					/>
 				</>
 			)}
 		</div>
