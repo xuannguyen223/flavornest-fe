@@ -1,20 +1,17 @@
-import SearchSection from "@/components/common/search-bar/SearchSection";
-import { Preferences } from "./components/Preferences";
-import { preferencesData } from "./components/tempData";
-import { useState, useMemo, useEffect } from "react";
-import { RecipeList } from "../list-recipes/components/RecipeList";
-import { useNavigate } from "react-router-dom";
-import { BlogPost } from "./components/BlogPost";
-import { ShowCase } from "./components/ShowCase";
-import { useAppDispatch, useAppSelector } from "@/hooks/redux";
-import type { Recipe } from "@/types/TypeRecipe";
-import type { RecipeItemProps } from "@/features/list-recipes/components/RecipeItem";
-import {
-  fetchAllRecipes,
-  fetchFavoriteRecipes,
-} from "@/store/features/recipeAPISlice";
-import { formatTime } from "@/lib/utils";
-import LoadingPage from "../loading/LoadingPage";
+import SearchSection from '@/components/common/search-bar/SearchSection';
+import { Preferences } from './components/Preferences';
+import { preferencesData } from './components/tempData';
+import { useState, useMemo, useEffect } from 'react';
+import { RecipeList } from '../list-recipes/components/RecipeList';
+import { useNavigate } from 'react-router-dom';
+import { BlogPost } from './components/BlogPost';
+import { ShowCase } from './components/ShowCase';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
+import type { Recipe } from '@/types/TypeRecipe';
+import type { RecipeItemProps } from '@/features/list-recipes/components/RecipeItem';
+import { fetchAllRecipes, fetchFavoriteRecipes } from '@/store/features/recipeAPISlice';
+import { formatTime } from '@/lib/utils';
+import LoadingPage from '../loading/LoadingPage';
 
 export default function HomePage() {
   const [searchValue, setSearchValue] = useState("");
@@ -128,57 +125,63 @@ export default function HomePage() {
     console.log("User preferences:", selections);
   };
 
-  return (
-    <div className="min-h-screen">
-      {loading ? (
-        <LoadingPage />
-      ) : (
-        <>
-          <SearchSection
-            title="Fuel your body & soul - find recipes that taste amazing!"
-            backgroundImage="/home.png"
-            searchValue={searchValue}
-            onSearchChange={setSearchValue}
-            onSearch={handleSearch}
-            showBreadcrumbs={false}
-            height="h-120"
-            overlayOpacity={0.3}
-          />
+	return (
+		<div className="min-h-screen">
+			{loading ? (
+				<LoadingPage />
+			) : (
+				<>
+					<SearchSection
+						title="Fuel your body & soul - find recipes that taste amazing!"
+						backgroundImage="/home.png"
+						searchValue={searchValue}
+						onSearchChange={setSearchValue}
+						onSearch={handleSearch}
+						showBreadcrumbs={false}
+						height="h-120"
+						overlayOpacity={0.3}
+					/>
 
-          {group1 && (
-            <RecipeList
-              key={group1.name}
-              recipeList={mapToRecipeItemProps(group1.recipes)}
-              layout="1-row-4"
-              categoryName={group1.name}
-              description={group1.description}
-              viewAll={{ show: true, onClick: handleViewAll }}
-              className="my-8 mt-10"
-            />
-          )}
+					{group1 && (
+						<RecipeList
+							key={group1.name}
+							recipeList={mapToRecipeItemProps(group1.recipes)}
+							layout="1-row-4"
+							categoryName={group1.name}
+							description={group1.description}
+							viewAll={{ show: true, onClick: handleViewAll }}
+							className="my-8 mt-10"
+						/>
+					)}
 
-          <BlogPost
-            categoryName="Healthy Eating Inspiration"
-            onViewAllClick={() => {}}
-            onRecipeClick={() => {}}
-          />
+					<BlogPost
+						categoryName="Healthy Eating Inspiration"
+						onViewAllClick={() => {}}
+						onRecipeClick={() => {}}
+					/>
 
-          {group2 && (
-            <RecipeList
-              key={group2.name}
-              recipeList={mapToRecipeItemProps(group2.recipes)}
-              layout="1-row-4"
-              categoryName={group2.name}
-              description={group2.description}
-              viewAll={{ show: true, onClick: handleViewAll }}
-              className="my-8 mt-10"
-            />
-          )}
+					{group2 && (
+						<RecipeList
+							key={group2.name}
+							recipeList={mapToRecipeItemProps(group2.recipes)}
+							layout="1-row-4"
+							categoryName={group2.name}
+							description={group2.description}
+							viewAll={{ show: true, onClick: handleViewAll }}
+							className="my-8 mt-10"
+						/>
+					)}
 
-          <Preferences steps={preferencesData} onComplete={handleComplete} />
-          <ShowCase onViewAll={() => {}} onCardClick={() => {}} />
-        </>
-      )}
-    </div>
-  );
+					<Preferences
+						steps={preferencesData}
+						onComplete={handleComplete}
+					/>
+					<ShowCase
+						onViewAll={() => {}}
+						onCardClick={() => {}}
+					/>
+				</>
+			)}
+		</div>
+	);
 }

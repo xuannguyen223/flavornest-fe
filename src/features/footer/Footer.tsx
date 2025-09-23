@@ -1,62 +1,72 @@
 import FooterLinks from './components/FooterLinks';
-import SubscribeNewsletter from './components/SubscribeNewsletter';
 import SocialIcons from './components/SocialIcons';
 import { footerColumns as staticFooterColumns } from './footer-data';
-import { useAppSelector, useAppDispatch } from "@/hooks/redux";
+import { useAppSelector, useAppDispatch } from '@/hooks/redux';
 import type { FooterColumn, FooterLink } from './footer-data';
 import { useEffect } from 'react';
 import { fetchAllCategories } from '@/store/features/categorySlice';
 import { formatCategoryType } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
 
 export default function Footer() {
+	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 
-	const categoriesByType = useAppSelector((state) => state.category.categoriesByType);
+	const categoriesByType = useAppSelector(state => state.category.categoriesByType);
+	const userId = useAppSelector(state => state.userSlice.profile.userId);
 
-	// Fetch khi component mount
 	useEffect(() => {
 		dispatch(fetchAllCategories());
 	}, [dispatch]);
 
-	// Tạo FooterLink[] từ categories
 	const mainCategoryLinks: FooterLink[] = Object.keys(categoriesByType).map(cat => ({
-		label: formatCategoryType(cat),       
+		label: formatCategoryType(cat),
 		href: `/recipes?categoryType=${cat}`,
 	}));
 
-	// Tạo footerColumns mới, thay cột Main Categories bằng dynamic links
 	const footerColumns: FooterColumn[] = staticFooterColumns.map(col => {
 		if (col.title === 'MAIN CATEGORIES') {
-		  return { ...col, links: mainCategoryLinks };
+			return { ...col, links: mainCategoryLinks };
 		}
 		return col;
 	});
 
 	return (
-		<footer className="w-full bg-neutral-200 text-left p-8">
-			<div className="px-6 py-8">
-				<div className="flex flex-wrap justify-between items-start">
-					{/* 3 cột links */}
+		<footer className="w-full bg-neutral-700 text-left p-8">
+			<div className="pb-8">
+				<div className="flex flex-wrap justify-around items-start">
 					<FooterLinks columns={footerColumns} />
 
-					{/* Subscribe Newsletter + Social Media */}
-					<div className="flex flex-col md:flex-col gap-8">
-						<div className="flex-shrink-0 w-full md:w-auto">
-							<SubscribeNewsletter />
-						</div>
+					<div className="flex flex-col items-end justify-between gap-16">
+						{!userId && (
+							<div className="w-full">
+								<p className="text-right text-neutral-100 text-lg leading-relaxed">
+									Want to save your favorite recipes? <br />
+									<span
+										className="font-semibold underline cursor-pointer"
+										onClick={() => navigate('/login')}>
+										Sign in
+									</span>{' '}
+									or{' '}
+									<span
+										className="font-semibold underline cursor-pointer"
+										onClick={() => navigate('/signup')}>
+										Create an account
+									</span>{' '}
+									to unlock more recipes!
+								</p>
+							</div>
+						)}
 
-						<div className="flex justify-start md:justify-start">
-							<SocialIcons />
-						</div>
+						<SocialIcons />
 					</div>
 				</div>
 
-				{/* Divider + Copyright */}
 				<div className="mt-8">
-					<div className="w-full h-px bg-neutral-500"></div>
+					<div className="w-full h-px bg-neutral-200"></div>
 
 					<div className="mt-4 w-full flex justify-center -mb-12">
-						<span className="text-neutral-700 text-lg leading-none">
+						<span className="text-neutral-200 text-lg leading-none">
 							© 2025 Brand. All rights reserved.
 						</span>
 					</div>

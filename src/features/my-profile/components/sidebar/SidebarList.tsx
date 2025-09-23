@@ -18,9 +18,9 @@ export const MY_PROFILE_NAV = [
 		path: '/my-profile/my-recipes',
 	},
 	{
-		key: 'FAVORITE_RECIPES',
+		key: 'SAVED_RECIPES',
 		label: 'Saved Recipes',
-		path: '/my-profile/favorite-recipes',
+		path: '/my-profile/saved-recipes',
 	},
 ] as const;
 

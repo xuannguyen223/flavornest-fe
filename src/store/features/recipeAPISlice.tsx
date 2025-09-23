@@ -49,16 +49,15 @@ export const fetchAllRecipes = createAsyncThunk('recipes/fetchAll', async () => 
 });
 
 export const fetchUserRecipes = createAsyncThunk<
-  Recipe[],
-  { userId: string },
-  { state: RootState }
+	Recipe[],
+	{ userId: string },
+	{ state: RootState }
 >('recipes/fetchByUserId', async ({ userId }) => {
 	const response = await getUserRecipes(userId);
 	const userRecipesData = response || [];
 
 	if (!userRecipesData.length) return [];
 
-	// Lấy full detail từng recipe
 	const recipePromises = userRecipesData.map((recipe: any) => {
 		const recipeId = recipe.id;
 		if (!recipeId) throw new Error(`Missing recipeId in user recipe: ${JSON.stringify(recipe)}`);
@@ -74,7 +73,6 @@ export const fetchUserRecipes = createAsyncThunk<
 
 	return detailedRecipes as Recipe[];
 });
-
 
 export const fetchRecipesBySearch = createAsyncThunk(
 	'recipes/fetchBySearch',
