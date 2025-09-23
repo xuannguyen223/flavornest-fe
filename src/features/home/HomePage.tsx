@@ -88,6 +88,7 @@ export default function HomePage() {
 	// --- Hàm map Recipe -> RecipeItemProps ---
 	const mapToRecipeItemProps = (recipes: Recipe[]): RecipeItemProps[] =>
 		recipes.map(r => ({
+			authorId: r.authorId,
 			id: r.id,
 			title: r.title,
 			creator: r.author.profile.name,

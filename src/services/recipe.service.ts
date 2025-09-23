@@ -70,7 +70,6 @@ export const getUserRecipes = async (userId: string) => {
 		const response = await axiosInstance.get(`/api/recipe/${userId}/recipes`, {
 			withCredentials: true,
 		});
-		console.log('User Recipes:', response.data);
 		return response.data.data.recipes as Recipe[];
 	} catch (err) {
 		console.error(err);

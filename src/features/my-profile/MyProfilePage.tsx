@@ -1,13 +1,25 @@
 import { Link, Navigate, Outlet, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { MY_PROFILE_NAV } from './components/sidebar/SidebarList';
-import { useSelector } from 'react-redux';
-import type { RootState } from '@/store/store';
+import { fetchUserRecipes } from '@/store/features/recipeAPISlice';
+import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 
 function MyProfilePage() {
 	const location = useLocation();
 	const isBasePath = location.pathname === '/my-profile';
-	const { isAuthenticated } = useSelector((state: RootState) => state.loginSlice);
+
+	const dispatch = useAppDispatch();
+	const isAuthenticated = useAppSelector(state => state.loginSlice.isAuthenticated);
+
+	useEffect(() => {
+		const storedUserId = localStorage.getItem('USER_ID');
+		if (storedUserId && isAuthenticated) {
+		  dispatch(fetchUserRecipes({ userId: storedUserId }))
+			.unwrap()
+			.catch(err => console.error(err));
+		}
+	  }, [dispatch, isAuthenticated]);
 
 	if (!isAuthenticated) {
 		return (

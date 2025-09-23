@@ -12,6 +12,7 @@ export default function RecipeRecommend({ recipes }: RecipeRecommendProps) {
 	const mappedRecipes: RecipeItemProps[] = useMemo(
 		() =>
 			recipes.map(r => ({
+				authorId: r.authorId,
 				id: r.id,
 				title: r.title,
 				creator: r.author.profile.name,
