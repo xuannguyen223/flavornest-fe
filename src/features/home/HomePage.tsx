@@ -12,6 +12,7 @@ import type { RecipeItemProps } from '@/features/list-recipes/components/RecipeI
 import { fetchAllRecipes, fetchFavoriteRecipes } from '@/store/features/recipeAPISlice';
 import { formatTime } from '@/lib/utils';
 import LoadingPage from '../loading/LoadingPage';
+import { RecipeWeek } from './components/RecipeWeek';
 
 export default function HomePage() {
   const [searchValue, setSearchValue] = useState("");
@@ -128,7 +129,7 @@ export default function HomePage() {
   const handleComplete = (selections: Record<number, string[]>) => {
     console.log("User preferences:", selections);
   };
-
+  
 	return (
 		<div className="min-h-screen">
 			{loading ? (
@@ -175,6 +176,8 @@ export default function HomePage() {
 							className="my-8 mt-10"
 						/>
 					)}
+
+					<RecipeWeek recipe={recipeOfTheWeek} />
 
 					<Preferences
 						steps={preferencesData}
