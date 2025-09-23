@@ -1,8 +1,9 @@
-import { useState, useEffect, useMemo } from 'react';
-import { Star } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useAppSelector } from '@/hooks/redux';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useMemo } from "react";
+import { Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useAppDispatch, useAppSelector } from "@/hooks/redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { handleRedirectPath } from "@/store/features/login/loginSlice";
 
 interface ReviewsRatingProps {
   rating: number;
@@ -20,7 +21,7 @@ export default function ReviewsRating({
   avatarUrl,
   onSubmitRating,
   hasReviewed,
-  recipeId,
+  // recipeId,
   userRating,
 }: ReviewsRatingProps) {
   const [currentRating, setCurrentRating] = useState<number>(userRating); // Khởi tạo từ prop userRating
@@ -36,6 +37,8 @@ export default function ReviewsRating({
   );
   const user = useAppSelector((state) => state.userSlice.profile);
   const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useAppDispatch();
 
   const initials = useMemo(() => {
     const parts = user.name.trim().split(" ").filter(Boolean);
@@ -90,14 +93,24 @@ export default function ReviewsRating({
           <p className="text-center text-neutral-700 text-lg">
             <span
               className="font-semibold underline cursor-pointer"
-              onClick={() => navigate('/login')}>
+              onClick={() => {
+                navigate("/login");
+                dispatch(handleRedirectPath(location.pathname));
+              }}
+            >
               Login
-            </span> {' '} or {' '}
+            </span>{" "}
+            or
             <span
               className="font-semibold underline cursor-pointer"
-              onClick={() => navigate('/signup')}>
+              onClick={() => {
+                navigate("/signup");
+                dispatch(handleRedirectPath(location.pathname));
+              }}
+            >
               Signup
-            </span>{' '} to rate this Recipe!
+            </span>{" "}
+            to rate this Recipe!
           </p>
         </div>
       ) : (
@@ -114,10 +127,10 @@ export default function ReviewsRating({
             ) : (
               <span
                 aria-hidden
-                className='grid place-items-center w-4/5 h-4/5 rounded-full 
+                className="grid place-items-center w-4/5 h-4/5 rounded-full 
                   bg-neutral-200 size-16 sm:size-20 md:size-24 
-                  text-neutral-700 text-4xl font-medium cursor-pointer'
-                onClick={() => navigate('/my-profile')}
+                  text-neutral-700 text-4xl font-medium cursor-pointer"
+                onClick={() => navigate("/my-profile")}
               >
                 {initials}
               </span>
@@ -127,8 +140,8 @@ export default function ReviewsRating({
             <div className="py-2 flex-1 text-left">
               <div className="font-medium text-neutral-700 mb-2">
                 {hasReviewed
-                  ? 'You rated this recipe (you can update it):'
-                  : 'Rate this recipe:'}
+                  ? "You rated this recipe (you can update it):"
+                  : "Rate this recipe:"}
               </div>
               <div className="flex items-center gap-10">
                 <div className="flex items-center gap-2">
@@ -157,7 +170,11 @@ export default function ReviewsRating({
                   disabled={currentRating === 0 || isSubmitting}
                   className="px-5 py-3 rounded-md bg-neutral-700 text-lg text-white font-medium hover:bg-neutral-500 disabled:bg-neutral-300"
                 >
-                  {isSubmitting ? 'Submitting...' : hasReviewed ? 'Update' : 'Submit'}
+                  {isSubmitting
+                    ? "Submitting..."
+                    : hasReviewed
+                    ? "Update"
+                    : "Submit"}
                 </Button>
               </div>
             </div>

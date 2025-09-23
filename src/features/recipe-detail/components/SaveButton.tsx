@@ -1,7 +1,7 @@
 import { Bookmark } from "lucide-react";
-import { cn } from '@/lib/utils';
-import { useNavigate } from "react-router-dom";
-import { toast } from 'react-toastify';
+import { cn } from "@/lib/utils";
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   addToFavorites,
@@ -9,6 +9,7 @@ import {
   selectIsRecipeFavorite,
   toggleFavoriteLocal,
 } from "@/store/features/recipeAPISlice";
+import { handleRedirectPath } from "@/store/features/login/loginSlice";
 
 export interface SaveButtonProps {
   id: string;
@@ -25,13 +26,16 @@ export default function SaveButton({ className, id }: SaveButtonProps) {
     (state) => state.loginSlice.isAuthenticated
   );
   const navigate = useNavigate();
-  
+  const location = useLocation();
+
   const handleClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
 
     if (!isAuthenticated || !userId) {
       toast.error("Login or SignUp to save this Recipe!");
       navigate("/login");
+      dispatch(handleRedirectPath(location.pathname));
+
       return;
     }
 
@@ -57,7 +61,7 @@ export default function SaveButton({ className, id }: SaveButtonProps) {
       onClick={handleClick}
       aria-pressed={isFavorite}
       className={cn(
-        'h-[53px] rounded-full border px-5 w-full sm:w-auto h-8 sm:h-8 lg:h-10 xl:h-14 font-medium text-sm sm:text-base lg:text-lg xl:text-xl inline-flex items-center gap-2 transition-colors', // base
+        "h-[53px] rounded-full border px-5 w-full sm:w-auto h-8 sm:h-8 lg:h-10 xl:h-14 font-medium text-sm sm:text-base lg:text-lg xl:text-xl inline-flex items-center gap-2 transition-colors", // base
         "border-neutral-800 text-neutral-800", // default state
         "hover:bg-neutral-800 hover:text-white hover:border-neutral-50 transition", // hover
         isFavorite && "bg-neutral-800 text-white border-white", // active state
@@ -75,4 +79,3 @@ export default function SaveButton({ className, id }: SaveButtonProps) {
     </button>
   );
 }
-

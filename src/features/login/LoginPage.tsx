@@ -4,19 +4,26 @@ import { loginValidationSchema } from "../../components/common/auth/utils/valida
 import InputForm from "@/components/common/auth/InputField";
 import type { LoginFormValues } from "@/components/common/auth/type/authInterface";
 import InputPasswordField from "@/components/common/auth/PasswordField";
-import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "@/store/store";
-import { handleLoading } from "@/store/features/login/loginSlice";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/store/store";
+import {
+  handleLoading,
+  handleRedirectPath,
+} from "@/store/features/login/loginSlice";
 import { handleLoginAction } from "@/store/features/login/loginAction";
 import SubmitButton from "@/components/common/auth/SubmitButton";
 import { toast } from "react-toastify";
+import { useAppDispatch } from "@/hooks/redux";
 
 const LoginPage = () => {
   const submitLoading = useSelector(
     (state: RootState) => state.loginSlice.loading
   );
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const redirectPath = useSelector(
+    (state: RootState) => state.loginSlice.redirectPath
+  );
 
   const formik = useFormik<LoginFormValues>({
     initialValues: {
@@ -28,9 +35,10 @@ const LoginPage = () => {
       dispatch(handleLoading(true));
       const success = await dispatch(handleLoginAction(values));
       if (success) {
-        toast.info("You will be redirected to the homepage!");
+        toast.info("You will be redirected!");
         setTimeout(() => {
-          navigate("/");
+          dispatch(handleRedirectPath("/"));
+          navigate(redirectPath);
         }, 500);
       }
     },
