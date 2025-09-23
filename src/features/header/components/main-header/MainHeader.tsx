@@ -5,11 +5,12 @@ import AuthButton from "./action-buttons/AuthButton";
 import UserMenu from "./action-buttons/UserMenu";
 import "../../style.css";
 import { Categories } from "../categories";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/hooks/redux";
 import { useState } from "react";
 import { handleLogOutFromBE } from "@/store/features/user/userAction";
 import { toast } from "react-toastify";
+import { handleRedirectPath } from "@/store/features/login/loginSlice";
 
 export default function MainHeader() {
   const dispatch = useAppDispatch();
@@ -25,16 +26,20 @@ export default function MainHeader() {
   const displayName = userProfile.name || "Name";
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [menuOpen, setMenuOpen] = useState(false);
-
-  const handleLogin = () => navigate("/login");
+  const handleLogin = () => {
+    navigate("/login");
+    dispatch(handleRedirectPath(location.pathname));
+  };
   const handleAddRecipes = () => {
     if (isLoggedIn) {
       navigate("/add-recipe");
     } else {
       toast.error("Login or SignUp to add a Recipe!");
       navigate("/login");
+      dispatch(handleRedirectPath(location.pathname));
     }
   };
   const handleLogout = () => {
