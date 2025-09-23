@@ -8,6 +8,7 @@ import {
 	addFavoriteRecipe,
 	removeFavoriteRecipe,
 	getFavoriteRecipes,
+	getUserRecipes,
 } from '@/services/recipe.service';
 import type { RootState } from '../store';
 // Contains API for Recipe Service
@@ -17,6 +18,7 @@ export interface RecipeState {
 	recipesByCategory: Record<string, Recipe[]>;
 	recipesByCategoryType: Record<string, Recipe[]>;
 	allRecipes: Recipe[];
+	userRecipes: Recipe[];
 	searchRecipes: Recipe[];
 	favoriteRecipesList: Recipe[];
 	loading: boolean;
@@ -28,6 +30,7 @@ const initialState: RecipeState = {
 	recipesByCategory: {},
 	recipesByCategoryType: {},
 	allRecipes: [],
+	userRecipes: [],
 	searchRecipes: [],
 	favoriteRecipesList: [],
 	loading: false,
@@ -44,6 +47,14 @@ export const fetchAllRecipes = createAsyncThunk('recipes/fetchAll', async () => 
 	const res = await getListRecipes();
 	return res as Recipe[];
 });
+
+export const fetchUserRecipes = createAsyncThunk(
+	'recipes/fetchByUserId',
+	async ({ userId }: { userId: string }) => {
+		const res = await getUserRecipes(userId);
+		return res as Recipe[];
+	},
+);
 
 export const fetchRecipesBySearch = createAsyncThunk(
 	'recipes/fetchBySearch',
@@ -90,43 +101,42 @@ export const submitRecipeRating = createAsyncThunk<
 });
 
 export const fetchFavoriteRecipes = createAsyncThunk<
-  Recipe[], 
-  { userId: string }, 
-  { state: RootState } 
+	Recipe[],
+	{ userId: string },
+	{ state: RootState }
 >('recipes/fetchFavoriteRecipes', async ({ userId }) => {
-
 	const response = await getFavoriteRecipes(userId);
-    // Xử lý cấu trúc response
-    const favoritesData = response.data?.favorites || response.favorites || [];
+	// Xử lý cấu trúc response
+	const favoritesData = response.data?.favorites || response.favorites || [];
 
-    // Nếu không có favorites, trả về mảng rỗng
-    if (!favoritesData.length) {
-      return [];
-    }
+	// Nếu không có favorites, trả về mảng rỗng
+	if (!favoritesData.length) {
+		return [];
+	}
 
-    // Lấy danh sách recipeId và gọi getRecipeById cho mỗi id
-    const recipePromises = favoritesData.map((favorite: any) => {
-      const recipeId = favorite.recipeId || favorite.recipe?.id;
-      if (!recipeId) {
-        throw new Error(`Missing recipeId in favorite: ${JSON.stringify(favorite)}`);
-      }
-      return getRecipeById(recipeId);
-    });
+	// Lấy danh sách recipeId và gọi getRecipeById cho mỗi id
+	const recipePromises = favoritesData.map((favorite: any) => {
+		const recipeId = favorite.recipeId || favorite.recipe?.id;
+		if (!recipeId) {
+			throw new Error(`Missing recipeId in favorite: ${JSON.stringify(favorite)}`);
+		}
+		return getRecipeById(recipeId);
+	});
 
-    const recipeResponses = await Promise.all(recipePromises);
+	const recipeResponses = await Promise.all(recipePromises);
 
-    // Ánh xạ response thành mảng Recipe[]
-	const recipes = recipeResponses.map((response) => {
+	// Ánh xạ response thành mảng Recipe[]
+	const recipes = recipeResponses.map(response => {
 		// Kiểm tra cấu trúc response: { data: { recipe: {...} } } hoặc { recipe: {...} }
 		if (response.data?.recipe) {
-		  return response.data.recipe;
+			return response.data.recipe;
 		} else if (response.recipe) {
-		  return response.recipe;
+			return response.recipe;
 		} else {
-		  return response; // Fallback nếu response đã là Recipe
+			return response; // Fallback nếu response đã là Recipe
 		}
 	});
-    return recipes;
+	return recipes;
 });
 
 export const addToFavorites = createAsyncThunk<
@@ -184,6 +194,19 @@ const recipeAPISlice = createSlice({
 			.addCase(fetchRecipeById.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.error.message ?? 'Error';
+			})
+
+			.addCase(fetchUserRecipes.pending, state => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(fetchUserRecipes.fulfilled, (state, action: PayloadAction<Recipe[]>) => {
+				state.loading = false;
+				state.userRecipes = action.payload;
+			})
+			.addCase(fetchUserRecipes.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error.message ?? 'Failed to fetch user recipes';
 			})
 
 			.addCase(fetchRecipesByCategoryType.pending, state => {

@@ -1,18 +1,21 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { useSelector, useDispatch } from "react-redux";
-import SearchBar from "@/components/common/search-bar/SearchBar";
-import { RecipeList } from "@/features/list-recipes/components/RecipeList";
-import { RecipeSort } from "@/features/list-recipes/components/RecipeSort";
-import Sections from "./Sections";
-import type { RootState, AppDispatch } from "@/store/store";
-import { fetchFavoriteRecipes } from "@/store/features/recipeAPISlice";
+import { useSelector, useDispatch } from 'react-redux';
+import SearchBar from '@/components/common/search-bar/SearchBar';
+import { RecipeList } from '@/features/list-recipes/components/RecipeList';
+import { RecipeSort } from '@/features/list-recipes/components/RecipeSort';
+import Sections from './Sections';
+import type { RootState, AppDispatch } from '@/store/store';
+import { fetchFavoriteRecipes } from '@/store/features/recipeAPISlice';
 import { useAppSelector } from '@/hooks/redux';
 import { useSort } from '@/hooks';
-import { formatTime } from "@/lib/utils";
+import { formatTime } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
 
 function FavoriteRecipesSection() {
+	const navigate = useNavigate();
+
 	const dispatch = useDispatch<AppDispatch>();
 	const { favoriteRecipesList, loading } = useSelector((state: RootState) => state.recipeAPI);
 	const userProfile = useAppSelector(state => state.userSlice.profile);
@@ -77,7 +80,6 @@ function FavoriteRecipesSection() {
 		return sorted;
 	}, [favoriteRecipesForDisplay, searchQuery, sortBy]);
 
-
 	if (!isAuthenticated) {
 		return (
 			<Sections title="Favorite Recipes">
@@ -113,8 +115,15 @@ function FavoriteRecipesSection() {
 					recipeList={sortedRecipes}
 				/>
 			) : (
-				<div className="text-center text-gray-500 py-40">
-					You haven't added any favorite recipes yet.
+				<div className="text-center text-gray-500 py-20">
+					You don’t have any favorite recipes yet.
+					<br /> Start exploring{' '}
+					<span
+						className="font-semibold cursor-pointer text-amber-500"
+						onClick={() => navigate('/recipes')}>
+						recipes
+					</span>{' '}
+					and save the ones that inspire you — your personal cookbook begins here!
 				</div>
 			)}
 		</Sections>
