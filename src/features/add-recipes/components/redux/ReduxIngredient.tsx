@@ -12,24 +12,18 @@ type ReduxIngredientRowProps = {
 };
 
 const UNITS = [
-	'cup',
+	'(none)',
 	'cups',
-	'tbsp',
-	'tsp',
-	'oz',
-	'lb',
-	'g',
-	'kg',
-	'ml',
-	'l',
-	'piece',
-	'pieces',
-	'clove',
-	'cloves',
-	'can',
-	'cans',
-	'bunch',
+	'dash',
+	'grams (g)',
+	'kilograms (kg)',
+	'litres (L)',
+	'millilitres (ml)',
+	'kgounces (oz)',
 	'pinch',
+	'pints (pt)',
+	'teaspoons (tsp)',
+	'tablespoons (tbsp)',
 ];
 
 export function ReduxIngredient({
@@ -53,7 +47,7 @@ export function ReduxIngredient({
 			<div
 				{...dragHandleProps}
 				className="cursor-grab flex-shrink-0">
-				<img src="public/re-order icon.svg" />
+				<img src="/re-order icon.svg" />
 			</div>
 
 			<div className="flex flex-col sm:flex-row gap-2 sm:gap-3 flex-1 min-w-0">
@@ -92,7 +86,7 @@ export function ReduxIngredient({
 				onClick={onRemove}
 				className="h-8 w-8 p-0 flex-shrink-0 flex items-center justify-center">
 				<img
-					src="public/remove-icon.svg"
+					src="/remove-icon.svg"
 					alt="Remove ingredient"
 				/>
 			</Button>
