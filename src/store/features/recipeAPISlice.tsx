@@ -33,7 +33,7 @@ const initialState: RecipeState = {
 	userRecipes: [],
 	searchRecipes: [],
 	favoriteRecipesList: [],
-	loading: false,
+	loading: true,
 	error: null,
 };
 
@@ -66,7 +66,6 @@ export const fetchUserRecipes = createAsyncThunk<
 	});
 
 	const recipeResponses = await Promise.all(recipePromises);
-	console.log("response", recipeResponses)
 	const detailedRecipes = recipeResponses.map(res => {
 		if (res.data?.recipe) return res.data.recipe;
 		if (res.recipe) return res.recipe;

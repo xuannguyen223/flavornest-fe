@@ -132,8 +132,6 @@ export default function HomePage() {
     <div className="min-h-screen">
       {loading ? (
         <LoadingPage />
-      ) : !allRecipes.length ? (
-        <div>No recipes found</div>
       ) : (
         <>
           <SearchSection
