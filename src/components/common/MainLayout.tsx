@@ -11,10 +11,8 @@ export default function MainLayout() {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     const checkAuth = async () => {
-      const isChecked = await dispatch(checkLogin());
-      if (isChecked) {
-        setLoading(false);
-      }
+      await dispatch(checkLogin());
+      setLoading(false);
     };
     checkAuth();
   }, []);
