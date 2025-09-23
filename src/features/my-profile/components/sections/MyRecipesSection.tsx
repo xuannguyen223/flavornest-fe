@@ -2,35 +2,42 @@ import SearchBar from '@/components/common/search-bar/SearchBar';
 import { RecipeList } from '@/features/list-recipes/components/RecipeList';
 import { RecipeSort } from '@/features/list-recipes/components/RecipeSort';
 import Sections from '@/features/my-profile/components/sections/Sections';
-import { useAppSelector } from '@/hooks/redux';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import { useSort } from '@/hooks/useSort';
 import { formatTime } from '@/lib/utils';
 import { fetchUserRecipes } from '@/store/features/recipeAPISlice';
-import type { AppDispatch, RootState } from '@/store/store';
 import { useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 function MyRecipesSection() {
 	const navigate = useNavigate();
 
-	const dispatch = useDispatch<AppDispatch>();
-	const { userRecipes, loading } = useSelector((state: RootState) => state.recipeAPI);
+	const dispatch = useAppDispatch();
+	const userRecipes= useAppSelector(state => state.recipeAPI.userRecipes);
+	const loading = useAppSelector(state => state.recipeAPI.loading);
+	const error = useAppSelector(state => state.recipeAPI.error);
 
-	const userProfile = useAppSelector(state => state.userSlice.profile);
-	const userId = userProfile.userId;
+	const storedUserId = localStorage.getItem('USER_ID');
+	const userId = storedUserId;
 	const isAuthenticated = useAppSelector(state => state.loginSlice.isAuthenticated);
 
 	const { sortBy } = useSort();
 	const [searchQuery, setSearchQuery] = useState('');
 
+	console.log('userRecipes from Redux:', userRecipes);
+
 	useEffect(() => {
+		// Nếu chưa fetch và đã xác thực, thì dispatch fetch
 		if (isAuthenticated && userId) {
-			dispatch(fetchUserRecipes({ userId }));
+		  dispatch(fetchUserRecipes({ userId }))
+			.unwrap()
+			.catch(error => console.error('Failed to fetch user recipes:', error));
 		}
-	}, [dispatch, userId, isAuthenticated]);
+	  }, [dispatch, isAuthenticated, userId]);
+
 
 	const userRecipesForDisplay = userRecipes.map(recipe => ({
+		authorId: recipe.authorId,
 		id: recipe.id,
 		title: recipe.title,
 		creator: recipe.author.profile.name,
@@ -78,19 +85,20 @@ function MyRecipesSection() {
 		return sorted;
 	}, [sortBy, searchQuery]);
 
-	if (!isAuthenticated) {
-		return (
-			<Sections title="Favorite Recipes">
-				<div className="text-center py-8 text-gray-500">Please log in to view your recipes.</div>
-			</Sections>
-		);
-	}
-
 	if (loading) {
 		return (
-			<Sections title="Favorite Recipes">
-				<div className="text-center py-8 text-gray-500">Loading your recipes...</div>
-			</Sections>
+		  <Sections title="My Recipes">
+			<div className="text-center py-8 text-gray-500">Loading your recipes...</div>
+		  </Sections>
+		);
+	}
+	  
+	if (error) {
+		return (
+			<div className="flex-1 flex flex-col items-center justify-center py-16">
+			<h3 className="text-2xl font-semibold text-gray-900 mb-2">Error loading recipe</h3>
+			<p className="text-gray-600 text-lg">{error}</p>
+			</div>
 		);
 	}
 
@@ -105,23 +113,25 @@ function MyRecipesSection() {
 				/>
 				<RecipeSort className="p-0" />
 			</div>
-			{sortedRecipes.length > 0 ? (
+			{/* Chỉ hiển thị message 'no recipes' khi đã fetch xong */}
+			{!loading && sortedRecipes.length > 0 ? (
 				<RecipeList
 					layout="list-rows-3"
 					recipeList={sortedRecipes.slice(0, 10)}
 				/>
-			) : (
+			) : !loading ? (
 				<div className="text-center text-gray-500 py-20">
 					You haven’t created any recipes yet.
 					<br /> Get started by{' '}
 					<span
 						className="font-semibold cursor-pointer text-amber-500"
-						onClick={() => navigate('/add-recipe')}>
+						onClick={() => navigate('/add-recipe')}
+					>
 						adding your first recipe
 					</span>{' '}
 					and share your creativity!
 				</div>
-			)}
+			) : null}
 		</Sections>
 	);
 }

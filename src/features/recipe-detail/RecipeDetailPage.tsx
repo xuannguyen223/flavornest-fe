@@ -124,39 +124,36 @@ export default function RecipeDetailPage() {
 		});
 	}
 
-	if (loading && !recipe) {
+	if (loading) {
 		return (
 		  <div className="flex-1 flex flex-col items-center justify-center py-16">
 			<p className="text-xl text-gray-700">Loading recipe details...</p>
 		  </div>
 		);
-	}
-	
-
-	if (error || !recipe) {
+	  }
+	  
+	if (error) {
 		return (
 			<div className="flex-1 flex flex-col items-center justify-center py-16">
-			<div className="text-center">
-				<h3 className="text-2xl font-semibold text-gray-900 mb-2">
-					{error ? 'Error loading recipe' : 'Recipe not found'}
-				</h3>
-				<p className="text-gray-600 text-lg">
-					{error || 'We could not find the recipe you are looking for.'}
-				</p>
-				<p className="text-gray-500 text-sm mt-2">
-					Try searching with different keywords or browsing other recipes.
-				</p>
-				<Link
-					to="/"
-					className="mt-4 inline-block px-6 py-2 bg-neutral-700 text-white rounded hover:bg-neutral-300 transition"
-				>
-				Go to Homepage
-				</Link>
-			</div>
+			<h3 className="text-2xl font-semibold text-gray-900 mb-2">Error loading recipe</h3>
+			<p className="text-gray-600 text-lg">{error}</p>
 			</div>
 		);
 	}
-
+	  
+	if (!recipe) {
+		return (
+		  <div className="flex-1 flex flex-col items-center justify-center py-16">
+			<h3 className="text-2xl font-semibold text-gray-900 mb-2">Recipe not found</h3>
+			<p className="text-gray-600 text-lg">
+			  We could not find the recipe you are looking for.
+			</p>
+			<Link to="/" className="mt-4 px-6 py-2 bg-neutral-700 text-white rounded">
+			  Go to Homepage
+			</Link>
+		  </div>
+		);
+	}
 
 	const createdDate = new Date(recipe.createdAt).toLocaleDateString('en-GB', {
 		day: '2-digit',

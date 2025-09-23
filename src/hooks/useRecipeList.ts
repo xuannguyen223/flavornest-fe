@@ -96,6 +96,7 @@ export function useRecipeList() {
 	const mappedRecipes: RecipeItemProps[] = useMemo(
 		() =>
 			displayRecipes.map(r => ({
+				authorId: r.authorId, 
 				id: r.id,
 				title: r.title,
 				creator: r.author.profile.name,
