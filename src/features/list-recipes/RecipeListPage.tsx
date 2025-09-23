@@ -8,6 +8,7 @@ import { RecipeList } from './components/RecipeList';
 import { formatCategoryType } from '@/lib/utils';
 import { useSort } from '@/hooks/useSort';
 import { useMemo } from 'react';
+import { useAppSelector } from '@/hooks/redux';
 
 export default function RecipeListPage() {
 	const {
@@ -18,12 +19,13 @@ export default function RecipeListPage() {
 		setSearchInput,
 		handleSearch,
 		mappedRecipes,
-		loading,
 		searchValue,
 		filterData,
 		handleRecipeClick,
 		handleFilterChange,
 	} = useRecipeList();
+
+	const loading = useAppSelector(state => state.recipeAPI.loading);
 
 	const { sortBy } = useSort();
 
@@ -94,32 +96,46 @@ export default function RecipeListPage() {
 						initialSelected={categoryNames}
 					/>
 
-					{loading ? (
-						<div className="h-[200px] w-full mx-auto flex flex-col items-center justify-center">
-							<div className="text-center">
-								<p className="text-2xl text-gray-900 mb-2">Loading...</p>
-							</div>
-						</div>
-					) : sortedRecipes && sortedRecipes.length > 0 ? (
-						<RecipeList
-							recipeList={sortedRecipes}
-							layout="default"
-							onRecipeClick={handleRecipeClick}
-						/>
-					) : (
-						<div className="h-[200px] w-full mx-auto flex flex-col items-center justify-center">
-							<div className="text-center">
-								<h3 className="text-2xl font-semibold text-gray-900 mb-2">No Results Found</h3>
-								<p className="text-gray-600 text-lg">
-									There are no results from "
-									{searchValue || categoryNames.join(', ') || formatCategoryType(categoryType)}"
-								</p>
-								<p className="text-gray-500 text-sm mt-2">
-									Try searching with different keywords or browse all recipes
-								</p>
-							</div>
-						</div>
-					)}
+					{(() => {
+						if (loading) {
+							return (
+								<div className="h-[200px] w-full mx-auto flex flex-col items-center justify-center">
+									<div className="text-center">
+										<p className="text-xl text-gray-700 mb-2">Loading recipes...</p>
+									</div>
+								</div>
+							);
+
+							
+						}
+
+						if (sortedRecipes && sortedRecipes.length > 0) {
+							return (
+								<RecipeList
+									recipeList={sortedRecipes}
+									layout="default"
+									onRecipeClick={handleRecipeClick}
+								/>
+							);
+						}
+
+						if (!sortedRecipes) {
+							return (
+								<div className="h-[200px] w-full mx-auto flex flex-col items-center justify-center">
+									<div className="text-center">
+										<h3 className="text-2xl font-semibold text-gray-900 mb-2">No Results Found</h3>
+										<p className="text-gray-600 text-lg">
+											There are no results from "
+											{searchValue || categoryNames.join(', ') || formatCategoryType(categoryType)}"
+										</p>
+										<p className="text-gray-500 text-sm mt-2">
+											Try searching with different keywords or browse all recipes
+										</p>
+									</div>
+								</div>
+							);
+						}
+					})()}
 				</div>
 			</div>
 		</div>
