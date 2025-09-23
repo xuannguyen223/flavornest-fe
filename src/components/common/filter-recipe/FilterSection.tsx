@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { FilterOption } from './FilterGroup';
 
 export interface FilterSectionProps {
@@ -12,6 +12,12 @@ export interface FilterSectionProps {
 
 function FilterSection({ title, options, selected, onSelect }: FilterSectionProps) {
 	const [open, setOpen] = useState(false);
+
+	// Kiểm tra xem có option nào trong section này được chọn hay không
+    useEffect(() => {
+        const hasSelectedOption = options.some(option => selected.includes(option.label));
+        setOpen(hasSelectedOption);
+    }, [selected, options]);
 
 	const toggleFilter = () => setOpen(!open);
 
@@ -50,7 +56,7 @@ function FilterSection({ title, options, selected, onSelect }: FilterSectionProp
 								type="checkbox"
 								checked={selected.includes(option.label)}
 								onChange={() => onSelect(option.label)}
-								className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+								className="h-4 w-4 text-neutral-600 rounded border-gray-300 focus:ring-neutral-500"
 							/>
 						</label>
 					))}

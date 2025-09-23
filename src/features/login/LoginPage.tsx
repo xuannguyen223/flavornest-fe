@@ -9,6 +9,7 @@ import type { AppDispatch, RootState } from "@/store/store";
 import { handleLoading } from "@/store/features/login/loginSlice";
 import { handleLoginAction } from "@/store/features/login/loginAction";
 import SubmitButton from "@/components/common/auth/SubmitButton";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const submitLoading = useSelector(
@@ -27,8 +28,9 @@ const LoginPage = () => {
       dispatch(handleLoading(true));
       const success = await dispatch(handleLoginAction(values));
       if (success) {
+        toast.info("You will be redirected to the homepage!");
         setTimeout(() => {
-          navigate(-1);
+          navigate("/");
         }, 500);
       }
     },

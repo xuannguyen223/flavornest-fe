@@ -18,7 +18,7 @@ export default function RecipeListPage() {
 		setSearchInput,
 		handleSearch,
 		mappedRecipes,
-		hasNoResults,
+		loading,
 		searchValue,
 		filterData,
 		handleRecipeClick,
@@ -98,7 +98,19 @@ export default function RecipeListPage() {
 						initialSelected={categoryNames}
 					/>
 
-					{hasNoResults ? (
+					{loading ? (
+						<div className="h-[200px] w-full mx-auto flex flex-col items-center justify-center">
+							<div className="text-center">
+								<p className="text-2xl text-gray-900 mb-2">Loading...</p>
+							</div>
+						</div>
+					) : sortedRecipes && sortedRecipes.length > 0 ? (
+						<RecipeList
+							recipeList={sortedRecipes}
+							layout="default"
+							onRecipeClick={handleRecipeClick}
+						/>
+					) : (
 						<div className="h-[200px] w-full mx-auto flex flex-col items-center justify-center">
 							<div className="text-center">
 								<h3 className="text-2xl font-semibold text-gray-900 mb-2">No Results Found</h3>
@@ -111,12 +123,6 @@ export default function RecipeListPage() {
 								</p>
 							</div>
 						</div>
-					) : (
-						<RecipeList
-							recipeList={sortedRecipes}
-							layout="default"
-							onRecipeClick={handleRecipeClick}
-						/>
 					)}
 				</div>
 			</div>
