@@ -1,6 +1,5 @@
 import Footer from "@/features/footer/Footer";
 import MainHeader from "@/features/header/components/main-header/MainHeader";
-import SuspenseWrapper from "@/features/loading/SuspenseWrapper";
 import { useAppDispatch } from "@/hooks/redux";
 import { checkLogin } from "@/store/features/login/loginAction";
 import { useEffect } from "react";
@@ -13,13 +12,11 @@ export default function MainLayout() {
   }, []);
   return (
     <div className="flex flex-col min-h-screen mx-auto w-full">
-      <SuspenseWrapper>
-        <MainHeader />
-        <main className="flex-1">
-          <Outlet />
-        </main>
-        <Footer />
-      </SuspenseWrapper>
+      <MainHeader />
+      <main className="flex-1">
+        <Outlet />
+      </main>
+      <Footer />
     </div>
   );
 }
