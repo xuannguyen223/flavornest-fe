@@ -1,20 +1,21 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import SearchBar from '@/components/common/search-bar/SearchBar';
-import { RecipeList } from '@/features/list-recipes/components/RecipeList';
-import { RecipeSort } from '@/features/list-recipes/components/RecipeSort';
-import Sections from './Sections';
-import type { RootState, AppDispatch } from '@/store/store';
-import { fetchFavoriteRecipes } from '@/store/features/recipeAPISlice';
-import { useAppSelector } from '@/hooks/redux';
-import { useSort } from '@/hooks';
-import { formatTime } from '@/lib/utils';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useMemo, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import SearchBar from "@/components/common/search-bar/SearchBar";
+import { RecipeList } from "@/features/list-recipes/components/RecipeList";
+import { RecipeSort } from "@/features/list-recipes/components/RecipeSort";
+import Sections from "./Sections";
+import type { RootState, AppDispatch } from "@/store/store";
+import { fetchFavoriteRecipes } from "@/store/features/recipeAPISlice";
+import { useAppSelector } from "@/hooks/redux";
+import { useSort } from "@/hooks";
+import { formatTime } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
+import LoadingPage from "@/features/loading/LoadingPage";
 
 function FavoriteRecipesSection() {
-	const navigate = useNavigate();
+  const navigate = useNavigate();
 
 	const dispatch = useDispatch<AppDispatch>();
 	const { favoriteRecipesList, loading } = useSelector((state: RootState) => state.recipeAPI);
@@ -23,8 +24,8 @@ function FavoriteRecipesSection() {
 	const userId = userProfile.userId;
 	const isAuthenticated = useAppSelector(state => state.loginSlice.isAuthenticated);
 
-	const { sortBy } = useSort();
-	const [searchQuery, setSearchQuery] = useState('');
+  const { sortBy } = useSort();
+  const [searchQuery, setSearchQuery] = useState("");
 
 	useEffect(() => {
 		if (isAuthenticated && userId) {
@@ -48,43 +49,43 @@ function FavoriteRecipesSection() {
 		createdAt: recipe.createdAt,
 	}));
 
-	const sortedRecipes = useMemo(() => {
-		if (!favoriteRecipesForDisplay || favoriteRecipesForDisplay.length === 0)
-			return favoriteRecipesForDisplay;
+  const sortedRecipes = useMemo(() => {
+    if (!favoriteRecipesForDisplay || favoriteRecipesForDisplay.length === 0)
+      return favoriteRecipesForDisplay;
 
-		let filteredRecipes = favoriteRecipesForDisplay;
-		if (searchQuery.trim()) {
-			filteredRecipes = favoriteRecipesForDisplay.filter(recipe => {
-				const query = searchQuery.toLowerCase();
-				return recipe.title?.toLowerCase().includes(query);
-			});
-		}
+    let filteredRecipes = favoriteRecipesForDisplay;
+    if (searchQuery.trim()) {
+      filteredRecipes = favoriteRecipesForDisplay.filter((recipe) => {
+        const query = searchQuery.toLowerCase();
+        return recipe.title?.toLowerCase().includes(query);
+      });
+    }
 
-		const sorted = [...filteredRecipes].sort((a, b) => {
-			switch (sortBy) {
-				case 'newest': {
-					const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-					const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-					return dateB - dateA;
-				}
-				case 'oldest': {
-					const oldDateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-					const oldDateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-					return oldDateA - oldDateB;
-				}
-				case 'atoz':
-					return (a.title || '').localeCompare(b.title || '');
-				case 'ztoa':
-					return (b.title || '').localeCompare(a.title || '');
-				case 'rating':
-					return (b.rating || 0) - (a.rating || 0);
-				default:
-					return 0;
-			}
-		});
+    const sorted = [...filteredRecipes].sort((a, b) => {
+      switch (sortBy) {
+        case "newest": {
+          const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+          const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+          return dateB - dateA;
+        }
+        case "oldest": {
+          const oldDateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+          const oldDateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+          return oldDateA - oldDateB;
+        }
+        case "atoz":
+          return (a.title || "").localeCompare(b.title || "");
+        case "ztoa":
+          return (b.title || "").localeCompare(a.title || "");
+        case "rating":
+          return (b.rating || 0) - (a.rating || 0);
+        default:
+          return 0;
+      }
+    });
 
-		return sorted;
-	}, [favoriteRecipesForDisplay, searchQuery, sortBy]);
+    return sorted;
+  }, [favoriteRecipesForDisplay, searchQuery, sortBy]);
 
 	if (!isAuthenticated) {
 		return (
