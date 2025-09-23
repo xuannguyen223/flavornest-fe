@@ -38,7 +38,7 @@ export default function Breadcrumbs({ title, base = false }: TitleProps) {
 						<span className={`h-3 w-[1px] rotate-12 ${divider}`} />
 						{isLast ? (
 							<span
-								className={`${textMain} font-semibold cursor-pointer hover:text-white`}
+								className={`${textMain} font-semibold`}
 								onClick={() => navigate(to)}>
 								{title ?? decodeURIComponent(value.charAt(0).toUpperCase() + value.slice(1))}
 							</span>
@@ -55,7 +55,9 @@ export default function Breadcrumbs({ title, base = false }: TitleProps) {
 			{categoryType && (
 				<span className="flex items-center gap-2">
 					<span className={`h-3 w-[1px] rotate-12 ${divider}`} />
-					<span className={`${textMain} font-semibold`}>{formatCategoryType(categoryType)}</span>
+					<span className={`${textMain} font-semibold`}>
+						{formatCategoryType(categoryType)}
+					</span>
 				</span>
 			)}
 		</nav>

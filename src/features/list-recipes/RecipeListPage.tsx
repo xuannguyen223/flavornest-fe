@@ -64,7 +64,7 @@ export default function RecipeListPage() {
 		<div>
 			<SearchSection
 				backgroundColor="bg-neutral-300"
-				searchPlaceholder="Search recipe by title ......"
+				searchPlaceholder="Search recipes by name..."
 				backgroundImage="/home.png"
 				searchValue={searchInput}
 				onSearchChange={setSearchInput}
