@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 export default function NotFoundPage() {
   return (
@@ -13,11 +14,11 @@ export default function NotFoundPage() {
           please contact us.
         </p>
         <div className="flex gap-4">
-          <a href="/">
+          <Link to="/">
             <Button className="bg-(--primary-color) text-white hover:bg-(--primary-color)/80">
               Go back to homepage
             </Button>
-          </a>
+          </Link>
         </div>
       </div>
     </div>
