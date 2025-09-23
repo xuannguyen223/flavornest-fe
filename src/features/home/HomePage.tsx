@@ -21,6 +21,10 @@ export default function HomePage() {
   const { allRecipes, loading } = useAppSelector((state) => state.recipeAPI);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+  useEffect(() => {
     dispatch(fetchAllRecipes());
   }, [dispatch]);
 

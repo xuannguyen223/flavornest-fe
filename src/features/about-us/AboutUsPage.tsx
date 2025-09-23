@@ -1,7 +1,12 @@
 import AboutRow from "./component/AboutRow";
 import FeatureSection from "./component/FeatureSection";
-
+import { useEffect } from "react";
 export default function AboutUsPage() {
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   return (
     <section className="min-h-screen">
       {/* Header */}
