@@ -40,9 +40,9 @@ function FavoriteRecipesSection() {
 		id: recipe.id,
 		title: recipe.title,
 		authorId: recipe.authorId,
-		creator: recipe.author.profile.name, 
+		creator: recipe.author.profile.name,
 		totalTime: formatTime(recipe.cookTime + recipe.prepTime),
-		rating: recipe.avgRating, 
+		rating: recipe.avgRating,
 		reviewCount: recipe.ratingCount,
 		imageUrl: recipe.imageUrl,
 		createdAt: recipe.createdAt,
@@ -88,9 +88,9 @@ function FavoriteRecipesSection() {
 
 	if (!isAuthenticated) {
 		return (
-			<Sections title="Favorite Recipes">
+			<Sections title="Saved Recipes">
 				<div className="text-center py-8 text-gray-500">
-					Please log in to view your favorite recipes.
+					Please log in to view your saved recipes.
 				</div>
 			</Sections>
 		);
@@ -98,14 +98,14 @@ function FavoriteRecipesSection() {
 
 	if (loading) {
 		return (
-			<Sections title="Favorite Recipes">
-				<div className="text-center py-8 text-gray-500">Loading your favorite recipes...</div>
+			<Sections title="Saved Recipes">
+				<div className="text-center py-8 text-gray-500">Loading your saved recipes...</div>
 			</Sections>
 		);
 	}
 
 	return (
-		<Sections title="Favorite Recipes">
+		<Sections title="Saved Recipes">
 			<div className="w-full flex flex-row justify-between mb-4">
 				<SearchBar
 					className="w-[40%] text-gray-400"
@@ -122,7 +122,7 @@ function FavoriteRecipesSection() {
 				/>
 			) : (
 				<div className="text-center text-gray-500 py-20">
-					You don’t have any favorite recipes yet.
+					You haven't saved any recipes yet.
 					<br /> Start exploring{' '}
 					<span
 						className="font-semibold cursor-pointer text-amber-500"
