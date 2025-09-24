@@ -1,6 +1,5 @@
 'use client';
 
-import RecipeCategories from '@/features/recipe-detail/components/RecipeCategories';
 import type { Recipe } from '@/types/TypeRecipe';
 import { useNavigate } from 'react-router-dom';
 
@@ -47,12 +46,6 @@ export function RecipeWeek({ recipe }: RecipeWeekProps) {
 							{recipe.description}
 						</div>
 					</div>
-					{/* <div>
-						<RecipeCategories
-							categories={recipe.categories.map(c => c.category)}
-							hasLabel={false}
-						/>
-					</div> */}
 				</div>
 			</div>
 		</div>
