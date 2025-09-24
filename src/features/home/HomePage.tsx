@@ -79,7 +79,7 @@ export default function HomePage() {
       );
       if (!recipesForCat.length) continue;
 
-      if (recipesForCat.length >= 1 && !g1) {
+      if (recipesForCat.length >= 4 && !g1) {
         // Gán sub-cat đầu tiên có >= 4 recipes cho g1
         g1 = {
           name: catName,
@@ -89,7 +89,7 @@ export default function HomePage() {
               (c) => c.category.name === catName
             )?.category.description || "No description available",
         };
-      } else if (recipesForCat.length >= 1 && !g2 && catName !== g1?.name) {
+      } else if (recipesForCat.length >= 4 && !g2 && catName !== g1?.name) {
         // g1 khác g2
         g2 = {
           name: catName,
